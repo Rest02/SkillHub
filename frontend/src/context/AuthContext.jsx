@@ -24,6 +24,7 @@ export const AuthContextProvider = ({ children }) => {
   const loginUser = async(data) => {
     try{
       const response = await loginUserApi(data)
+      localStorage.setItem('token', response.data.token);
       console.log(response)
     }catch(error){
       console.log(error)

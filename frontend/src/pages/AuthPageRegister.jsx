@@ -1,13 +1,10 @@
 import React from "react";
-import RegisterForm from '../components/AuthComponents/RegisterForm.jsx'
-
+import RegisterForm from "../components/AuthComponents/RegisterForm.jsx";
 
 function AuthPageRegister() {
-
-
   return (
     <div>
-      <RegisterForm/>
+      <RegisterForm />
     </div>
   );
 }
