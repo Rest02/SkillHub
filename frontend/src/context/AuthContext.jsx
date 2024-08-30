@@ -1,4 +1,5 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
+import { registerUserApi } from "../api/auth.api";
 
 export const AuthContext = createContext();
 
@@ -11,9 +12,16 @@ export const useAuth = () => {
 };
 
 export const AuthContextProvider = ({ children }) => {
+  const registerUser = async (data) => {
+    try {
+      const response = await registerUserApi(data);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ text: "Hola mundo", x: 100 }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{registerUser}}>{children}</AuthContext.Provider>
   );
 };
