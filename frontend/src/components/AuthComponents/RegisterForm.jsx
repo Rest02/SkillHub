@@ -1,9 +1,9 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext.jsx";
 import { Form, Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-function AuthPage() {
+function RegisterForm() {
   const { registerUser } = useAuth();
 
   // Esquema de validación utilizando Yup
@@ -62,4 +62,4 @@ function AuthPage() {
   );
 }
 
-export default AuthPage;
+export default RegisterForm;
