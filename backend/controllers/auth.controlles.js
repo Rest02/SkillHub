@@ -2,6 +2,8 @@ import { pool } from "../db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
+import crypto from 'crypto';
+
 
 
 dotenv.config();
@@ -79,5 +81,53 @@ export const registerUser = async (req, res) => {
     return res.status(500).json({
       message: error.message,
     });
+  }
+};
+
+
+export const requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+
+  // Verificar que el usuario existe
+  const user = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+  if (!user) {
+    return res.status(404).json({ message: 'Usuario no encontrado' });
+  }
+
+  // Generar un token y una fecha de expiración
+  const token = crypto.randomBytes(32).toString('hex');
+  const expiration = new Date(Date.now() + 3600000); // Token válido por 1 hora
+
+  // Guardar el token en la base de datos
+  await addResetToken(user.id, token, expiration);
+
+  // Enviar el correo electrónico
+  await sendResetPasswordEmail(email, token);
+
+  res.status(200).json({ message: 'Correo de recuperación enviado' });
+};
+
+export const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    // Validar el token
+    const tokenData = await validateResetToken(token);
+    if (!tokenData) {
+      return res.status(400).json({ message: 'Token inválido o expirado' });
+    }
+
+    // Encriptar la nueva contraseña
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Actualizar la contraseña en la base de datos
+    await pool.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, tokenData.user_id]);
+
+    // Eliminar el token de la base de datos
+    await pool.query('DELETE FROM password_reset_tokens WHERE token = ?', [token]);
+
+    res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
