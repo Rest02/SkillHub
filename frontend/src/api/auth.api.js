@@ -7,3 +7,4 @@ export const registerUserApi = async (user) => {
 export const loginUserApi = async (user) => {
   return await axios.post("http://localhost:4000/login/", user);
 };
+

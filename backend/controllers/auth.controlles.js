@@ -1,14 +1,12 @@
 import { pool } from "../db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
-import crypto from 'crypto';
-
-
+import dotenv from "dotenv";
+import nodemailer from "nodemailer"
+import { format } from 'date-fns'; // Asegúrate de tener instalado date-fns
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
-
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -84,50 +82,61 @@ export const registerUser = async (req, res) => {
   }
 };
 
-
-export const requestPasswordReset = async (req, res) => {
+export const forgetPassword = async (req, res) => {
   const { email } = req.body;
 
-  // Verificar que el usuario existe
-  const user = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
-  if (!user) {
-    return res.status(404).json({ message: 'Usuario no encontrado' });
+  const [user] = await pool.query("SELECT * FROM users WHERE email = ?", [
+    email,
+  ]);
+
+  if (user.length === 0) {
+    return res.status(401).json({
+      message: "El email ingresado no pertenece a un usuario",
+    });
   }
 
-  // Generar un token y una fecha de expiración
-  const token = crypto.randomBytes(32).toString('hex');
-  const expiration = new Date(Date.now() + 3600000); // Token válido por 1 hora
+  const resetCode = Math.floor(100000 + Math.random() * 900000); // Código de 6 dígitos
 
-  // Guardar el token en la base de datos
-  await addResetToken(user.id, token, expiration);
 
-  // Enviar el correo electrónico
-  await sendResetPasswordEmail(email, token);
+  // Crear una fecha de expiración correcta para MySQL
+  const expirationDate = new Date(Date.now() + 3600000); // 1 hora desde ahora
+  const formattedExpirationDate = format(expirationDate, 'yyyy-MM-dd HH:mm:ss');
 
-  res.status(200).json({ message: 'Correo de recuperación enviado' });
-};
+  // Actualizar la tabla de usuarios con el código de recuperación y la fecha de expiración
+  await pool.query(
+    "UPDATE users SET reset_password_token = ?, reset_password_expires = ? WHERE id = ?",
+    [resetCode, formattedExpirationDate, user[0].id]
+  );
 
-export const resetPassword = async (req, res) => {
-  const { token, newPassword } = req.body;
+  let config = {
+    service: "gmail", // your email domain
+    auth: {
+      user: process.env.GMAIL_APP_USER, // your email address
+      pass: process.env.GMAIL_APP_PASSWORD, // your password
+    },
+  };
 
-  try {
-    // Validar el token
-    const tokenData = await validateResetToken(token);
-    if (!tokenData) {
-      return res.status(400).json({ message: 'Token inválido o expirado' });
-    }
+  let transporter = nodemailer.createTransport(config);
 
-    // Encriptar la nueva contraseña
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+  let message = {
+    from: "rodriguez.bastidas.matias@gmail.com", // dirección del remitente
+    to: req.body.email, // dirección del destinatario
+    subject: "SkilHub - Código de recuperación de cuenta", // asunto del correo
+    html: `<p>Se ha solicitado la recuperación de tu contraseña. Utiliza el siguiente código para restablecer tu contraseña:</p>
+           <p><b>${resetCode}</b></p>
+           <p>Este código es válido por 1 hora.</p>`, // cuerpo del correo en HTML
+  };
 
-    // Actualizar la contraseña en la base de datos
-    await pool.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, tokenData.user_id]);
-
-    // Eliminar el token de la base de datos
-    await pool.query('DELETE FROM password_reset_tokens WHERE token = ?', [token]);
-
-    res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  transporter
+    .sendMail(message)
+    .then((info) => {
+      return res.status(201).json({
+        msg: "Email sent",
+        info: info.messageId,
+        preview: nodemailer.getTestMessageUrl(info),
+      });
+    })
+    .catch((err) => {
+      return res.status(500).json({ msg: err });
+    });
 };
