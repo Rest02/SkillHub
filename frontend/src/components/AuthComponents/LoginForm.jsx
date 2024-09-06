@@ -2,6 +2,7 @@ import React from "react";
 import { ErrorMessage, Form, Formik, Field } from "formik";
 import { useAuth } from "../../context/AuthContext.jsx";
 import * as Yup from "yup";
+import { Link } from 'react-router-dom';
 
 function LoginForm() {
   const { loginUser } = useAuth();
@@ -33,17 +34,19 @@ function LoginForm() {
             <div>
               <label>Correo Electronico</label>
               <Field type="email" name="email" onChange={handleChange} />
-              <ErrorMessage name = "email" component="div" className="error"/>
+              <ErrorMessage name="email" component="div" className="error" />
             </div>
 
             <div>
               <label>Contraseña</label>
               <Field type="password" name="password" onChange={handleChange} />
-              <ErrorMessage name = "password" component="div" className="error"/>
-
+              <ErrorMessage name="password" component="div" className="error" />
             </div>
 
             <button type="submit">Entrar</button>
+            <div>
+              <Link to="/forgetPassword">¿Olvidaste tu contraseña?</Link>
+            </div>
           </Form>
         )}
       </Formik>

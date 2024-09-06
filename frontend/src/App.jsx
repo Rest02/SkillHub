@@ -4,6 +4,7 @@ import AuthPageRegister from "./pages/AuthPageRegister.jsx";
 import AuthPageLogin from './pages/AuthPageLogin.jsx'
 import NotFound from "./pages/NotFound.jsx";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
+import AuthPageForgetPassword  from './pages/AuthPageForgetPassword.jsx'
 
 
 
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/register" element={<AuthPageRegister />} />
         <Route path="/login" element={<AuthPageLogin />} />
+        <Route path="/forgetPassword" element={<AuthPageForgetPassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AuthContextProvider>

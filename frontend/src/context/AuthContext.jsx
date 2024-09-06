@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { registerUserApi, loginUserApi } from "../api/auth.api";
+import { registerUserApi, loginUserApi, forgetPasswordApi} from "../api/auth.api";
 
 export const AuthContext = createContext();
 
@@ -31,8 +31,16 @@ export const AuthContextProvider = ({ children }) => {
     }
   }
 
+  const forgetPasswordContext = async(email) => {
+    try{
+      const response = forgetPasswordApi(email)
+      console.log(response)
+    }catch(error){
+      console.log(error)
+    }
+  }
   
   return (
-    <AuthContext.Provider value={{registerUser, loginUser}}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{registerUser, loginUser, forgetPasswordContext}}>{children}</AuthContext.Provider>
   );
 };
