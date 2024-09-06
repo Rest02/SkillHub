@@ -2,11 +2,13 @@ import { pool } from "../db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer"
-import { format } from 'date-fns'; // Asegúrate de tener instalado date-fns
+import nodemailer from "nodemailer";
+import { format } from "date-fns"; 
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
+
+// Controllers para login y register
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -49,7 +51,6 @@ export const loginUser = async (req, res) => {
     });
   }
 };
-
 export const registerUser = async (req, res) => {
   const { nombre, email, password } = req.body;
   try {
@@ -82,6 +83,8 @@ export const registerUser = async (req, res) => {
   }
 };
 
+// Controllers para olvido de contraseña
+
 export const forgetPassword = async (req, res) => {
   const { email } = req.body;
 
@@ -97,10 +100,9 @@ export const forgetPassword = async (req, res) => {
 
   const resetCode = Math.floor(100000 + Math.random() * 900000); // Código de 6 dígitos
 
-
   // Crear una fecha de expiración correcta para MySQL
   const expirationDate = new Date(Date.now() + 3600000); // 1 hora desde ahora
-  const formattedExpirationDate = format(expirationDate, 'yyyy-MM-dd HH:mm:ss');
+  const formattedExpirationDate = format(expirationDate, "yyyy-MM-dd HH:mm:ss");
 
   // Actualizar la tabla de usuarios con el código de recuperación y la fecha de expiración
   await pool.query(
@@ -139,4 +141,51 @@ export const forgetPassword = async (req, res) => {
     .catch((err) => {
       return res.status(500).json({ msg: err });
     });
+};
+export const verifyRecoveryCode = async (req, res) => {
+  const { email, code } = req.body;
+
+  const [user] = await pool.query("SELECT * FROM users WHERE email = ?", [
+    email,
+  ]);
+
+  if (user.length === 0) {
+    return res
+      .status(401)
+      .json({ message: "El email ingresado no pertenece a un usuario" });
+  }
+
+  const currentDateTime = new Date();
+  const resetExpire = new Date(user[0].reset_password_expires);
+
+  if (
+    user[0].reset_password_expires !== code ||
+    resetExpire < currentDateTime
+  ) {
+    return res.status(200).json({
+      message: "Código válido. Proceda a cambiar su contraseña.",
+      userId: user[0].id,
+    });
+  }
+};
+export const changePassword = async (req, res) => {
+  const { userId, newPassword } = req.body;
+
+  const [user] = await pool.query("SELECT * FROM users WHERE id = ?", [userId]);
+
+  if (user.length === 0) {
+    return res.status(401).json({ message: "Usuario no encontrado" });
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+  await pool.query(
+    "UPDATE users SET password = ?, reset_password_token = NULL, reset_password_expires = NULL WHERE id = ?",
+    [hashedPassword, userId]
+  );
+
+  return res
+    .status(200)
+    .json({ message: "Contraseña actualizada exitosamente" });
 };

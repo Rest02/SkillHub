@@ -6,7 +6,6 @@ import * as Yup from "yup";
 function RegisterForm() {
   const { registerUser } = useAuth();
 
-  // Esquema de validación utilizando Yup
   const validationSchema = Yup.object({
     nombre: Yup.string()
       .min(3, "El nombre de usuario debe tener al menos 3 caracteres")
