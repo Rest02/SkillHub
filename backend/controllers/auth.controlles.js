@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
-import { format } from "date-fns"; 
+import { format } from "date-fns";
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -145,29 +145,39 @@ export const forgetPassword = async (req, res) => {
 export const verifyRecoveryCode = async (req, res) => {
   const { email, code } = req.body;
 
-  const [user] = await pool.query("SELECT * FROM users WHERE email = ?", [
-    email,
-  ]);
+  console.log("Email:", email);
+  console.log("Code:", code);
 
-  if (user.length === 0) {
-    return res
-      .status(401)
-      .json({ message: "El email ingresado no pertenece a un usuario" });
-  }
+  try {
+    const [rows] = await pool.query(
+      `SELECT * FROM users WHERE email = ? AND reset_password_token = ?`, 
+      [email, code]
+    );
 
-  const currentDateTime = new Date();
-  const resetExpire = new Date(user[0].reset_password_expires);
+    if (rows.length === 0) {
+      return res.status(401).json({ message: "El email ingresado no pertenece a un usuario o el código es incorrecto." });
+    }
 
-  if (
-    user[0].reset_password_expires !== code ||
-    resetExpire < currentDateTime
-  ) {
+    const user = rows[0];
+    const currentDateTime = new Date();
+    const resetExpire = new Date(user.reset_password_expires);
+
+    if (user.reset_password_token !== code || resetExpire < currentDateTime) {
+      return res.status(401).json({ message: "El código es inválido o ha expirado." });
+    }
+
     return res.status(200).json({
       message: "Código válido. Proceda a cambiar su contraseña.",
-      userId: user[0].id,
+      userId: user.id,
     });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error interno del servidor." });
   }
 };
+
+
 export const changePassword = async (req, res) => {
   const { userId, newPassword } = req.body;
 

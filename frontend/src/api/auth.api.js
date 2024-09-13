@@ -14,6 +14,13 @@ export const loginUserApi = async (user) => {
 
 // Forget Password
 
-export const forgetPasswordApi = async (email) =>{
-  return await axios.post("http://localhost:4000/ForgetPassword/", email)
+export const forgetPasswordApi = async (email) => {
+  return await axios.post("http://localhost:4000/ForgetPassword/", { email });
+};
+
+
+// Validate Code
+
+export const validateCodeApi = async(data) => {
+  return await axios.post("http://localhost:4000/verifyRecoveryCode/",  data)
 }

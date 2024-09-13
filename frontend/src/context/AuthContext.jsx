@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { registerUserApi, loginUserApi, forgetPasswordApi} from "../api/auth.api";
+import { registerUserApi, loginUserApi, forgetPasswordApi, validateCodeApi} from "../api/auth.api";
 
 export const AuthContext = createContext();
 
@@ -40,7 +40,18 @@ export const AuthContextProvider = ({ children }) => {
     }
   }
   
+  const validateCodeContext = async (data) => {
+    try {
+      const response = await validateCodeApi(data);
+      return response.data.message.includes("Código válido");
+    } catch (error) {
+      console.log(error);
+      return false
+    }
+  };
+  
+
   return (
-    <AuthContext.Provider value={{registerUser, loginUser, forgetPasswordContext}}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{registerUser, loginUser, forgetPasswordContext, validateCodeContext}}>{children}</AuthContext.Provider>
   );
 };
