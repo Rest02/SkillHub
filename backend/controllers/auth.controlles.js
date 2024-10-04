@@ -104,10 +104,24 @@ export const forgetPassword = async (req, res) => {
   const expirationDate = new Date(Date.now() + 3600000); // 1 hora desde ahora
   const formattedExpirationDate = format(expirationDate, "yyyy-MM-dd HH:mm:ss");
 
+  // Crear token de seguridad para el usuario
+  const token = jwt.sign(
+    { id: user[0].id, email: user[0].email },
+    JWT_SECRET,
+    {
+      expiresIn: "1h",
+    }
+  );
+  console.log("Generated token:", token);
+
+  
+
+  
+
   // Actualizar la tabla de usuarios con el código de recuperación y la fecha de expiración
   await pool.query(
-    "UPDATE users SET reset_password_token = ?, reset_password_expires = ? WHERE id = ?",
-    [resetCode, formattedExpirationDate, user[0].id]
+    "UPDATE users SET code_user_password = ?, reset_password_expires = ?, password_reset_token = ? WHERE id = ?",
+    [resetCode, formattedExpirationDate, token, user[0].id]
   );
 
   let config = {
@@ -143,32 +157,33 @@ export const forgetPassword = async (req, res) => {
     });
 };
 export const verifyRecoveryCode = async (req, res) => {
-  const { email, code } = req.body;
-
-  console.log("Email:", email);
-  console.log("Code:", code);
+  const { code } = req.body; // El código ingresado por el usuario
+  const { token } = req.params; // El token que viene en la URL
 
   try {
-    const [rows] = await pool.query(
-      `SELECT * FROM users WHERE email = ? AND reset_password_token = ?`, 
-      [email, code]
-    );
+    // Verificar el token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded token:", decoded); 
 
-    if (rows.length === 0) {
-      return res.status(401).json({ message: "El email ingresado no pertenece a un usuario o el código es incorrecto." });
+    // Buscar al usuario con el ID obtenido del token
+    const [user] = await pool.query("SELECT * FROM users WHERE id = ?", [decoded.id]);
+
+    if (user.length === 0) {
+      return res.status(401).json({ message: "Token inválido o expirado." });
     }
 
-    const user = rows[0];
+    const currentUser = user[0];
+    console.log(user[0])
     const currentDateTime = new Date();
-    const resetExpire = new Date(user.reset_password_expires);
 
-    if (user.reset_password_token !== code || resetExpire < currentDateTime) {
+    // Verificar que el código sea correcto y no haya expirado
+    if (currentUser.code_user_password !== code || currentUser.reset_password_expires < currentDateTime) {
       return res.status(401).json({ message: "El código es inválido o ha expirado." });
     }
 
     return res.status(200).json({
       message: "Código válido. Proceda a cambiar su contraseña.",
-      userId: user.id,
+      userId: currentUser.id,
     });
 
   } catch (error) {
@@ -176,26 +191,35 @@ export const verifyRecoveryCode = async (req, res) => {
     return res.status(500).json({ message: "Error interno del servidor." });
   }
 };
-
-
 export const changePassword = async (req, res) => {
-  const { userId, newPassword } = req.body;
+  const { token } = req.params;  // Token que viene en la URL
+  const { newPassword } = req.body;  // Nueva contraseña que ingresa el usuario
 
-  const [user] = await pool.query("SELECT * FROM users WHERE id = ?", [userId]);
+  try {
+    // Verificar el token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    // Decodificar el token para obtener el userId
+    const userId = decoded.id;
 
-  if (user.length === 0) {
-    return res.status(401).json({ message: "Usuario no encontrado" });
+    // Si el token es válido, hashea la nueva contraseña
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Actualizar la contraseña en la base de datos
+    await pool.query("UPDATE users SET password = ? WHERE id = ?", [
+      hashedPassword,
+      userId
+    ]);
+
+    return res.status(200).json({
+      message: "Contraseña actualizada exitosamente",
+    });
+
+  } catch (error) {
+    console.error("Error al cambiar la contraseña:", error);
+    return res.status(500).json({
+      message: "Error interno del servidor.",
+    });
   }
-
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-  await pool.query(
-    "UPDATE users SET password = ?, reset_password_token = NULL, reset_password_expires = NULL WHERE id = ?",
-    [hashedPassword, userId]
-  );
-
-  return res
-    .status(200)
-    .json({ message: "Contraseña actualizada exitosamente" });
 };
+

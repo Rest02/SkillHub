@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 
 function ForgetPassword() {
+
+  const navigate = useNavigate();
+
+
   const { forgetPasswordContext, validateCodeContext } = useAuth(); // Se asume que tienes otra función para validar el código
   const [isCodeSent, setIsCodeSent] = useState(false); // Estado para controlar si el código fue enviado
   const [emailStored, setEmailStored] = useState(""); // Guardar el email para reusarlo después
@@ -43,7 +49,8 @@ function ForgetPassword() {
 
             if (isValid) {
               alert("Código válido, ahora proceda a cambiar la contraseña");
-              // Aquí puedes redirigir al usuario a la página de cambio de contraseña
+              navigate("/")
+              
             } else {
               alert("Código incorrecto, por favor intenta de nuevo");
             }
