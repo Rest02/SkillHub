@@ -105,18 +105,10 @@ export const forgetPassword = async (req, res) => {
   const formattedExpirationDate = format(expirationDate, "yyyy-MM-dd HH:mm:ss");
 
   // Crear token de seguridad para el usuario
-  const token = jwt.sign(
-    { id: user[0].id, email: user[0].email },
-    JWT_SECRET,
-    {
-      expiresIn: "1h",
-    }
-  );
+  const token = jwt.sign({ id: user[0].id, email: user[0].email }, JWT_SECRET, {
+    expiresIn: "1h",
+  });
   console.log("Generated token:", token);
-
-  
-
-  
 
   // Actualizar la tabla de usuarios con el código de recuperación y la fecha de expiración
   await pool.query(
@@ -143,19 +135,23 @@ export const forgetPassword = async (req, res) => {
            <p>Este código es válido por 1 hora.</p>`, // cuerpo del correo en HTML
   };
 
-  transporter
-    .sendMail(message)
-    .then((info) => {
-      return res.status(201).json({
-        msg: "Email sent",
-        info: info.messageId,
-        preview: nodemailer.getTestMessageUrl(info),
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({ msg: err });
+  try {
+    const info = await transporter.sendMail(message);
+
+    return res.status(200).json({
+      msg: "Email sent",
+      info: info.messageId,
+      preview: nodemailer.getTestMessageUrl(info),
+      token: token, // Devolver el token en la respuesta
     });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ msg: "Error al enviar el correo", error: err });
+  }
 };
+
 export const verifyRecoveryCode = async (req, res) => {
   const { code } = req.body; // El código ingresado por el usuario
   const { token } = req.params; // El token que viene en la URL
@@ -169,36 +165,34 @@ export const verifyRecoveryCode = async (req, res) => {
     const [user] = await pool.query("SELECT * FROM users WHERE id = ?", [decoded.id]);
 
     if (user.length === 0) {
-      return res.status(401).json({ message: "Token inválido o expirado." });
+      return res.status(401).json({ valid: false, message: "Token inválido o expirado." });
     }
 
     const currentUser = user[0];
-    console.log(user[0])
+    console.log(currentUser);
     const currentDateTime = new Date();
 
     // Verificar que el código sea correcto y no haya expirado
     if (currentUser.code_user_password !== code || currentUser.reset_password_expires < currentDateTime) {
-      return res.status(401).json({ message: "El código es inválido o ha expirado." });
+      return res.status(401).json({ valid: false, message: "El código es inválido o ha expirado." });
     }
 
-    return res.status(200).json({
-      message: "Código válido. Proceda a cambiar su contraseña.",
-      userId: currentUser.id,
-    });
+    return res.status(200).json({ valid: true, userId: currentUser.id });
 
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Error interno del servidor." });
+    return res.status(500).json({ valid: false, message: "Error interno del servidor." });
   }
 };
+
 export const changePassword = async (req, res) => {
-  const { token } = req.params;  // Token que viene en la URL
-  const { newPassword } = req.body;  // Nueva contraseña que ingresa el usuario
+  const { token } = req.params; // Token que viene en la URL
+  const { newPassword } = req.body; // Nueva contraseña que ingresa el usuario
 
   try {
     // Verificar el token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
+
     // Decodificar el token para obtener el userId
     const userId = decoded.id;
 
@@ -208,13 +202,12 @@ export const changePassword = async (req, res) => {
     // Actualizar la contraseña en la base de datos
     await pool.query("UPDATE users SET password = ? WHERE id = ?", [
       hashedPassword,
-      userId
+      userId,
     ]);
 
     return res.status(200).json({
       message: "Contraseña actualizada exitosamente",
     });
-
   } catch (error) {
     console.error("Error al cambiar la contraseña:", error);
     return res.status(500).json({
@@ -222,4 +215,3 @@ export const changePassword = async (req, res) => {
     });
   }
 };
-

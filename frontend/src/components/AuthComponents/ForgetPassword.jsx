@@ -1,89 +1,52 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import * as Yup from "yup"; // Importa Yup para validaciones
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Importar useNavigate para la redirección
 
+// Esquema de validación de Yup
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("El correo no es válido") // Validación de email
+    .required("El correo es obligatorio"), // Campo obligatorio
+});
 
 function ForgetPassword() {
-
-  const navigate = useNavigate();
-
-
-  const { forgetPasswordContext, validateCodeContext } = useAuth(); // Se asume que tienes otra función para validar el código
-  const [isCodeSent, setIsCodeSent] = useState(false); // Estado para controlar si el código fue enviado
-  const [emailStored, setEmailStored] = useState(""); // Guardar el email para reusarlo después
-
-  const initialValues = {
-    email: "",
-    code: "", // Campo para el código de verificación
-  };
-
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Correo electrónico no válido")
-      .required("El correo electrónico es obligatorio"),
-    code: isCodeSent
-      ? Yup.string().required("El código es obligatorio")
-      : null, // Validación condicional para el código
-  });
+  const { forgetPassword } = useAuth();
+  const navigate = useNavigate(); // Hook para redireccionar
 
   return (
     <div>
       <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
+        initialValues={{
+          email: "",
+        }}
+        validationSchema={validationSchema} // Añadir el esquema de validación
         onSubmit={async (values) => {
-          if (!isCodeSent) {
-            // Fase 1: Enviar correo de recuperación
-            await forgetPasswordContext(values.email);
-            setIsCodeSent(true); // Cambia el estado para mostrar el campo de código
-            setEmailStored(values.email); // Guarda el email para reutilizarlo en la validación
-          } else {
-            // Fase 2: Validar el código de verificación
-            const data = {
-              email: emailStored,
-              code: values.code
-            };
-            const isValid = await validateCodeContext(data);
-
-            if (isValid) {
-              alert("Código válido, ahora proceda a cambiar la contraseña");
-              navigate("/")
-              
-            } else {
-              alert("Código incorrecto, por favor intenta de nuevo");
-            }
+          const token = await forgetPassword(values);
+          if (token) {
+            // Redirigir a VerifyCode con el token
+            navigate(`/verifyRecoveryCode/${token}`);
           }
         }}
       >
-        {({ handleChange, handleSubmit }) => (
+        {({ handleChange, handleSubmit, errors, touched }) => (
           <Form onSubmit={handleSubmit}>
-            {/* Fase 1: Mostrar el campo del correo */}
             <div>
-              <label>Correo electrónico</label>
+              <label>Correo Electrónico</label>
               <Field
                 type="email"
                 name="email"
+                placeholder="Ingresa tu correo"
                 onChange={handleChange}
-                disabled={isCodeSent} // Deshabilitar campo email una vez que el código fue enviado
               />
-              <ErrorMessage name="email" component="div" className="error" />
+              {/* Mostrar el mensaje de error si existe */}
+              {errors.email && touched.email && (
+                <div style={{ color: "red" }}>{errors.email}</div>
+              )}
             </div>
 
-            {/* Fase 2: Mostrar el campo del código de verificación si el email fue enviado */}
-            {isCodeSent && (
-              <div>
-                <label>Código de verificación</label>
-                <Field type="text" name="code" onChange={handleChange} />
-                <ErrorMessage name="code" component="div" className="error" />
-              </div>
-            )}
-
-            {/* Botón que cambia de función según el estado */}
-            <button type="Submit">
-              {isCodeSent ? "Validar Código" : "Enviar Correo"}
-            </button>
+            <button type="submit">Enviar</button>
           </Form>
         )}
       </Formik>
