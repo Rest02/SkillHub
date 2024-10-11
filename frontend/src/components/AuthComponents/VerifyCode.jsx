@@ -32,7 +32,7 @@ function VerifyCode() {
             if (response.valid) {
               // Si la verificación es exitosa, redirigir a la página de registro (puedes cambiar a changePassword más tarde)
               setMessage("Código verificado correctamente. Redirigiendo...");
-              navigate('/register');
+              navigate(`/changePassword/${token}`); // Pasa el token en la URL correctamente
             } else {
               // Manejar el error de código inválido
               setMessage(response.message || "Código inválido. Por favor, inténtalo de nuevo."); // Establece el mensaje de error

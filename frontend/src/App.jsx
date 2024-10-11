@@ -18,6 +18,7 @@ function App() {
         <Route path="/login" element={<AuthPageLogin />} />
         <Route path="/forgetPassword" element={<AuthPageForgetPassword />} />
         <Route path="/verifyRecoveryCode/:token" element={<AuthPageVerifyCode/>} />
+        <Route path="/changePassword/:token" element={<AuthPageNewPassword/>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AuthContextProvider>

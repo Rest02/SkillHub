@@ -3,7 +3,8 @@ import {
   registerUserApi,
   loginUserApi,
   forgetPasswordRequest,
-  verifyRecoveryCodeRequest
+  verifyRecoveryCodeRequest,
+  changePasswordRequest
 } from "../api/auth.api";
 
 export const AuthContext = createContext();
@@ -43,22 +44,20 @@ export const AuthContextProvider = ({ children }) => {
       const response = await forgetPasswordRequest(values);
       // Captura el token de la respuesta
       const token = response.data.token; // Aquí obtienes el token
-  
+
       return token; // Devuelve el token aquí
     } catch (error) {
       console.error(error);
       throw error; // Lanzar el error para que sea manejado en el componente
     }
   };
-  
-  
 
-   // Función para verificar el código de recuperación
-   const verifyRecoveryCode = async (code, token) => {
+  // Función para verificar el código de recuperación
+  const verifyRecoveryCode = async (code, token) => {
     try {
       const response = await verifyRecoveryCodeRequest(code, token);
       console.log(response.data); // Verifica la respuesta del servidor
-  
+
       // Si la respuesta es exitosa, puedes manejar el siguiente paso, por ejemplo:
       // Redirigir a la página para cambiar la contraseña
       return response.data; // Asegúrate de retornar lo que necesites
@@ -66,13 +65,24 @@ export const AuthContextProvider = ({ children }) => {
       console.error(error); // Manejo de errores
     }
   };
-  
-  
+
+  // Función para cambiar la contraseña
+  const changePassword = async (newPassword, token) => {
+    try {
+      const response = await changePasswordRequest(token, newPassword);
+      return response; // Retornar la respuesta del backend
+    } catch (error) {
+      console.error("Error cambiando la contraseña:", error.message);
+      throw error;
+    }
+  };
 
   //---------------------------------------------------------------------------
 
   return (
-    <AuthContext.Provider value={{ registerUser, loginUser, forgetPassword, verifyRecoveryCode }}>
+    <AuthContext.Provider
+      value={{ registerUser, loginUser, forgetPassword, verifyRecoveryCode, changePassword }}
+    >
       {children}
     </AuthContext.Provider>
   );
