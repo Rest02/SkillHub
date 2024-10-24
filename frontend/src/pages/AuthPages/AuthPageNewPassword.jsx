@@ -1,5 +1,5 @@
 import React from 'react'
-import NewPassword from '../components/AuthComponents/NewPassword'
+import NewPassword from '../../components/AuthComponents/NewPassword'
 
 function AuthPageNewPassword() {
   return (

@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext , useEffect, useState} from "react";
 import {
   registerUserApi,
   loginUserApi,
@@ -18,6 +18,14 @@ export const useAuth = () => {
 };
 
 export const AuthContextProvider = ({ children }) => {
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
   //------------------ Apartado de Cuentas Login y mas ------------------------
 
   const registerUser = async (data) => {
@@ -32,12 +40,16 @@ export const AuthContextProvider = ({ children }) => {
   const loginUser = async (data) => {
     try {
       const response = await loginUserApi(data);
-      localStorage.setItem("token", response.data.token);
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token); // Asegúrate de que el token se guarda aquí
+        console.log("Token guardado en localStorage:", response.data.token); // Verifica que el token se guarda correctamente
+      }
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
+  
 
   const forgetPassword = async (values) => {
     try {

@@ -1,5 +1,5 @@
 import React from 'react'
-import ForgetPassword from '../components/AuthComponents/ForgetPassword'
+import ForgetPassword from '../../components/AuthComponents/ForgetPassword'
 
 function AuthPageForgetPassword() {
   return (
