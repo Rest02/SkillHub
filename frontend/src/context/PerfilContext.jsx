@@ -1,7 +1,6 @@
 // PerfilContext.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getPerfilRequest } from "../api/perfil.api"; // Importar la función de la API
-import { useAuth } from "./AuthContext"; // Suponiendo que AuthContext ya tiene el token del usuario
+import { getPerfilRequest, updateEmailRequest } from "../api/perfil.api"; // Importar la función de la API
 
 // Crear el contexto
 const PerfilContext = createContext();
@@ -38,6 +37,15 @@ export const PerfilProvider = ({ children }) => {
     }
   };
 
+  const updateEmail = async (newEmail) => {
+    try {
+      const response = await updateEmailRequest(token, newEmail);
+      console.log("Correo actualizado:", response);
+    } catch (error) {
+      console.error("Error al actualizar el correo:", error);
+    }
+  };
+
   useEffect(() => {
     if (token) {
       getPerfil(); // Solo llamar a getPerfil si el token está disponible
@@ -45,7 +53,7 @@ export const PerfilProvider = ({ children }) => {
   }, [token]); // Solo volver a obtener el perfil cuando el token cambie
 
   return (
-    <PerfilContext.Provider value={{ perfil, loading, error, getPerfil }}>
+    <PerfilContext.Provider value={{ perfil, loading, error, getPerfil, updateEmail }}>
       {children}
     </PerfilContext.Provider>
   );

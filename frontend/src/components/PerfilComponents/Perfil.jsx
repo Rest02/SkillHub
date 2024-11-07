@@ -1,9 +1,12 @@
 // Perfil.jsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { usePerfil } from "../../context/PerfilContext"; // Importar el contexto de perfil
+import { Formik, Form, Field, ErrorMessage } from "formik"; // Importar Formik y sus componentes
+import * as Yup from "yup"; // Importar Yup para validaciones
 
 function Perfil() {
-  const { perfil, getPerfil, loading, error } = usePerfil(); // Obtener la función y el perfil desde el contexto
+  const { perfil, getPerfil, loading, error, updateEmail } = usePerfil(); // Asegúrate de obtener updateEmail desde el contexto
+  const [showEmailForm, setShowEmailForm] = useState(false); // Estado para mostrar u ocultar el formulario
 
   useEffect(() => {
     // Obtener los datos del perfil cuando se monte el componente
@@ -24,6 +27,25 @@ function Perfil() {
     return <div>No se pudo obtener el perfil.</div>; // Si no hay perfil, muestra un mensaje de error
   }
 
+  // Esquema de validación de Yup para el correo electrónico
+  const validationSchema = Yup.object().shape({
+    newEmail: Yup.string()
+      .email("El correo electrónico no es válido")
+      .required("El correo electrónico es requerido"),
+  });
+
+  const handleEmailChange = async (values, { setSubmitting, setErrors }) => {
+    try {
+      await updateEmail(values.newEmail);
+      setShowEmailForm(false); // Ocultar el formulario si todo es correcto
+    } catch (error) {
+      setErrors({ newEmail: "No se pudo actualizar el correo" });
+    } finally {
+      setSubmitting(false); // Terminar la acción de submit
+
+    }
+  };
+
   return (
     <div>
       <h2>Perfil del Usuario</h2>
@@ -40,9 +62,40 @@ function Perfil() {
       {/* Opciones de cambios */}
       <div style={{ marginTop: "20px" }}>
         <h3>Opciones de Configuración</h3>
-        <button onClick={() => alert("Cambiar correo")}>
-          Cambiar correo vinculado
+        <button onClick={() => setShowEmailForm(!showEmailForm)}>
+          {showEmailForm ? "Cancelar" : "Cambiar correo vinculado"}
         </button>
+
+        {showEmailForm && (
+          <Formik
+            initialValues={{ newEmail: "" }}
+            validationSchema={validationSchema}
+            onSubmit={handleEmailChange}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <div>
+                  <label htmlFor="newEmail">Nuevo correo electrónico:</label>
+                  <Field
+                    type="email"
+                    name="newEmail"
+                    placeholder="Ingrese su nuevo correo"
+                  />
+                  <ErrorMessage
+                    name="newEmail"
+                    component="div"
+                    style={{ color: "red" }}
+                  />
+                </div>
+                <button type="submit" disabled={isSubmitting}>
+                  Actualizar Correo
+                </button>
+              </Form>
+            )}
+          </Formik>
+        )}
+
+        {/* Otras opciones */}
         <br />
         <button onClick={() => alert("Cambiar contraseña")}>
           Cambiar contraseña

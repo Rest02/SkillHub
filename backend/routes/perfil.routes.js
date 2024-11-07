@@ -6,6 +6,8 @@ import { verifyToken } from '../middlewares/middlewareToken.js'; // Middleware p
 const router = Router()
 
 router.get("/perfil", verifyToken, perfilControllers.getUserProfile)
+router.put("/perfil/correo", verifyToken, perfilControllers.updateUserEmail); // Ruta para actualizar el correo
+
 
 
 export default router
