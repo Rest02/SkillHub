@@ -14,5 +14,7 @@ router.post('/courses',
     courseControllers.createCourse
 );
 
+router.post('/courses/:courseId/units', verifyToken, courseControllers.createUnit);
+
 
 export default router;

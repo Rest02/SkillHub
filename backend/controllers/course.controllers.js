@@ -20,3 +20,23 @@ export const createCourse = async (req, res) => {
         res.status(500).json({ message: 'Error al crear el curso' });
     }
 };
+
+export const createUnit = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const { titulo, descripcion, objetivos, tema } = req.body;
+
+        // Inserta la unidad en la base de datos
+        const [unitResult] = await pool.query(
+            `INSERT INTO units (titulo, descripcion, objetivos, tema, curso_id) 
+            VALUES (?, ?, ?, ?, ?)`,
+            [titulo, descripcion, objetivos, tema, courseId]
+        );
+
+        const unitId = unitResult.insertId;
+        res.status(201).json({ message: 'Unidad creada con éxito', unitId });
+    } catch (error) {
+        console.error("Error al crear la unidad:", error);
+        res.status(500).json({ message: 'Error al crear la unidad' });
+    }
+};
