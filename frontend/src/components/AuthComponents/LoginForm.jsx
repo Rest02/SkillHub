@@ -38,7 +38,6 @@ function LoginForm() {
       justifyContent="center"
       style={{ height: "100vh" }}
     >
-      {/* Right side with form */}
       <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
         <Paper
           elevation={3}
@@ -48,50 +47,46 @@ function LoginForm() {
             backgroundColor: "#f7f3e9",
             display: "flex",
             alignItems: "center",
-            width: "100%", // Aseguramos que el formulario ocupe todo el ancho disponible
-            height: "auto", // Dejamos que la altura se ajuste según el contenido
+            width: "100%", 
+            height: "auto", 
           }}
         >
-          {/* Left side with image */}
           <Box
             component="img"
             src={picture}
             alt="Descripción de la imagen"
             sx={{
-              width: "50%", // Ajusta para ocupar el 50% del ancho
+              width: "50%", 
               height: "auto",
               objectFit: "cover",
               borderRadius: "8px",
               border: "1px solid black",
-              marginRight: "20px", // Espacio entre la imagen y el formulario
+              marginRight: "20px", 
             }}
           />
           
-          {/* Right side with form */}
           <Card
             sx={{
               p: 3,
               borderRadius: 3,
               boxShadow: 4,
               bgcolor: "#ffffff",
-              width: "50%", // Ajusta para que ocupe el 50% del ancho
-              height: "auto", // Ocupa el 100% de la altura disponible
+              width: "50%", 
+              height: "auto", 
             }}
           >
-            {/* Logo above the form */}
             <Box
               component="img"
               src={logo}
               alt="Logo"
               sx={{
-                width: "219px", // Ajusta el tamaño del logo
+                width: "179px",
                 height: "auto",
                 display: "block",
-                margin: "0 auto 20px", // Centramos el logo y le damos espacio inferior
+                margin: "0 auto 20px",
               }}
             />
 
-            {/* Título y descripción */}
             <Typography
               variant="h4"
               sx={{
@@ -122,7 +117,6 @@ function LoginForm() {
               {({ handleChange, handleSubmit, errors, touched }) => (
                 <Form onSubmit={handleSubmit}>
                   <Stack spacing={3}>
-                    {/* Campo correo electrónico */}
                     <TextField
                       fullWidth
                       label="Correo Electrónico"
@@ -134,37 +128,35 @@ function LoginForm() {
                       helperText={touched.email && errors.email}
                       sx={{
                         bgcolor: "white",
-                        borderRadius: "30px", // Bordes redondeados
+                        borderRadius: "30px",
                       }}
                     />
-                    {/* Campo contraseña */}
                     <TextField
                       fullWidth
                       label="Contraseña"
                       name="password"
-                      type={showPassword ? "text" : "password"} // Cambiar el tipo según el estado
+                      type={showPassword ? "text" : "password"} 
                       onChange={handleChange}
                       variant="outlined"
                       error={touched.password && !!errors.password}
                       helperText={touched.password && errors.password}
                       sx={{
                         bgcolor: "white",
-                        borderRadius: "30px", // Bordes redondeados
+                        borderRadius: "30px",
                       }}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
                             <Button
-                              onClick={() => setShowPassword((prev) => !prev)} // Cambiar el estado
+                              onClick={() => setShowPassword((prev) => !prev)}
                               sx={{ color: "black" }}
                             >
-                              {showPassword ? <VisibilityOff /> : <Visibility />} {/* Mostrar el ícono según el estado */}
+                              {showPassword ? <VisibilityOff /> : <Visibility />}
                             </Button>
                           </InputAdornment>
                         ),
                       }}
                     />
-                    {/* Botón de submit */}
                     <Button
                       fullWidth
                       type="submit"
@@ -187,6 +179,12 @@ function LoginForm() {
             <Typography align="center" sx={{ mt: 3 }}>
               <Link to="/forgetPassword" style={{ color: "#8C6D62" }}>
                 ¿Olvidaste tu contraseña?
+              </Link>
+            </Typography>
+            <Typography align="center" sx={{ mt: 2 }}>
+              ¿No tienes una cuenta?{" "}
+              <Link to="/register" style={{ color: "#8C6D62" }}>
+                Registrarse
               </Link>
             </Typography>
           </Card>
