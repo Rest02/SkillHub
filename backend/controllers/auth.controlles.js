@@ -37,7 +37,7 @@ export const loginUser = async (req, res) => {
 
     // Generamos el token con JWT y nuestra clave secreta env
     const token = jwt.sign(
-      { id: user[0].id, email: user[0].email },
+      { id: user[0].id, email: user[0].email, rol: user[0].rol },
       JWT_SECRET,
       {
         expiresIn: "1h",
