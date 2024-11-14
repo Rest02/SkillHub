@@ -1,6 +1,8 @@
 // course.controller.js
 import {pool} from '../db.js'; // Asegúrate de tener la conexión a la base de datos
 
+import fs from 'fs';
+
 export const createCourse = async (req, res) => {
     try {
         const { titulo, descripcion, categoria_id, precio, modalidad } = req.body;
@@ -13,6 +15,10 @@ export const createCourse = async (req, res) => {
 
         // Verifica si se recibió el título, descripción, categoría, precio y modalidad
         if (!titulo || !descripcion || !categoria_id || !precio || !modalidad) {
+            // Si el archivo se subió pero faltan datos, lo eliminamos
+            if (thumbnailPath) {
+                fs.unlinkSync(thumbnailPath);
+            }
             return res.status(400).json({ message: 'Faltan datos requeridos' });
         }
 
@@ -33,15 +39,25 @@ export const createCourse = async (req, res) => {
 
 
 
+
 export const createUnit = async (req, res) => {
     try {
-        const {titulo, descripcion } = req.body;
+        const {titulo, descripcion, objetivos, tema } = req.body;
         const curso_id = req.params.courseId
-        console.log(curso_id)
+
 
         // Obtén el ID del usuario desde el token
         const instructor_id = req.user.id;
         console.log(curso_id, instructor_id)
+
+
+        if (!titulo || !descripcion || !objetivos || !tema) {
+            // Si falta algún dato, eliminar el archivo de video subido
+            if (videoPath) {
+                fs.unlinkSync(videoPath);
+            }
+            return res.status(400).json({ message: 'Datos incompletos' });
+        }
 
         // Verificar que el curso existe y pertenece al instructor
         const [course] = await pool.query(
@@ -56,8 +72,8 @@ export const createUnit = async (req, res) => {
 
         // Ahora, puedes crear la unidad
         const [result] = await pool.query(
-            `INSERT INTO units (titulo, descripcion, curso_id) VALUES (?, ?, ?)`,
-            [titulo, descripcion, curso_id]
+            `INSERT INTO units (titulo, descripcion, objetivos, tema, curso_id) VALUES (?, ?, ?, ?, ?)`,
+            [titulo, descripcion, objetivos, tema, curso_id]
         );
 
         res.status(201).json({ message: 'Unidad creada con éxito', unitId: result.insertId });
@@ -74,24 +90,33 @@ export const createUnit = async (req, res) => {
 // Controlador para subir video de los cursos por unidades
 export const uploadVideo = async (req, res) => {
     try {
-        const { unidad_id, nombre, descripcion } = req.body;
+        const { nombre, descripcion } = req.body;
+        const unidad_id = req.params.unidad_id;
         const videoPath = req.file ? req.file.path : null;
+        const instructor_id = req.user.id;  // Obtenemos el ID del instructor desde el token
 
-        if (!unidad_id || !nombre || !videoPath) {
+        if (!unidad_id || !nombre || !videoPath || !descripcion) {
+            // Si falta algún dato, eliminar el archivo de video subido
+            if (videoPath) {
+                fs.unlinkSync(videoPath);
+            }
             return res.status(400).json({ message: 'Datos incompletos' });
         }
 
-        // Verificar si la unidad existe
+        // Verificar si la unidad existe y pertenece a un curso del instructor autenticado
         const [unit] = await pool.query(
-            'SELECT id FROM units WHERE id = ?',
-            [unidad_id]
+            `SELECT units.id 
+            FROM units 
+            INNER JOIN courses ON units.curso_id = courses.id 
+            WHERE units.id = ? AND courses.instructor_id = ?`,
+            [unidad_id, instructor_id]
         );
 
         if (unit.length === 0) {
-            return res.status(400).json({ message: 'La unidad especificada no existe' });
+            return res.status(403).json({ message: 'No tienes permiso para agregar videos a esta unidad o la unidad no existe' });
         }
 
-        // Si la unidad existe, procedemos a insertar el video
+        // Si la unidad pertenece al curso del instructor autenticado, procedemos a insertar el video
         const [result] = await pool.query(
             `INSERT INTO videos (unidad_id, nombre, descripcion, video_url) 
             VALUES (?, ?, ?, ?)`,
@@ -106,24 +131,30 @@ export const uploadVideo = async (req, res) => {
 };
 
 
-// Controlador para subir miniatura
 export const uploadThumbnail = async (req, res) => {
     try {
-        const { video_id } = req.body; // Recibe el ID del video al que pertenece la miniatura
+        const video_id  = req.params.video_id; // Recibe el ID del video al que pertenece la miniatura
         const thumbnailPath = req.file ? req.file.path : null;
 
+        // Verificar que `video_id` y `thumbnailPath` estén presentes
         if (!video_id || !thumbnailPath) {
+            // Eliminar el archivo si los datos son incompletos
+            if (thumbnailPath) {
+                fs.unlinkSync(thumbnailPath);
+            }
             return res.status(400).json({ message: 'Datos incompletos' });
         }
 
-        // Actualiza la miniatura del video en la tabla "videos"
+        // Actualizar la miniatura del video en la tabla "videos"
         const [result] = await pool.query(
             `UPDATE videos SET miniatura_url = ? WHERE id = ?`,
             [thumbnailPath, video_id]
         );
 
-        // Verifica si se actualizó correctamente
+        // Verificar si el video se encontró y actualizó
         if (result.affectedRows === 0) {
+            // Eliminar el archivo si no se encontró el video
+            fs.unlinkSync(thumbnailPath);
             return res.status(404).json({ message: 'Video no encontrado' });
         }
 
@@ -133,4 +164,5 @@ export const uploadThumbnail = async (req, res) => {
         res.status(500).json({ message: 'Error al subir la miniatura' });
     }
 };
+
 

@@ -35,7 +35,7 @@ router.post(
 
 // Ruta para subir miniatura
 router.post(
-  "/units/:unidad_id/thumbnails",
+  "/units/:video_id/thumbnails",
   verifyToken,
   checkInstructorRole,
   uploadThumbnail.single("thumbnail"),
