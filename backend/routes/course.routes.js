@@ -4,11 +4,15 @@ import * as courseControllers from "../controllers/course.controllers.js";
 import { verifyToken } from "../middlewares/middlewareToken.js"; // Middleware para verificar el token
 import uploadThumbnail from "../middlewares/uploadThumbnailMiddlware.js";
 import uploadVideo from "../middlewares/uploadVideoMiddleware.js";
-import {checkInstructorRole} from '../middlewares/isInstructorMiddleware.js'
+import { checkInstructorRole } from "../middlewares/isInstructorMiddleware.js";
 const router = Router();
 
 // En course.routes.js antes de uploadVideo y uploadThumbnail
 // Agrega un middleware para verificar los archivos que está procesando Multer
+
+// -------------------------- POST Crear Cursos COMPLETOS --------------------------
+
+//Ruta para crear Curso dependiendo de user
 router.post(
   "/courses",
   verifyToken,
@@ -17,6 +21,7 @@ router.post(
   courseControllers.createCourse
 );
 
+//Ruta para crear Unidad dependiendo del curso
 router.post(
   "/courses/:courseId/units",
   verifyToken,
@@ -24,7 +29,7 @@ router.post(
   courseControllers.createUnit
 );
 
-// Ruta para subir video
+// Ruta para subir Video dependiendo de unidad
 router.post(
   "/units/:unidad_id/videos",
   verifyToken,
@@ -33,7 +38,7 @@ router.post(
   courseControllers.uploadVideo
 );
 
-// Ruta para subir miniatura
+// Ruta para subir Miniatura del video
 router.post(
   "/units/:video_id/thumbnails",
   verifyToken,
@@ -41,5 +46,18 @@ router.post(
   uploadThumbnail.single("thumbnail"),
   courseControllers.uploadThumbnail
 );
+
+// ---------------------------------------------------------------------------------
+
+// -------------------------- GET --------------------------
+
+router.get(
+  "/misCursos",
+  verifyToken,
+  checkInstructorRole,
+  courseControllers.getCourses
+);
+
+// --------------------------------------------------------
 
 export default router;

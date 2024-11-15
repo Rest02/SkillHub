@@ -1,0 +1,29 @@
+body {
+    
+    background-color: #e8f5e9;
+    margin: 0;  /* Elimina márgenes por defecto */
+    padding: 20px;  /* Elimina padding por defecto */
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+  
+
+/* Estilo global para los scrolls */
+::-webkit-scrollbar {
+  width: 10px; /* Ancho del scrollbar vertical */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color del thumb del scrollbar */
+  border-radius: 20px; /* Borde redondeado del thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color del thumb cuando se pasa el cursor por encima */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color del track del scrollbar */
+  border-radius: 20px; /* Borde redondeado del track */
+}
+

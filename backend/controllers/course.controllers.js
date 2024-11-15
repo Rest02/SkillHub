@@ -3,6 +3,10 @@ import {pool} from '../db.js'; // Asegúrate de tener la conexión a la base de 
 
 import fs from 'fs';
 
+
+//---------------- POST TODO LO DE CURSOS ------------------------
+
+// Controlador para crear curso
 export const createCourse = async (req, res) => {
     try {
         const { titulo, descripcion, categoria_id, precio, modalidad } = req.body;
@@ -11,7 +15,7 @@ export const createCourse = async (req, res) => {
         const instructor_id = req.user.id;  // Asumiendo que el id del instructor está en el payload del token
 
         // Guarda la ruta de la imagen de portada si fue cargada
-        const thumbnailPath = req.file ? req.file.path : null;
+        const thumbnailPath = req.file ? `thumbnail/${req.file.filename}` : null;
 
         // Verifica si se recibió el título, descripción, categoría, precio y modalidad
         if (!titulo || !descripcion || !categoria_id || !precio || !modalidad) {
@@ -36,10 +40,7 @@ export const createCourse = async (req, res) => {
         res.status(500).json({ message: 'Error al crear el curso' });
     }
 };
-
-
-
-
+// Controlador para crear unidades segun el curso seleccionado
 export const createUnit = async (req, res) => {
     try {
         const {titulo, descripcion, objetivos, tema } = req.body;
@@ -82,12 +83,7 @@ export const createUnit = async (req, res) => {
         res.status(500).json({ message: 'Error al crear la unidad' });
     }
 };
-
-
-
-
-
-// Controlador para subir video de los cursos por unidades
+// Controlador para subir video de los cursos segun unidad seleccionada
 export const uploadVideo = async (req, res) => {
     try {
         const { nombre, descripcion } = req.body;
@@ -129,8 +125,7 @@ export const uploadVideo = async (req, res) => {
         res.status(500).json({ message: 'Error al subir el video' });
     }
 };
-
-
+// Controlador para subir miniatura del video en cuestion
 export const uploadThumbnail = async (req, res) => {
     try {
         const video_id  = req.params.video_id; // Recibe el ID del video al que pertenece la miniatura
@@ -165,4 +160,25 @@ export const uploadThumbnail = async (req, res) => {
     }
 };
 
+//-----------------------------------------------------------------
 
+
+//---------------- GET TODO LO DE CURSOS ------------------------
+
+
+export const getCourses = async (req, res) => {
+    try {
+      // Realiza una consulta para obtener todos los cursos
+      const instructor_id = req.user.id;  // Asumiendo que el id del instructor está en el payload del token
+
+      const [courses] = await pool.query(
+        "SELECT titulo, descripcion, imagen_portada from courses WHERE instructor_id = ?", [instructor_id]
+      );
+  
+      // Devuelve los cursos obtenidos
+      res.status(200).json(courses);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error al obtener los cursos" });
+    }
+  };
