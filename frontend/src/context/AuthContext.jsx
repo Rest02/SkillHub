@@ -65,14 +65,27 @@ export const AuthContextProvider = ({ children }) => {
     try {
       const response = await loginUserApi(data);
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token); // Asegúrate de que el token se guarda aquí
-        console.log("Token guardado en localStorage:", response.data.token); // Verifica que el token se guarda correctamente
+        const newToken = response.data.token;
+        localStorage.setItem("token", newToken); // Guarda el token en localStorage
+        setToken(newToken); // Actualiza el estado del token
+  
+        // Decodifica el token para extraer el rol del usuario
+        try {
+          const decodedToken = jwt_decode(newToken);
+          if (decodedToken && decodedToken.rol) {
+            setUserRole(decodedToken.rol); // Actualiza el rol del usuario
+          } else {
+            console.error("No se encontró un rol en el token");
+          }
+        } catch (decodeError) {
+          console.error("Error al decodificar el token:", decodeError);
+        }
       }
-      console.log(response);
     } catch (error) {
-      console.log(error);
+      console.error("Error al iniciar sesión:", error);
     }
   };
+  
 
   const forgetPassword = async (values) => {
     try {
@@ -117,6 +130,7 @@ export const AuthContextProvider = ({ children }) => {
         changePassword,
         token,
         userRole,
+        setToken
       }}
     >
       {children}

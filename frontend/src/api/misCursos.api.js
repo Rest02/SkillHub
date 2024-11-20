@@ -27,3 +27,39 @@ export const getMisCursosApi = async () => {
     return []; // Retorna un array vacío para no interrumpir el flujo
   }
 };
+
+// Crear un curso
+export const createCourseApi = async (courseData, thumbnailFile) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se ha iniciado sesión.");
+      return;
+    }
+
+    // Crear FormData para enviar el archivo junto con los datos del curso
+    const formData = new FormData();
+    formData.append('titulo', courseData.titulo);
+    formData.append('descripcion', courseData.descripcion);
+    formData.append('categoria_id', courseData.categoria_id);
+    formData.append('precio', courseData.precio);
+    formData.append('modalidad', courseData.modalidad);
+
+    if (thumbnailFile) {
+      formData.append('thumbnail', thumbnailFile); // Agregar el archivo de la portada
+    }
+
+    // Realizar la solicitud POST para crear el curso
+    const response = await axios.post('http://localhost:4000/courses', formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`, // Incluir el token de autenticación
+        'Content-Type': 'multipart/form-data', // Indicar que estamos enviando FormData
+      },
+    });
+
+    return response.data; // Devuelve la respuesta del backend (confirmación de creación)
+  } catch (error) {
+    console.error("Error al crear el curso:", error.response || error.message);
+    return null; // Retorna null si hay un error
+  }
+};

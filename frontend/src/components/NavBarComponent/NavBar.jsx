@@ -2,8 +2,23 @@ import React from "react";
 import { AppBar, Toolbar, Box, TextField, Button, IconButton, InputAdornment } from "@mui/material";
 import { AccountCircle, Search } from "@mui/icons-material";
 import logo from "../../assets/img/logo.png"; // Importa el logo
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
+
+
 
 const NavBar = () => {
+  const navigate = useNavigate(); // Inicializa el hook useNavigate
+
+  // Funciones para redireccionar
+  const goToMisCursos = () => {
+    navigate("/miscursos"); // Redirige a /misCursos
+  };
+
+  const goToLogin = () => {
+    navigate("/login"); // Redirige a /misCursos
+  };
+
+
   return (
     <AppBar
       position="static"
@@ -26,6 +41,7 @@ const NavBar = () => {
       >
         {/* Logo */}
         <Box
+          
           component="img"
           src={logo}
           alt="Logo"
@@ -38,6 +54,7 @@ const NavBar = () => {
         {/* Barra de búsqueda */}
         <Box sx={{ flexGrow: 1, mx: 3 }}>
           <TextField
+          
             fullWidth
             placeholder="Busca tu futuro curso"
             variant="outlined"
@@ -89,8 +106,11 @@ const NavBar = () => {
               "&:hover": { color: "#f7f3e9" },
               padding: "0 8px",
             }}
+            onClick={goToMisCursos} // Redirige al hacer clic
+
           >
-            Mis Cursos
+            Cursos
+
           </Button>
           <Button
             variant="text"
@@ -106,17 +126,10 @@ const NavBar = () => {
         </Box>
 
         {/* Perfil y botones de acción */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <IconButton
-            sx={{
-              color: "#8C6D62",
-              "&:hover": { color: "#f7f3e9" },
-            }}
-          >
-            <AccountCircle fontSize="large" />
-          </IconButton>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, paddingLeft: " 20px"}}>
           <Button
             variant="outlined"
+            onClick = {goToLogin}
             sx={{
               color: "#8C6D62",
               borderColor: "#8C6D62",

@@ -17,8 +17,11 @@ import {
 import picture from "../../assets/img/foto.jpg"; // Imagen de la foto (a la izquierda)
 import logo from "../../assets/img/logo.png"; // Logo que irá arriba del formulario
 import { Visibility, VisibilityOff } from "@mui/icons-material"; // Iconos para mostrar/ocultar contraseña
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
 function LoginForm() {
+  const navigate = useNavigate(); // Inicializa el hook useNavigate
+
   const { loginUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
 
@@ -36,7 +39,7 @@ function LoginForm() {
       container
       alignItems="center"
       justifyContent="center"
-      style={{ height: "100vh" }}
+      style={{ height: "810px" }}
     >
       <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
         <Paper
@@ -44,11 +47,11 @@ function LoginForm() {
           sx={{
             p: 4,
             borderRadius: 2,
-            backgroundColor: "#f7f3e9",
+            backgroundColor: "#C0C0C0",
             display: "flex",
             alignItems: "center",
-            width: "100%", 
-            height: "auto", 
+            width: "100%",
+            height: "auto",
           }}
         >
           <Box
@@ -56,12 +59,12 @@ function LoginForm() {
             src={picture}
             alt="Descripción de la imagen"
             sx={{
-              width: "50%", 
+              width: "50%",
               height: "auto",
               objectFit: "cover",
               borderRadius: "8px",
-              border: "1px solid black",
-              marginRight: "20px", 
+              border: "1px solid #003366", // Azul marino para borde
+              marginRight: "20px",
             }}
           />
           
@@ -71,8 +74,8 @@ function LoginForm() {
               borderRadius: 3,
               boxShadow: 4,
               bgcolor: "#ffffff",
-              width: "50%", 
-              height: "auto", 
+              width: "50%",
+              height: "580px",
             }}
           >
             <Box
@@ -84,6 +87,8 @@ function LoginForm() {
                 height: "auto",
                 display: "block",
                 margin: "0 auto 20px",
+                paddingTop: "10px",
+                paddingBottom: "10px"
               }}
             />
 
@@ -91,7 +96,7 @@ function LoginForm() {
               variant="h4"
               sx={{
                 fontWeight: "bold",
-                color: "black",
+                color: "#003366", // Azul marino para el título
                 textAlign: "center",
                 mb: 2,
               }}
@@ -112,6 +117,7 @@ function LoginForm() {
               onSubmit={async (values) => {
                 console.log(values);
                 await loginUser(values);
+                navigate("/");
               }}
             >
               {({ handleChange, handleSubmit, errors, touched }) => (
@@ -149,7 +155,7 @@ function LoginForm() {
                           <InputAdornment position="end">
                             <Button
                               onClick={() => setShowPassword((prev) => !prev)}
-                              sx={{ color: "black" }}
+                              sx={{ color: "#003366" }} // Azul marino para el ícono
                             >
                               {showPassword ? <VisibilityOff /> : <Visibility />}
                             </Button>
@@ -166,8 +172,11 @@ function LoginForm() {
                         mt: 2,
                         borderRadius: "50px",
                         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                        backgroundColor: "black",
-                        color: "#ffffff",
+                        backgroundColor: "#000000", // Negro para el botón
+                        color: "#ffffff", // Blanco para el texto
+                        "&:hover": {
+                          backgroundColor: "#9B111E", // Rojo rubí en hover
+                        },
                       }}
                     >
                       Entrar
@@ -177,13 +186,13 @@ function LoginForm() {
               )}
             </Formik>
             <Typography align="center" sx={{ mt: 3 }}>
-              <Link to="/forgetPassword" style={{ color: "#8C6D62" }}>
+              <Link to="/forgetPassword" style={{ color: "#9B111E" }}>
                 ¿Olvidaste tu contraseña?
               </Link>
             </Typography>
             <Typography align="center" sx={{ mt: 2 }}>
               ¿No tienes una cuenta?{" "}
-              <Link to="/register" style={{ color: "#8C6D62" }}>
+              <Link to="/register" style={{ color: "#9B111E" }}>
                 Registrarse
               </Link>
             </Typography>
