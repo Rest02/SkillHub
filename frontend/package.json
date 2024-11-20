@@ -16,6 +16,8 @@
     "@mui/material": "^6.1.6",
     "axios": "^1.7.5",
     "formik": "^2.4.6",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^2.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.26.1",

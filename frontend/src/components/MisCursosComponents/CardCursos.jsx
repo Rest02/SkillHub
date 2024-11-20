@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 import {
   Card,
@@ -7,18 +7,42 @@ import {
   CardMedia,
   Button,
   Grid,
+  Pagination,
+  Box,
 } from "@mui/material";
 
 const MisCursosCard = () => {
   const { cursos } = useContext(MisCursosContext);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const cursosPorPagina = 3;
+
+  useEffect(() => {
+    setPaginaActual(1); // Reinicia a la primera página si cambian los cursos
+  }, [cursos]);
+
+  // Calcular los cursos que se mostrarán en la página actual
+  const totalPaginas = Math.ceil(cursos.length / cursosPorPagina);
+  const indiceInicio = (paginaActual - 1) * cursosPorPagina;
+  const indiceFin = indiceInicio + cursosPorPagina;
+  const cursosActuales = cursos.slice(
+    indiceInicio,
+    Math.min(indiceFin, cursos.length)
+  );
+
+  // Cambiar de página
+  const handlePaginaChange = (event, value) => {
+    if (value >= 1 && value <= totalPaginas) {
+      setPaginaActual(value);
+    }
+  };
 
   return (
     <div>
       <h1 style={{ textAlign: "left", color: "#836953" }}>Mis Cursos</h1>
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        {cursos.map((curso) => (
+        {cursosActuales.map((curso, index) => (
           <Card
-            key={curso.titulo}
+            key={curso.id || `${curso.titulo}-${index}`} // Asegura una clave única
             sx={{
               padding: "20px",
               justifyContent: "center",
@@ -48,7 +72,6 @@ const MisCursosCard = () => {
                 width: "250px",
                 height: "250px",
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-                
               }}
             />
 
@@ -57,11 +80,9 @@ const MisCursosCard = () => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                alignItems: "flex-start", // Alinea todo el contenido a la izquierda
+                alignItems: "flex-start",
                 width: "60%",
                 paddingTop: "25px",
-
-
               }}
             >
               <div style={{ width: "100%" }}>
@@ -74,7 +95,7 @@ const MisCursosCard = () => {
                     borderRadius: "6px",
                     padding: "10px 15px",
                     backgroundColor: "#f5deb3",
-                    textAlign: "left", // Alinea el texto del título a la izquierda
+                    textAlign: "left",
                   }}
                 >
                   {curso.titulo}
@@ -130,6 +151,28 @@ const MisCursosCard = () => {
           </Card>
         ))}
       </div>
+
+      {/* Paginación */}
+      <Box
+        sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+      >
+        <Pagination
+          count={totalPaginas}
+          page={paginaActual}
+          onChange={handlePaginaChange}
+          color="standard"
+          sx={{
+            "& .Mui-selected": {
+              backgroundColor: "#836953 !important",
+              color: "#ffffff !important",
+            },
+            "& .MuiPaginationItem-root:hover": {
+              backgroundColor: "#a57c65",
+              color: "#ffffff",
+            },
+          }}
+        />
+      </Box>
     </div>
   );
 };

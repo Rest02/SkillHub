@@ -12,6 +12,8 @@ import NavBar from "../src/components/NavBarComponent/NavBar.jsx";
 import HomePage from "../src/pages/HomePage/HomePage.jsx";
 import MisCursosPage from "../src/pages/MisCursosPage/MisCursosPage.jsx";
 import { MisCursosProvider } from "./context/MisCursosContext"; // Asegúrate de importar el provider
+import PrivateRoute from "../src/components/PrivateRoute.jsx"; // Importa el componente PrivateRoute
+
 
 function App() {
   return (
@@ -32,7 +34,16 @@ function App() {
             element={<AuthPageNewPassword />}
           />
           <Route path="/perfil" element={<PerfilPage />} />
-          <Route path="/miscursos" element={<MisCursosPage />} />
+          {/* Protege la ruta /misCursos */}
+          <Route
+            path="/miscursos"
+            element={
+              <PrivateRoute
+                element={<MisCursosPage />}
+                allowedRoles={["instructor"]} // Solo los usuarios con rol de 'instructor' pueden acceder
+              />
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </MisCursosProvider>
