@@ -63,3 +63,30 @@ export const createCourseApi = async (courseData, thumbnailFile) => {
     return null; // Retorna null si hay un error
   }
 };
+
+export const getCategoriasApi = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se inicia sesión");
+      return [];
+    }
+
+    const response = await axios.get('http://localhost:4000/categorias', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log("la respuesta de datos del servidor", response.data)
+    return response.data; // Asegúrate que esto sea un array de categorías
+  } catch (error) {
+    console.error("Error al obtener las categorías:", error);
+    return [];
+  }
+};
+
+
+
+
+

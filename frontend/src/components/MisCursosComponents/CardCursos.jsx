@@ -50,7 +50,7 @@ const MisCursosCard = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: "left", color: "#9B111E" }}>Mis Cursos</h1>
+      <h1 style={{ textAlign: "left", color: "#000000" }}>Mis Cursos</h1>
       {/* Barra de búsqueda y botón */}
       <Box
         sx={{
@@ -109,7 +109,7 @@ const MisCursosCard = () => {
           display: "flex",
           justifyContent: "flex-start", // Para alinearlo al lado izquierdo
           width: "100%",
-          border: "1px solid #C0C0C0", // Borde con color gris
+          // border: "1px solid #C0C0C0", // Borde con color gris
         }}
       >
         {/* Contenedor para las tarjetas */}
@@ -133,8 +133,8 @@ const MisCursosCard = () => {
                 display: "flex",
                 flexDirection: "row",
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-                border: "1px solid #C0C0C0", // Borde gris
-                backgroundColor: "#FFFFFF", // Fondo blanco
+                border: "1px solid #000000", // Borde gris
+                backgroundColor: "#C0C0C0", // Fondo blanco
               }}
             >
               <CardMedia
@@ -143,7 +143,7 @@ const MisCursosCard = () => {
                 image={`http://localhost:4000/${curso.imagen_portada}`}
                 alt="Imagen de portada del curso"
                 sx={{
-                  border: "2px solid #9B111E", // Borde rojo
+                  border: "1px solid #000000", // Borde rojo
                   borderRadius: "50%",
                   marginRight: "15px",
                   width: "250px",
@@ -167,11 +167,11 @@ const MisCursosCard = () => {
                     variant="h6"
                     sx={{
                       fontWeight: "bold",
-                      color: "#9B111E", // Título en rojo
-                      border: "1px solid #C0C0C0", // Borde gris
+                      color: "#000000", // Título en gris
+                      border: "1px solid #000000", // Borde gris
                       borderRadius: "6px",
                       padding: "10px 15px",
-                      backgroundColor: "#C0C0C0", // Fondo gris
+                      backgroundColor: "#ffffff", // Fondo gris
                       textAlign: "left",
                     }}
                   >
@@ -181,14 +181,14 @@ const MisCursosCard = () => {
                     variant="body2"
                     sx={{
                       marginTop: 2,
-                      border: "1px solid #C0C0C0",
+                      border: "1px solid #000000", // Borde gris
                       borderRadius: "6px",
                       maxHeight: "3em",
                       overflowY: "auto",
                       padding: "10px 15px",
                       textAlign: "justify",
                       color: "#000000", // Texto negro
-                      backgroundColor: "#F5F5F5", // Fondo gris claro
+                      backgroundColor: "#ffffff", // Fondo gris claro
                     }}
                   >
                     {curso.descripcion}
@@ -210,11 +210,14 @@ const MisCursosCard = () => {
                           variant="contained"
                           fullWidth
                           sx={{
-                            backgroundColor: "#9B111E", // Color principal
+                            backgroundColor: "#000000", // Color principal
                             color: "#ffffff",
                             borderRadius: "10px",
+                            border: "1px solid #000000", // Borde gris
                             "&:hover": {
                               backgroundColor: "#C0C0C0", // Hover
+                              color: "#9B111E",
+                              border: "1px solid #000000", // Borde gris
                             },
                           }}
                         >
@@ -252,7 +255,7 @@ const MisCursosCard = () => {
           display: "flex",
           justifyContent: "center",
           marginTop: "20px", // Espacio entre cards y paginación
-          border: "1px solid #C0C0C0",
+          // border: "1px solid #C0C0C0",
           width: "49%",
         }}
       >

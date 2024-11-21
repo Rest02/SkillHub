@@ -58,6 +58,9 @@ router.get(
   courseControllers.getCourses
 );
 
+router.get("/categorias", verifyToken, checkInstructorRole, courseControllers.getCategorias);
+router.post("/categorias", verifyToken, checkInstructorRole, courseControllers.createCategoria);
+
 // --------------------------------------------------------
 
 export default router;

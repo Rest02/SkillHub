@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
-import { MisCursosContext } from "../../context/MisCursosContext.jsx"; // Importa el contexto
-import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import React, { useState, useContext, useEffect } from "react";
+import { MisCursosContext } from "../../context/MisCursosContext.jsx"; 
+import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 
 function FormCurso() {
-  const { createCourse } = useContext(MisCursosContext); // Accede a la función createCourse desde el contexto
+  const { createCourse, categorias } = useContext(MisCursosContext);  // Accede a las categorías desde el contexto
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [categoriaId, setCategoriaId] = useState("");
@@ -25,8 +25,7 @@ function FormCurso() {
       modalidad,
     };
 
-    // Llamar a la función del contexto para crear el curso
-    createCourse(courseData, thumbnail);
+    createCourse(courseData, thumbnail);  // Llamar a la función del contexto para crear el curso
   };
 
   return (
@@ -35,10 +34,10 @@ function FormCurso() {
         component="form"
         onSubmit={handleSubmit}
         sx={{
-          display: 'flex',
-          flexDirection: 'row', // Alinea el formulario y la imagen horizontalmente
+          display: "flex",
+          flexDirection: "row",
           gap: 3,
-          backgroundColor: '#C0C0C0',
+          backgroundColor: "#C0C0C0",
           padding: 4,
           borderRadius: 2,
           boxShadow: 3,
@@ -46,7 +45,11 @@ function FormCurso() {
       >
         {/* Formulario */}
         <Box sx={{ flex: 1 }}>
-          <Typography variant="h5" align="center" sx={{ marginBottom: 3, color: '#000000' }}>
+          <Typography
+            variant="h5"
+            align="center"
+            sx={{ marginBottom: 3, color: "#000000" }}
+          >
             Crear un nuevo curso
           </Typography>
 
@@ -57,20 +60,7 @@ function FormCurso() {
             onChange={(e) => setTitulo(e.target.value)}
             fullWidth
             required
-            sx={{
-              marginBottom: '20px', // Agrega espacio entre los inputs
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: '#000000',  // Gris claro para el borde
-                },
-              },
-              '& .MuiInputLabel-root': {
-                color: '#000000', // Texto de etiqueta en negro
-              },
-              '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#9B111E',  // Rojo oscuro en hover
-              },
-            }}
+            sx={{ marginBottom: "20px" }}
           />
 
           <TextField
@@ -82,44 +72,26 @@ function FormCurso() {
             multiline
             rows={4}
             required
-            sx={{
-              marginBottom: '20px', // Agrega espacio entre los inputs
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: '#000000',  // Gris claro para el borde
-                },
-              },
-              '& .MuiInputLabel-root': {
-                color: '#000000', // Texto de etiqueta en negro
-              },
-              '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#9B111E',  // Rojo oscuro en hover
-              },
-            }}
+            sx={{ marginBottom: "20px" }}
           />
 
-          <TextField
-            label="ID de la categoría"
-            variant="outlined"
-            value={categoriaId}
-            onChange={(e) => setCategoriaId(e.target.value)}
-            fullWidth
-            required
-            sx={{
-              marginBottom: '20px', // Agrega espacio entre los inputs
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: '#000000',  // Gris claro para el borde
-                },
-              },
-              '& .MuiInputLabel-root': {
-                color: '#000000', // Texto de etiqueta en negro
-              },
-              '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#9B111E',  // Rojo oscuro en hover
-              },
-            }}
-          />
+          {/* Campo de selección de categoría */}
+          <FormControl fullWidth required sx={{ marginBottom: "20px" }}>
+            <InputLabel id="categoria-select-label">Categoría</InputLabel>
+            <Select
+              labelId="categoria-select-label"
+              id="categoria-select"
+              value={categoriaId}
+              label="Categoría"
+              onChange={(e) => setCategoriaId(e.target.value)}
+            >
+              {categorias.map((categoria) => (
+                <MenuItem key={categoria.id} value={categoria.id}>
+                  {categoria.nombre}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           <TextField
             label="Precio"
@@ -128,20 +100,7 @@ function FormCurso() {
             onChange={(e) => setPrecio(e.target.value)}
             fullWidth
             required
-            sx={{
-              marginBottom: '20px', // Agrega espacio entre los inputs
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: '#000000',  // Gris claro para el borde
-                },
-              },
-              '& .MuiInputLabel-root': {
-                color: '#000000', // Texto de etiqueta en negro
-              },
-              '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#9B111E',  // Rojo oscuro en hover
-              },
-            }}
+            sx={{ marginBottom: "20px" }}
           />
 
           <TextField
@@ -151,36 +110,22 @@ function FormCurso() {
             onChange={(e) => setModalidad(e.target.value)}
             fullWidth
             required
-            sx={{
-              marginBottom: '20px', // Agrega espacio entre los inputs
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: '#000000',  // Gris claro para el borde
-                },
-              },
-              '& .MuiInputLabel-root': {
-                color: '#000000', // Texto de etiqueta en negro
-              },
-              '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#9B111E',  // Rojo oscuro en hover
-              },
-            }}
+            sx={{ marginBottom: "20px" }}
           />
 
-          {/* Botones al lado */}
-          <Box sx={{ display: 'flex', gap: 2, marginTop: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, marginTop: 2 }}>
             <Button
               variant="outlined"
               component="label"
               sx={{
                 width: "50%",
                 padding: 1.5,
-                borderColor: '#C0C0C0',
-                color: '#FFFFFF',
+                borderColor: "#C0C0C0",
+                color: "#FFFFFF",
                 backgroundColor: "black",
-                '&:hover': {
-                  color: '#FFFFFF',
-                  backgroundColor: '#292929',
+                "&:hover": {
+                  color: "#FFFFFF",
+                  backgroundColor: "#292929",
                 },
               }}
             >
@@ -199,9 +144,9 @@ function FormCurso() {
               sx={{
                 width: "50%",
                 padding: 1.5,
-                backgroundColor: '#9B111E',
-                '&:hover': {
-                  backgroundColor: '#CA1628',
+                backgroundColor: "#9B111E",
+                "&:hover": {
+                  backgroundColor: "#CA1628",
                 },
               }}
             >
@@ -214,25 +159,25 @@ function FormCurso() {
         {thumbnail && (
           <Box
             sx={{
-              width: '250px',
-              height: 'auto',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              width: "500px",
+              height: "auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
               borderRadius: 2,
-              overflow: 'hidden',
+              overflow: "hidden",
               boxShadow: 3,
-              backgroundColor: 'white',
+              backgroundColor: "black",
             }}
           >
             <img
               src={URL.createObjectURL(thumbnail)}
               alt="Vista previa"
               style={{
-                width: '100%',
-                height: 'auto',
-                objectFit: 'cover',
-                borderRadius: '8px',
+                width: "500px",
+                height: "572px",
+                objectFit: "cover",
+                borderRadius: "8px",
               }}
             />
           </Box>
