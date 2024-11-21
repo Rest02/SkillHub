@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { getMisCursosApi, createCourseApi, getCategoriasApi } from "../api/misCursos.api";
+import {
+  getMisCursosApi,
+  createCourseApi,
+  getCategoriasApi,
+} from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
 export const MisCursosContext = React.createContext();
@@ -28,17 +32,20 @@ export const MisCursosProvider = ({ children }) => {
 
   // Obtener las categorías desde el backend
   useEffect(() => {
-    const fetchCategorias = async () => {
-      try {
-        const response = await getCategoriasApi();
-        setCategorias(response);  // Asumiendo que tu backend devuelve un array de categorías
-      } catch (error) {
-        console.error("Error al obtener categorías:", error);
-      }
-    };
-
-    fetchCategorias();
-  }, []);
+    if (userRole) {
+      console.log("Ejecutando useEffect para fetchCategorias");
+      const fetchCategorias = async () => {
+        try {
+          const response = await getCategoriasApi();
+          setCategorias(response);
+        } catch (error) {
+          console.error("Error al obtener categorías:", error);
+        }
+      };
+  
+      fetchCategorias();
+    }
+  }, [userRole]);
 
   // Función para crear un nuevo curso
   const createCourse = async (courseData, thumbnailFile) => {
@@ -47,7 +54,7 @@ export const MisCursosProvider = ({ children }) => {
       if (result) {
         // Después de agregar el curso, obtener los cursos actualizados
         const updatedCursos = await getMisCursosApi();
-        setCursos(updatedCursos);  // Actualiza la lista completa de cursos
+        setCursos(updatedCursos); // Actualiza la lista completa de cursos
       } else {
         console.error("Error al crear el curso");
       }
@@ -55,7 +62,6 @@ export const MisCursosProvider = ({ children }) => {
       console.error("Error al crear el curso:", error);
     }
   };
-  
 
   return (
     <MisCursosContext.Provider value={{ cursos, createCourse, categorias }}>
