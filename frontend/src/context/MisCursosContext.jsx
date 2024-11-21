@@ -9,16 +9,17 @@ export const MisCursosProvider = ({ children }) => {
   const [categorias, setCategorias] = useState([]);
   const { userRole } = useContext(AuthContext);
 
+  // Obtener los cursos del backend cuando cambia el rol del usuario
   useEffect(() => {
     const fetchCursos = async () => {
       try {
         if (userRole) {
           const data = await getMisCursosApi();
-          setCursos(Array.isArray(data) ? data : []);
+          setCursos(Array.isArray(data) ? data : []); // Asegura que los cursos son un array
         }
       } catch (error) {
         console.error("Error al obtener los cursos:", error);
-        setCursos([]);
+        setCursos([]); // Si hay error, vacía los cursos
       }
     };
 
@@ -39,14 +40,22 @@ export const MisCursosProvider = ({ children }) => {
     fetchCategorias();
   }, []);
 
+  // Función para crear un nuevo curso
   const createCourse = async (courseData, thumbnailFile) => {
-    const result = await createCourseApi(courseData, thumbnailFile);
-    if (result) {
-      setCursos((prevCursos) => [...prevCursos, result]);
-    } else {
-      console.error("Error al crear el curso");
+    try {
+      const result = await createCourseApi(courseData, thumbnailFile);
+      if (result) {
+        // Después de agregar el curso, obtener los cursos actualizados
+        const updatedCursos = await getMisCursosApi();
+        setCursos(updatedCursos);  // Actualiza la lista completa de cursos
+      } else {
+        console.error("Error al crear el curso");
+      }
+    } catch (error) {
+      console.error("Error al crear el curso:", error);
     }
   };
+  
 
   return (
     <MisCursosContext.Provider value={{ cursos, createCourse, categorias }}>

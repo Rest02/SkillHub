@@ -18,7 +18,7 @@ const MisCursosCard = () => {
   const [paginaActual, setPaginaActual] = useState(1);
   const cursosPorPagina = 3;
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     setPaginaActual(1); // Reinicia a la primera página si cambian los cursos
@@ -28,10 +28,12 @@ const MisCursosCard = () => {
   const totalPaginas = Math.ceil(cursos.length / cursosPorPagina);
   const indiceInicio = (paginaActual - 1) * cursosPorPagina;
   const indiceFin = indiceInicio + cursosPorPagina;
+
+  // Filtrar y mostrar los cursos
   const cursosActuales = cursos
     .filter((curso) =>
-      curso.titulo.toLowerCase().includes(searchQuery.toLowerCase())
-    ) // Filtrar por búsqueda
+      curso.titulo && curso.titulo.toLowerCase().includes(searchQuery.toLowerCase())
+    ) // Filtrar por búsqueda, solo si curso.titulo está definido
     .slice(indiceInicio, Math.min(indiceFin, cursos.length));
 
   // Cambiar de página
@@ -41,12 +43,9 @@ const MisCursosCard = () => {
     }
   };
 
-
   const goToCreateCourse = () => {
     navigate("/createCourse"); // Redirige a crearCurso
   };
-
-
 
   return (
     <div>
@@ -109,7 +108,6 @@ const MisCursosCard = () => {
           display: "flex",
           justifyContent: "flex-start", // Para alinearlo al lado izquierdo
           width: "100%",
-          // border: "1px solid #C0C0C0", // Borde con color gris
         }}
       >
         {/* Contenedor para las tarjetas */}
@@ -237,7 +235,6 @@ const MisCursosCard = () => {
           sx={{
             width: "50%", // Ocupa el 50% del ancho
             backgroundColor: "#9B111E", // Rojo
-            // height: "900px", // Asegura que ocupe todo el alto del contenedor
             padding: "20px", // Espaciado interno
           }}
         >
