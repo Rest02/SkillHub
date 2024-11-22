@@ -116,3 +116,22 @@ export const getUnitsAndVideosApi = async (courseId) => {
   }
 };
 
+
+export const crearUnidad = async (courseId, unidadData) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:4000/courses/${courseId}/units`,
+      unidadData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Asegúrate de tener el token del instructor
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al crear unidad:", error);
+    return { success: false, message: "Error al crear unidad" };
+  }
+};

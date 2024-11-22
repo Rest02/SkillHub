@@ -4,6 +4,7 @@ import {
   createCourseApi,
   getCategoriasApi,
   getUnitsAndVideosApi,
+  crearUnidad
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -67,9 +68,19 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
 
+    // Función para crear una unidad dentro de un curso
+    const createUnidad = async (courseId, unidadData) => {
+      try {
+        return await crearUnidad(courseId, unidadData);
+      } catch (error) {
+        console.error("Error al crear unidad:", error);
+        return { success: false, message: "Error al crear unidad" };
+      }
+    };
+
   return (
     <MisCursosContext.Provider
-      value={{ cursos, categorias, createCourse, getUnitsAndVideos }}
+      value={{ cursos, categorias, createCourse, getUnitsAndVideos, createUnidad  }}
     >
       {children}
     </MisCursosContext.Provider>
