@@ -195,7 +195,7 @@ export const getCourses = async (req, res) => {
     const instructor_id = req.user.id; // Asumiendo que el id del instructor está en el payload del token
 
     const [courses] = await pool.query(
-      "SELECT titulo, descripcion, imagen_portada from courses WHERE instructor_id = ?",
+      "SELECT id, titulo, descripcion, imagen_portada from courses WHERE instructor_id = ?",
       [instructor_id]
     );
 

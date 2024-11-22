@@ -43,8 +43,9 @@ const MisCursosCard = () => {
     }
   };
 
-  const goToCreateCourse = () => {
-    navigate("/createCourse"); // Redirige a crearCurso
+  // Redirige a la ruta del curso
+  const handleViewCourse = (cursoID) => {
+    navigate(`/cursos/${cursoID}/unitsandvideos`);
   };
 
   return (
@@ -55,8 +56,8 @@ const MisCursosCard = () => {
         sx={{
           display: "flex",
           justifyContent: "flex-start",
-          width: "49%", // Ajustamos al 50% del contenedor
-          marginBottom: "20px", // Espacio entre la barra de búsqueda y las tarjetas
+          width: "49%",
+          marginBottom: "20px",
         }}
       >
         <TextField
@@ -64,65 +65,46 @@ const MisCursosCard = () => {
           variant="outlined"
           fullWidth
           sx={{
-            marginRight: "10px", // Espacio entre la barra de búsqueda y el botón
-            width: "70%", // La barra de búsqueda ocupa el 70% del 50% total
-            borderRadius: "20px", // Bordes completamente redondeados para la barra de búsqueda
-            "& .MuiOutlinedInput-root": {
-              borderRadius: "20px", // Asegura que la entrada tenga bordes redondeados
-              "& fieldset": {
-                borderColor: "#000000", // Borde negro por defecto
-              },
-              "&:focus": {
-                borderColor: "#000000", // Borde negro al hacer foco
-                boxShadow: "none", // Elimina cualquier sombra al hacer foco
-              },
-            },
-            "& .MuiInputLabel-root": {
-              color: "#000000", // Color de la etiqueta
-            },
+            marginRight: "10px",
+            width: "70%",
+            borderRadius: "20px",
           }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <Button
-          onClick={goToCreateCourse} // Redirige al hacer clic
+          onClick={() => navigate("/createCourse")}
           variant="contained"
           sx={{
-            backgroundColor: "#000000", // Color principal
+            backgroundColor: "#000000",
             color: "#ffffff",
-            width: "30%", // El botón ocupa el 30% del 50% total
-            borderRadius: "20px", // Bordes redondeados en el botón
-            "&:hover": {
-              backgroundColor: "#C0C0C0", // Hover
-              color: "black"
-            },
+            width: "30%",
+            borderRadius: "20px",
           }}
         >
           Crear Nuevo Curso
         </Button>
       </Box>
 
-      {/* Contenedor principal con estilo flex */}
       <Box
         sx={{
           display: "flex",
-          justifyContent: "flex-start", // Para alinearlo al lado izquierdo
+          justifyContent: "flex-start",
           width: "100%",
         }}
       >
-        {/* Contenedor para las tarjetas */}
         <Box
           sx={{
-            width: "50%", // Ocupa el 50% del ancho
+            width: "50%",
             display: "grid",
-            gridTemplateColumns: "repeat(1, 1fr)", // Una sola tarjeta por fila
+            gridTemplateColumns: "repeat(1, 1fr)",
             gap: "20px",
-            marginBottom: "20px", // Espacio entre las cards y la paginación
+            marginBottom: "20px",
           }}
         >
           {cursosActuales.map((curso, index) => (
             <Card
-              key={curso.id || `${curso.titulo}-${index}`} // Asegura una clave única
+              key={curso.id || `${curso.titulo}-${index}`}
               sx={{
                 padding: "20px",
                 justifyContent: "center",
@@ -131,8 +113,8 @@ const MisCursosCard = () => {
                 display: "flex",
                 flexDirection: "row",
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-                border: "1px solid #000000", // Borde gris
-                backgroundColor: "#C0C0C0", // Fondo blanco
+                border: "1px solid #000000",
+                backgroundColor: "#C0C0C0",
               }}
             >
               <CardMedia
@@ -141,15 +123,13 @@ const MisCursosCard = () => {
                 image={`http://localhost:4000/${curso.imagen_portada}`}
                 alt="Imagen de portada del curso"
                 sx={{
-                  border: "1px solid #000000", // Borde rojo
+                  border: "1px solid #000000",
                   borderRadius: "50%",
                   marginRight: "15px",
                   width: "250px",
                   height: "250px",
-                  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
                 }}
               />
-
               <CardContent
                 sx={{
                   display: "flex",
@@ -165,11 +145,10 @@ const MisCursosCard = () => {
                     variant="h6"
                     sx={{
                       fontWeight: "bold",
-                      color: "#000000", // Título en gris
-                      border: "1px solid #000000", // Borde gris
+                      color: "#000000",
                       borderRadius: "6px",
                       padding: "10px 15px",
-                      backgroundColor: "#ffffff", // Fondo gris
+                      backgroundColor: "#ffffff",
                       textAlign: "left",
                     }}
                   >
@@ -179,80 +158,67 @@ const MisCursosCard = () => {
                     variant="body2"
                     sx={{
                       marginTop: 2,
-                      border: "1px solid #000000", // Borde gris
-                      borderRadius: "6px",
                       maxHeight: "3em",
                       overflowY: "auto",
                       padding: "10px 15px",
                       textAlign: "justify",
-                      color: "#000000", // Texto negro
-                      backgroundColor: "#ffffff", // Fondo gris claro
+                      color: "#000000",
+                      backgroundColor: "#ffffff",
                     }}
                   >
                     {curso.descripcion}
                   </Typography>
                 </div>
-
                 <div style={{ marginTop: "15px", width: "100%" }}>
-                  <Grid container spacing={2} justifyContent="center">
-                    {[
-                      "Crear Unidad",
-                      "Subir Videos",
-                      "Eliminar",
-                      "Comentarios",
-                      "Portadas",
-                      "Editar",
-                    ].map((text) => (
-                      <Grid item xs={4} key={text}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          sx={{
-                            backgroundColor: "#000000", // Color principal
-                            color: "#ffffff",
-                            borderRadius: "10px",
-                            border: "1px solid #000000", // Borde gris
-                            "&:hover": {
-                              backgroundColor: "#C0C0C0", // Hover
-                              color: "#9B111E",
-                              border: "1px solid #000000", // Borde gris
-                            },
-                          }}
-                        >
-                          {text}
-                        </Button>
-                      </Grid>
-                    ))}
+                  <Grid container spacing={2} justifyContent="flex-end">
+                    <Grid item xs={4}>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={() => handleViewCourse(curso.id)}
+                        sx={{
+                          backgroundColor: "#000000",
+                          color: "#ffffff",
+                          borderRadius: "10px",
+                          "&:hover": {
+                            backgroundColor: "#C0C0C0",
+                            color: "#9B111E",
+                          },
+                        }}
+                      >
+                        Ver Curso
+                      </Button>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        sx={{
+                          backgroundColor: "#000000",
+                          color: "#ffffff",
+                          borderRadius: "10px",
+                          "&:hover": {
+                            backgroundColor: "#C0C0C0",
+                            color: "#9B111E",
+                          },
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                    </Grid>
                   </Grid>
                 </div>
               </CardContent>
             </Card>
           ))}
         </Box>
-
-        {/* Contenedor rojo al lado derecho */}
-        <Box
-          sx={{
-            width: "50%", // Ocupa el 50% del ancho
-            backgroundColor: "#9B111E", // Rojo
-            padding: "20px", // Espaciado interno
-          }}
-        >
-          <h2 style={{ color: "#FFFFFF" }}>Sección Roja</h2>
-          <p style={{ color: "#FFFFFF" }}>
-            Este es un espacio rojo para seccionar el contenido del lado
-            izquierdo.
-          </p>
-        </Box>
       </Box>
 
-      {/* Paginación dentro del contenedor de las cards */}
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
-          marginTop: "20px", // Espacio entre cards y paginación
-          // border: "1px solid #C0C0C0",
+          marginTop: "20px",
           width: "49%",
         }}
       >
