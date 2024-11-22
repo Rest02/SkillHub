@@ -4,8 +4,6 @@ import { AccountCircle, Search } from "@mui/icons-material";
 import logo from "../../assets/img/logo.png"; // Importa el logo
 import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
-
-
 const NavBar = () => {
   const navigate = useNavigate(); // Inicializa el hook useNavigate
 
@@ -18,12 +16,11 @@ const NavBar = () => {
     navigate("/login"); // Redirige a /misCursos
   };
 
-
   return (
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "#f7f3e9", // Color claro
+        backgroundColor: "#C0C0C0", // Mismo color de fondo que el navbar del instructor
         borderRadius: "15px",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
         height: "60px", // Altura de la barra
@@ -36,12 +33,10 @@ const NavBar = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          minHeight: "unset",
         }}
       >
         {/* Logo */}
         <Box
-          
           component="img"
           src={logo}
           alt="Logo"
@@ -54,32 +49,23 @@ const NavBar = () => {
         {/* Barra de búsqueda */}
         <Box sx={{ flexGrow: 1, mx: 3 }}>
           <TextField
-          
             fullWidth
             placeholder="Busca tu futuro curso"
             variant="outlined"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search sx={{ color: "#8C6D62" }} />
+                  <Search sx={{ color: "#FFFFFF" }} />
                 </InputAdornment>
               ),
             }}
             sx={{
               bgcolor: "#ffffff",
-              borderRadius: "20px", // Bordes redondeados
+              borderRadius: "20px",
               height: "40px",
               "& .MuiOutlinedInput-root": {
-                height: "40px", // Ajusta la altura del input
-                "& fieldset": {
-                  border: "none", // Sin bordes visibles
-                },
-                "&:hover fieldset": {
-                  border: "none",
-                },
-                "&.Mui-focused fieldset": {
-                  border: "none",
-                },
+                height: "40px",
+                "& fieldset": { border: "none" },
               },
             }}
           />
@@ -90,35 +76,30 @@ const NavBar = () => {
           <Button
             variant="text"
             sx={{
-              color: "#8C6D62",
+              color: "#000000",
               fontWeight: "bold",
-              "&:hover": { color: "#f7f3e9" },
-              padding: "0 8px",
+              "&:hover": { color: "#9B111E" }, // Rojo rubí al pasar el ratón
             }}
           >
             Nosotros
           </Button>
           <Button
             variant="text"
+            onClick={goToMisCursos}
             sx={{
-              color: "#8C6D62",
+              color: "#000000",
               fontWeight: "bold",
-              "&:hover": { color: "#f7f3e9" },
-              padding: "0 8px",
+              "&:hover": { color: "#9B111E" },
             }}
-            onClick={goToMisCursos} // Redirige al hacer clic
-
           >
             Cursos
-
           </Button>
           <Button
             variant="text"
             sx={{
-              color: "#8C6D62",
+              color: "#000000",
               fontWeight: "bold",
-              "&:hover": { color: "#f7f3e9" },
-              padding: "0 8px",
+              "&:hover": { color: "#9B111E" },
             }}
           >
             Aprendizaje
@@ -126,19 +107,19 @@ const NavBar = () => {
         </Box>
 
         {/* Perfil y botones de acción */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, paddingLeft: " 20px"}}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, paddingLeft: " 20px" }}>
           <Button
             variant="outlined"
-            onClick = {goToLogin}
+            onClick={goToLogin}
             sx={{
-              color: "#8C6D62",
-              borderColor: "#8C6D62",
+              color: "#000000",
+              borderColor: "#000000",
               fontWeight: "bold",
               borderRadius: "20px",
               "&:hover": {
-                backgroundColor: "#8C6D62",
-                color: "#f7f3e9",
-                borderColor: "#8C6D62",
+                backgroundColor: "#9B111E",
+                color: "#FFFFFF",
+                borderColor: "#9B111E",
               },
             }}
           >
@@ -147,13 +128,13 @@ const NavBar = () => {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#8C6D62",
+              backgroundColor: "#9B111E", // Rojo rubí
               color: "#ffffff",
               fontWeight: "bold",
               borderRadius: "20px",
               "&:hover": {
-                backgroundColor: "#f7f3e9",
-                color: "#8C6D62",
+                backgroundColor: "#C0C0C0", // Gris claro al pasar el ratón
+                color: "#000000",
               },
             }}
           >

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 import DescripcionCurso from "../../components/MisCursosComponents/DescripcionCurso.jsx";
+import MenuEditsCourse from '../../components/MisCursosComponents/MenuEditsCourse.jsx'
 
 const CourseDetailsPage = () => {
   const { courseId } = useParams();
@@ -22,8 +23,13 @@ const CourseDetailsPage = () => {
   }
 
   return (
-    <div>
-      <DescripcionCurso course={courseData.course} units={courseData.units} />
+    <div style={{ display: "flex", justifyContent: "space-between", gap: "20px"}}>
+      <div style={{ flex: "1", maxWidth: "50%"  , paddingTop : "27px", border: "1px solid black"}}>
+        <MenuEditsCourse />
+      </div>
+      <div style={{ flex: "2", maxWidth: "50%", border: "1px solid black"}}>
+        <DescripcionCurso course={courseData.course} units={courseData.units} />
+      </div>
     </div>
   );
 };
