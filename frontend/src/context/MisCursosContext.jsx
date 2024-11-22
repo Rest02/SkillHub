@@ -4,7 +4,9 @@ import {
   createCourseApi,
   getCategoriasApi,
   getUnitsAndVideosApi,
-  crearUnidad
+  crearUnidad,
+  crearClase,
+  getUnitsOfCourseApi,
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -13,6 +15,7 @@ export const MisCursosContext = React.createContext();
 export const MisCursosProvider = ({ children }) => {
   const [cursos, setCursos] = useState([]);
   const [categorias, setCategorias] = useState([]);
+  const [unidades, setUnidades] = useState([]); // Define el estado de las unidades
   const { userRole } = useContext(AuthContext);
 
   // Obtener los cursos
@@ -45,6 +48,29 @@ export const MisCursosProvider = ({ children }) => {
     fetchCategorias();
   }, [userRole]);
 
+
+  // Obtener las categorías
+  useEffect(() => {
+    const fetchUnidades = async () => {
+      if (userRole && cursos.length > 0) { // Verificar si cursos están disponibles
+        try {
+          // Asegúrate de obtener un curso específico, por ejemplo, el primero de la lista
+          const courseId = cursos[0]?.id; // O selecciona el curso adecuado
+          if (courseId) {
+            const data = await getUnitsOfCourseApi(courseId); // Pasar courseId
+            setUnidades(data);
+          }
+        } catch (error) {
+          console.error("Error al obtener unidades:", error);
+        }
+      }
+    };
+    fetchUnidades();
+  }, [userRole, cursos]); // Dependencia de cursos
+  
+
+
+
   // Obtener unidades y videos
   const getUnitsAndVideos = async (courseId) => {
     try {
@@ -68,19 +94,43 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
 
-    // Función para crear una unidad dentro de un curso
-    const createUnidad = async (courseId, unidadData) => {
-      try {
-        return await crearUnidad(courseId, unidadData);
-      } catch (error) {
-        console.error("Error al crear unidad:", error);
-        return { success: false, message: "Error al crear unidad" };
+  // Función para crear una unidad dentro de un curso
+  const createUnidad = async (courseId, unidadData) => {
+    try {
+      return await crearUnidad(courseId, unidadData);
+    } catch (error) {
+      console.error("Error al crear unidad:", error);
+      return { success: false, message: "Error al crear unidad" };
+    }
+  };
+
+  // Crear una clase dentro de una unidad
+  const createClase = async (courseId, unidadId, claseData) => {
+    try {
+      const result = await crearClase(courseId, unidadId, claseData);
+      if (result.success) {
+        console.log("Clase creada exitosamente:", result);
+        // Aquí puedes hacer algo como actualizar las unidades y clases
       }
-    };
+      return result;
+    } catch (error) {
+      console.error("Error al crear clase:", error);
+      return { success: false, message: "Error al crear clase" };
+    }
+  };
+
 
   return (
     <MisCursosContext.Provider
-      value={{ cursos, categorias, createCourse, getUnitsAndVideos, createUnidad  }}
+      value={{
+        cursos,
+        categorias,
+        createCourse,
+        getUnitsAndVideos,
+        createUnidad,
+        createClase,
+        unidades
+      }}
     >
       {children}
     </MisCursosContext.Provider>

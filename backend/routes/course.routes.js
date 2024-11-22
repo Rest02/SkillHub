@@ -67,6 +67,8 @@ router.get(
 
 router.get("/courses/:courseId/unitsandvideos", verifyToken, checkInstructorRole, courseControllers.getCourseUnitsAndVideos)
 
+router.get("/units/:curso_id/videos", verifyToken, checkInstructorRole, courseControllers.getUnitsOfCourse)
+
 
 // --------------------------------------------------------
 

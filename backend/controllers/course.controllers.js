@@ -283,24 +283,28 @@ export const getCourseUnitsAndVideos = async (req, res) => {
 };
 
 
+// GET para obtener las unidades de uncurso
+export const getUnitsOfCourse = async (req, res) => {
+  try {
+    const instructor_id = req.user.id;
+    const {curso_id} = req.params; // Recibe el curso_id de la URL
 
-// export const createCategoria = async (req, res) => {
-//   const { nombre } = req.body;
 
-//   if (!nombre) {
-//     return res
-//       .status(400)
-//       .json({ message: "El nombre de la categoría es obligatorio" });
-//   }
+    const [unidades] = await pool.query(
+      `SELECT u.id AS unidad_id, u.titulo AS unidad_titulo
+       FROM units u
+       INNER JOIN courses c ON u.curso_id = c.id
+       WHERE c.instructor_id = ? AND c.id = ?`,
+      [instructor_id, curso_id]
+    );
 
-//   try {
-//     const [result] = await pool.query(
-//       "INSERT INTO categories (nombre) VALUES (?)",
-//       [nombre]
-//     );
-//     res.status(201).json({ id: result.insertId, nombre });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Error al crear la categoría" });
-//   }
-// };
+    if (unidades.length === 0) {
+      return res.status(404).json({ message: "No se encontraron unidades para este curso." });
+    }
+
+    res.status(200).json(unidades);
+  } catch (error) {
+    console.error("Error al obtener unidades:", error);
+    res.status(500).json({ message: "Error al obtener las unidades del curso." });
+  }
+};

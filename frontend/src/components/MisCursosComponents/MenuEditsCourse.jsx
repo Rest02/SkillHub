@@ -26,6 +26,12 @@ function MenuEditsCourse() {
     handleCloseMenu();  // Cerrar el menú después de hacer clic
   };
 
+  const handleCrearClase = () => {
+    // Aquí se asume que tienes un courseId disponible
+    navigate(`/units/${courseId}/videos`);  // Redirige a la ruta de creación de unidad
+    handleCloseMenu();  // Cerrar el menú después de hacer clic
+  };
+
   return (
     <Box
       sx={{
@@ -124,7 +130,7 @@ function MenuEditsCourse() {
         {menuType === "crear" && (
           <div> {/* Cambié el fragmento por un div */}
             <MenuItem onClick={handleCrearUnidad}>Crear Unidad</MenuItem>  {/* Redirigir a crear unidad */}
-            <MenuItem onClick={handleCloseMenu}>Crear Clase</MenuItem>
+            <MenuItem onClick={handleCrearClase}>Crear Clase</MenuItem>
           </div>
         )}
         {menuType === "editar" && (

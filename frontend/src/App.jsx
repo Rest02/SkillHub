@@ -18,6 +18,7 @@ import NavBar from "./components/NavBarComponent/NavBar.jsx";
 import FormCurso from '../src/components/MisCursosComponents/FormCurso.jsx'
 import VerEditarCursoPage from '../src/pages/MisCursosPage/VerEditarCursoPage.jsx'
 import CreateUnidadForm from '../src/components/MisCursosComponents/CreateUnidadForm.jsx'
+import CreateClaseVideo from '../src/components/MisCursosComponents/CreateClaseVideo.jsx'
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -57,6 +58,8 @@ const AppContent = () => {
         />
         <Route path = "/cursos/:courseId/unitsandvideos" element={<VerEditarCursoPage/>}/>
         <Route path = "/courses/:courseId/units" element={<CreateUnidadForm/>}/>
+        <Route path = "/units/:unidad_id/videos" element={<CreateClaseVideo/>}/>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
