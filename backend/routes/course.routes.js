@@ -58,8 +58,15 @@ router.get(
   courseControllers.getCourses
 );
 
-router.get("/categorias", verifyToken, checkInstructorRole, courseControllers.getCategorias);
-router.post("/categorias", verifyToken, checkInstructorRole, courseControllers.createCategoria);
+router.get(
+  "/categorias",
+  verifyToken,
+  checkInstructorRole,
+  courseControllers.getCategorias
+);
+
+router.get("/courses/:courseId/unitsandvideos", verifyToken, checkInstructorRole, courseControllers.getCourseUnitsAndVideos)
+
 
 // --------------------------------------------------------
 

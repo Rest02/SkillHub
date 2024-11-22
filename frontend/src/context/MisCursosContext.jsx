@@ -3,6 +3,7 @@ import {
   getMisCursosApi,
   createCourseApi,
   getCategoriasApi,
+  getUnitsAndVideosApi,
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -13,50 +14,53 @@ export const MisCursosProvider = ({ children }) => {
   const [categorias, setCategorias] = useState([]);
   const { userRole } = useContext(AuthContext);
 
-  // Obtener los cursos del backend cuando cambia el rol del usuario
+  // Obtener los cursos
   useEffect(() => {
     const fetchCursos = async () => {
-      try {
-        if (userRole) {
+      if (userRole) {
+        try {
           const data = await getMisCursosApi();
-          setCursos(Array.isArray(data) ? data : []); // Asegura que los cursos son un array
+          setCursos(Array.isArray(data) ? data : []);
+        } catch (error) {
+          console.error("Error al obtener los cursos:", error);
         }
-      } catch (error) {
-        console.error("Error al obtener los cursos:", error);
-        setCursos([]); // Si hay error, vacía los cursos
       }
     };
-
     fetchCursos();
   }, [userRole]);
 
-  // Obtener las categorías desde el backend
+  // Obtener las categorías
   useEffect(() => {
-    if (userRole) {
-      console.log("Ejecutando useEffect para fetchCategorias");
-      const fetchCategorias = async () => {
+    const fetchCategorias = async () => {
+      if (userRole) {
         try {
-          const response = await getCategoriasApi();
-          setCategorias(response);
+          const data = await getCategoriasApi();
+          setCategorias(data);
         } catch (error) {
           console.error("Error al obtener categorías:", error);
         }
-      };
-  
-      fetchCategorias();
-    }
+      }
+    };
+    fetchCategorias();
   }, [userRole]);
 
-  // Función para crear un nuevo curso
+  // Obtener unidades y videos
+  const getUnitsAndVideos = async (courseId) => {
+    try {
+      return await getUnitsAndVideosApi(courseId);
+    } catch (error) {
+      console.error("Error al obtener unidades y videos:", error);
+      return null;
+    }
+  };
+
+  // Crear un curso
   const createCourse = async (courseData, thumbnailFile) => {
     try {
       const result = await createCourseApi(courseData, thumbnailFile);
       if (result) {
-        // Después de agregar el curso, obtener los cursos actualizados
         const updatedCursos = await getMisCursosApi();
-        setCursos(updatedCursos); // Actualiza la lista completa de cursos
-      } else {
-        console.error("Error al crear el curso");
+        setCursos(updatedCursos);
       }
     } catch (error) {
       console.error("Error al crear el curso:", error);
@@ -64,7 +68,9 @@ export const MisCursosProvider = ({ children }) => {
   };
 
   return (
-    <MisCursosContext.Provider value={{ cursos, createCourse, categorias }}>
+    <MisCursosContext.Provider
+      value={{ cursos, categorias, createCourse, getUnitsAndVideos }}
+    >
       {children}
     </MisCursosContext.Provider>
   );

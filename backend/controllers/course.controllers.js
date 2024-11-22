@@ -217,23 +217,90 @@ export const getCategorias = async (req, res) => {
   }
 };
 
-export const createCategoria = async (req, res) => {
-  const { nombre } = req.body;
 
-  if (!nombre) {
-    return res
-      .status(400)
-      .json({ message: "El nombre de la categoría es obligatorio" });
-  }
+// Controlador para obtener las unidades y videos de un curso
+export const getCourseUnitsAndVideos = async (req, res) => {
+  const { courseId } = req.params;
+  console.log(`Recibida solicitud para el curso con ID: ${courseId}`);
 
   try {
-    const [result] = await pool.query(
-      "INSERT INTO categories (nombre) VALUES (?)",
-      [nombre]
+    // Verifica si el curso existe
+    const [course] = await pool.query('SELECT titulo FROM courses WHERE id = ?', [courseId]);
+    if (course.length === 0) {
+      console.log('El curso no existe');
+      return res.status(404).json({ error: 'El curso no existe' });
+    }
+
+    // Obtén las unidades del curso
+    const unitsQuery = `
+      SELECT u.id AS unidad_id, u.titulo AS unidad_titulo
+      FROM units u
+      WHERE u.curso_id = ?;
+    `;
+    const [units] = await pool.query(unitsQuery, [courseId]);
+
+    // Si no hay unidades, devuelve solo los datos del curso
+    if (units.length === 0) {
+      console.log('No hay unidades para este curso');
+      return res.json({ course: course[0], units: [] });
+    }
+
+    // Agrega más información a las unidades y sus videos
+    const unitsWithDetails = await Promise.all(
+      units.map(async (unit) => {
+        // Query para obtener detalles adicionales de la unidad
+        const unitDetailsQuery = `
+          SELECT u.id AS unidad_id, u.titulo AS unidad_titulo
+          FROM units u
+          WHERE u.id = ?;
+        `;
+        const [unitDetails] = await pool.query(unitDetailsQuery, [unit.unidad_id]);
+
+        // Query para obtener los videos de la unidad
+        const videosQuery = `
+          SELECT v.id AS video_id, v.nombre AS video_nombre
+          FROM videos v
+          WHERE v.unidad_id = ?;
+        `;
+        const [videos] = await pool.query(videosQuery, [unit.unidad_id]);
+
+        return {
+          ...unitDetails[0],
+          videos,
+        };
+      })
     );
-    res.status(201).json({ id: result.insertId, nombre });
+
+    console.log('Datos del curso y unidades:', { course: course[0], units: unitsWithDetails });
+    res.json({
+      course: course[0],
+      units: unitsWithDetails,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error al crear la categoría" });
+    console.error('Error al obtener las unidades y videos del curso:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
+
+
+// export const createCategoria = async (req, res) => {
+//   const { nombre } = req.body;
+
+//   if (!nombre) {
+//     return res
+//       .status(400)
+//       .json({ message: "El nombre de la categoría es obligatorio" });
+//   }
+
+//   try {
+//     const [result] = await pool.query(
+//       "INSERT INTO categories (nombre) VALUES (?)",
+//       [nombre]
+//     );
+//     res.status(201).json({ id: result.insertId, nombre });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Error al crear la categoría" });
+//   }
+// };

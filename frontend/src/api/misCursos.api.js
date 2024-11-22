@@ -1,5 +1,5 @@
 // misCursos.api.js
-import axios from 'axios';
+import axios from "axios";
 
 export const getMisCursosApi = async () => {
   try {
@@ -9,7 +9,7 @@ export const getMisCursosApi = async () => {
       return [];
     }
 
-    const response = await axios.get('http://localhost:4000/misCursos', {
+    const response = await axios.get("http://localhost:4000/misCursos", {
       headers: {
         Authorization: `Bearer ${token}`, // Asegúrate de incluir el token en los headers
       },
@@ -39,23 +39,27 @@ export const createCourseApi = async (courseData, thumbnailFile) => {
 
     // Crear FormData para enviar el archivo junto con los datos del curso
     const formData = new FormData();
-    formData.append('titulo', courseData.titulo);
-    formData.append('descripcion', courseData.descripcion);
-    formData.append('categoria_id', courseData.categoria_id);
-    formData.append('precio', courseData.precio);
-    formData.append('modalidad', courseData.modalidad);
+    formData.append("titulo", courseData.titulo);
+    formData.append("descripcion", courseData.descripcion);
+    formData.append("categoria_id", courseData.categoria_id);
+    formData.append("precio", courseData.precio);
+    formData.append("modalidad", courseData.modalidad);
 
     if (thumbnailFile) {
-      formData.append('thumbnail', thumbnailFile); // Agregar el archivo de la portada
+      formData.append("thumbnail", thumbnailFile); // Agregar el archivo de la portada
     }
 
     // Realizar la solicitud POST para crear el curso
-    const response = await axios.post('http://localhost:4000/courses', formData, {
-      headers: {
-        'Authorization': `Bearer ${token}`, // Incluir el token de autenticación
-        'Content-Type': 'multipart/form-data', // Indicar que estamos enviando FormData
-      },
-    });
+    const response = await axios.post(
+      "http://localhost:4000/courses",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Incluir el token de autenticación
+          "Content-Type": "multipart/form-data", // Indicar que estamos enviando FormData
+        },
+      }
+    );
 
     return response.data; // Devuelve la respuesta del backend (confirmación de creación)
   } catch (error) {
@@ -72,13 +76,13 @@ export const getCategoriasApi = async () => {
       return [];
     }
 
-    const response = await axios.get('http://localhost:4000/categorias', {
+    const response = await axios.get("http://localhost:4000/categorias", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    console.log("la respuesta de datos del servidor", response.data)
+    console.log("la respuesta de datos del servidor", response.data);
     return response.data; // Asegúrate que esto sea un array de categorías
   } catch (error) {
     console.error("Error al obtener las categorías:", error);
@@ -86,7 +90,28 @@ export const getCategoriasApi = async () => {
   }
 };
 
+export const getUnitsAndVideosApi = async (courseId) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se ha iniciado sesión.");
+      return null;
+    }
 
+    const response = await axios.get(
+      `http://localhost:4000/courses/${courseId}/unitsandvideos`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-
+    console.log("respuesta del coso", response.data)
+    return response.data; // Devuelve los datos de la API
+  } catch (error) {
+    console.error("Error al obtener las unidades y videos del curso:", error);
+    return null;
+  }
+};
 

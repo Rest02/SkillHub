@@ -16,6 +16,7 @@ import NavBarInstructor from "../src/components/NavBarComponent/NavBarInstructor
 import NavBarEstudiante from "../src/components/NavBarComponent/NavBarEstudiante.jsx";
 import NavBar from "./components/NavBarComponent/NavBar.jsx";
 import FormCurso from '../src/components/MisCursosComponents/FormCurso.jsx'
+import VerEditarCursoPage from '../src/pages/MisCursosPage/VerEditarCursoPage.jsx'
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -53,6 +54,7 @@ const AppContent = () => {
             />
           }
         />
+        <Route path = "/cursos/:courseId/unitsandvideos" element={<VerEditarCursoPage/>}/>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
