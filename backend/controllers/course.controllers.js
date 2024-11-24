@@ -99,52 +99,59 @@ export const createUnit = async (req, res) => {
 // Controlador para subir video de los cursos segun unidad seleccionada
 export const uploadVideo = async (req, res) => {
   try {
-    const { nombre, descripcion } = req.body;
-    const unidad_id = req.params.unidad_id;
+    const { nombre, descripcion, unidad_id } = req.body; // Ahora unidad_id viene en el body
+    const curso_id = req.params.curso_id; // curso_id ahora viene de los parámetros
     const videoPath = req.file ? req.file.path : null;
     const instructor_id = req.user.id; // Obtenemos el ID del instructor desde el token
 
-    if (!unidad_id || !nombre || !videoPath || !descripcion) {
-      // Si falta algún dato, eliminar el archivo de video subido
+    // Validar que todos los datos necesarios están presentes
+    if (!curso_id || !unidad_id || !nombre || !descripcion || !videoPath) {
       if (videoPath) {
+        // Eliminar el archivo subido si falta algún dato
         fs.unlinkSync(videoPath);
       }
       return res.status(400).json({ message: "Datos incompletos" });
     }
 
-    // Verificar si la unidad existe y pertenece a un curso del instructor autenticado
+    // Verificar si la unidad pertenece al curso proporcionado y si el curso es del instructor
     const [unit] = await pool.query(
       `SELECT units.id 
-            FROM units 
-            INNER JOIN courses ON units.curso_id = courses.id 
-            WHERE units.id = ? AND courses.instructor_id = ?`,
-      [unidad_id, instructor_id]
+       FROM units 
+       INNER JOIN courses ON units.curso_id = courses.id 
+       WHERE units.id = ? AND courses.id = ? AND courses.instructor_id = ?`,
+      [unidad_id, curso_id, instructor_id]
     );
 
     if (unit.length === 0) {
-      return res
-        .status(403)
-        .json({
-          message:
-            "No tienes permiso para agregar videos a esta unidad o la unidad no existe",
-        });
+      // Si no se encuentra la unidad o no pertenece al curso del instructor
+      return res.status(403).json({
+        message: "No tienes permiso para agregar videos a esta unidad o la unidad no existe",
+      });
     }
 
-    // Si la unidad pertenece al curso del instructor autenticado, procedemos a insertar el video
+    // Insertar el video en la base de datos
     const [result] = await pool.query(
       `INSERT INTO videos (unidad_id, nombre, descripcion, video_url) 
-            VALUES (?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?)`,
       [unidad_id, nombre, descripcion, videoPath]
     );
 
-    res
-      .status(201)
-      .json({ message: "Video subido exitosamente", videoId: result.insertId });
+    res.status(201).json({
+      message: "Video subido exitosamente",
+      videoId: result.insertId,
+    });
   } catch (error) {
     console.error(error);
+
+    // Manejar errores, eliminando el archivo subido si ocurre algún problema
+    if (req.file && req.file.path) {
+      fs.unlinkSync(req.file.path);
+    }
+
     res.status(500).json({ message: "Error al subir el video" });
   }
 };
+
 // Controlador para subir miniatura del video en cuestion
 export const uploadThumbnail = async (req, res) => {
   try {

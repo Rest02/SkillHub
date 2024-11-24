@@ -31,7 +31,7 @@ router.post(
 
 // Ruta para subir Video dependiendo de unidad
 router.post(
-  "/units/:unidad_id/videos",
+  "/units/:curso_id/videos",
   verifyToken,
   checkInstructorRole,
   uploadVideo.single("video"),
