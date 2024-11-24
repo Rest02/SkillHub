@@ -161,3 +161,39 @@ export const getUnitsOfCourseApi = async (courseId) => {
     return []; // Retorna un array vacío si hay un error
   }
 };
+
+
+export const uploadVideoApi = async (cursoId, unidadId, videoData, videoFile) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se ha iniciado sesión.");
+      return null;
+    }
+
+    // Crear FormData para enviar el archivo de video junto con los datos
+    const formData = new FormData();
+    formData.append("unidad_id", unidadId);
+    formData.append("nombre", videoData.nombre);
+    formData.append("descripcion", videoData.descripcion);
+    formData.append("video", videoFile); // El archivo de video
+
+    // Realizar la solicitud POST para subir el video
+    const response = await axios.post(
+      `http://localhost:4000/units/${cursoId}/videos`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    console.log("Video subido exitosamente:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error al subir el video:", error.response || error.message);
+    return null;
+  }
+};

@@ -58,7 +58,7 @@ const AppContent = () => {
         />
         <Route path = "/cursos/:courseId/unitsandvideos" element={<VerEditarCursoPage/>}/>
         <Route path = "/courses/:courseId/units" element={<CreateUnidadForm/>}/>
-        <Route path = "/units/:unidad_id/videos" element={<CreateClaseVideo/>}/>
+        <Route path = "/units/:courseId/videos" element={<CreateClaseVideo/>}/>
 
         <Route path="*" element={<NotFound />} />
       </Routes>

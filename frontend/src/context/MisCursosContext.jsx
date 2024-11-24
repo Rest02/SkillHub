@@ -6,6 +6,7 @@ import {
   getUnitsAndVideosApi,
   crearUnidad,
   getUnitsOfCourseApi,
+  uploadVideoApi
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -103,7 +104,14 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
 
-
+  const uploadVideo = async (cursoId, unidadId, videoData, videoFile) => {
+    try {
+      return await uploadVideoApi(cursoId, unidadId, videoData, videoFile);
+    } catch (error) {
+      console.error("Error al subir el video:", error);
+      return { success: false, message: "Error al subir el video" };
+    }
+  };
 
 
   return (
@@ -114,7 +122,8 @@ export const MisCursosProvider = ({ children }) => {
         createCourse,
         getUnitsAndVideos,
         createUnidad,
-        unidades
+        unidades,
+        uploadVideo,
       }}
     >
       {children}
