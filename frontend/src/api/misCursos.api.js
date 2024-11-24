@@ -136,32 +136,6 @@ export const crearUnidad = async (courseId, unidadData) => {
   }
 };
 
-export const crearClase = async (courseId, unidadId, claseData) => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.log("Aún no se ha iniciado sesión.");
-      return { success: false, message: "No autorizado" };
-    }
-
-    const response = await axios.post(
-      `http://localhost:4000/units/${unidadId}/videos`, // Ruta para crear una clase
-      claseData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    return response.data; // Devuelve la respuesta del backend (confirmación de creación)
-  } catch (error) {
-    console.error("Error al crear clase:", error.response || error.message);
-    return { success: false, message: "Error al crear clase" };
-  }
-};
-
 
 export const getUnitsOfCourseApi = async (courseId) => {
   try {

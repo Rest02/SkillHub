@@ -5,7 +5,6 @@ import {
   getCategoriasApi,
   getUnitsAndVideosApi,
   crearUnidad,
-  crearClase,
   getUnitsOfCourseApi,
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
@@ -104,20 +103,7 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
 
-  // Crear una clase dentro de una unidad
-  const createClase = async (courseId, unidadId, claseData) => {
-    try {
-      const result = await crearClase(courseId, unidadId, claseData);
-      if (result.success) {
-        console.log("Clase creada exitosamente:", result);
-        // Aquí puedes hacer algo como actualizar las unidades y clases
-      }
-      return result;
-    } catch (error) {
-      console.error("Error al crear clase:", error);
-      return { success: false, message: "Error al crear clase" };
-    }
-  };
+
 
 
   return (
@@ -128,7 +114,6 @@ export const MisCursosProvider = ({ children }) => {
         createCourse,
         getUnitsAndVideos,
         createUnidad,
-        createClase,
         unidades
       }}
     >
