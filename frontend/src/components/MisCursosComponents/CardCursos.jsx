@@ -45,9 +45,11 @@ const MisCursosCard = () => {
 
   // Redirige a la ruta del curso
   const handleViewCourse = (cursoID) => {
+    console.log("ID del curso al hacer clic:", cursoID);  // Verifica que el ID es el esperado
     setCursoSeleccionado(cursos.find(curso => curso.id === cursoID)); // Cambiar el curso seleccionado
     navigate(`/cursos/${cursoID}/unitsandvideos`); // Navegar a la página del curso
   };
+  
   
 
   return (

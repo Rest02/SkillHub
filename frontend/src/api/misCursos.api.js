@@ -15,7 +15,7 @@ export const getMisCursosApi = async () => {
       },
     });
 
-    console.log("datos de los cursos del usuario", response.data)
+    // console.log("datos de los cursos del usuario", response.data)
     return response.data;
   } catch (error) {
     // Capturar error 401 y no interrumpir el flujo
@@ -83,7 +83,6 @@ export const getCategoriasApi = async () => {
       },
     });
 
-    console.log("la respuesta de datos del servidor", response.data);
     return response.data; // Asegúrate que esto sea un array de categorías
   } catch (error) {
     console.error("Error al obtener las categorías:", error);
@@ -108,7 +107,6 @@ export const getUnitsAndVideosApi = async (courseId) => {
       }
     );
 
-    console.log("respuesta del coso", response.data)
     return response.data; // Devuelve los datos de la API
   } catch (error) {
     console.error("Error al obtener las unidades y videos del curso:", error);
@@ -155,7 +153,7 @@ export const getUnitsOfCourseApi = async (courseId) => {
       }
     );
     
-    console.log("estas son las diferentes unidades de tal curso : ",response.data)
+    // console.log("estas son las diferentes unidades de tal curso : ",response.data)
     return response.data; // Retorna las unidades del curso
   } catch (error) {
     console.error("Error al obtener unidades:", error);
@@ -180,6 +178,9 @@ export const uploadVideoApi = async (cursoId, unidadId, videoData, videoFile) =>
     formData.append("video", videoFile); // El archivo de video
 
     // Realizar la solicitud POST para subir el video
+
+    console.log("Curso ID antes de la solicitud:", cursoId);
+
     const response = await axios.post(
       `http://localhost:4000/units/${cursoId}/videos`,
       formData,

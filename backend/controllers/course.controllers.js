@@ -113,6 +113,7 @@ export const uploadVideo = async (req, res) => {
       return res.status(400).json({ message: "Datos incompletos" });
     }
 
+
     // Verificar si la unidad pertenece al curso proporcionado y si el curso es del instructor
     const [unit] = await pool.query(
       `SELECT units.id 
@@ -228,7 +229,6 @@ export const getCategorias = async (req, res) => {
 // Controlador para obtener las unidades y videos de un curso
 export const getCourseUnitsAndVideos = async (req, res) => {
   const { courseId } = req.params;
-  console.log(`Recibida solicitud para el curso con ID: ${courseId}`);
 
   try {
     // Verifica si el curso existe
@@ -278,7 +278,6 @@ export const getCourseUnitsAndVideos = async (req, res) => {
       })
     );
 
-    console.log('Datos del curso y unidades:', { course: course[0], units: unitsWithDetails });
     res.json({
       course: course[0],
       units: unitsWithDetails,

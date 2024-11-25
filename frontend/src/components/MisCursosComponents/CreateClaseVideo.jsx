@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 
 function CreateClaseVideo() {
+  const { courseId } = useParams();
   const { cursos, unidades, uploadVideo, createUnidad } = useContext(MisCursosContext);
   const [selectedUnidad, setSelectedUnidad] = useState("");
   const [videoData, setVideoData] = useState({ nombre: "", descripcion: "" });
@@ -25,10 +26,9 @@ function CreateClaseVideo() {
   const [errorAlert, setErrorAlert] = useState(false);
   const navigate = useNavigate();
 
-  // Asegúrate de que las unidades se actualicen si cambian
   useEffect(() => {
     if (cursos.length > 0) {
-      setSelectedUnidad(""); // Restablece la selección de unidad si el curso cambia
+      setSelectedUnidad("");
     }
   }, [cursos]);
 
@@ -60,24 +60,18 @@ function CreateClaseVideo() {
       return;
     }
 
-    const cursoId = cursos[0]?.id;
-    if (!cursoId) {
-      alert("No se pudo identificar el curso.");
-      return;
-    }
+    console.log("Curso ID desde params:", courseId);
 
     try {
-      const result = await uploadVideo(cursoId, selectedUnidad, videoData, videoFile);
+      const result = await uploadVideo(courseId, selectedUnidad, videoData, videoFile);
       if (result) {
         setVideoFile(null);
         setVideoPreview("");
         setVideoData({ nombre: "", descripcion: "" });
         setSelectedUnidad("");
 
-        // Redirigir al usuario después de subir el video
         setTimeout(() => {
-          navigate(`/cursos/${cursoId}/unitsandvideos`);
-          // Mostrar alerta después de redirigir
+          navigate(`/cursos/${courseId}/unitsandvideos`);
           setSuccessAlert(true);
         }, 1500);
       } else {
@@ -87,6 +81,7 @@ function CreateClaseVideo() {
       setErrorAlert(true);
     }
   };
+
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
