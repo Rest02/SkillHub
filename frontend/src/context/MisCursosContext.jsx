@@ -97,7 +97,13 @@ export const MisCursosProvider = ({ children }) => {
   // Función para crear una unidad dentro de un curso
   const createUnidad = async (courseId, unidadData) => {
     try {
-      return await crearUnidad(courseId, unidadData);
+      const result = await crearUnidad(courseId, unidadData);
+      // Después de crear la unidad, volvemos a cargar las unidades para el curso
+      if (result.success) {
+        const updatedUnidades = await getUnitsOfCourseApi(courseId);
+        setUnidades(updatedUnidades); // Actualizamos el estado de unidades
+      }
+      return result;
     } catch (error) {
       console.error("Error al crear unidad:", error);
       return { success: false, message: "Error al crear unidad" };

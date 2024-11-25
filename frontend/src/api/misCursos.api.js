@@ -129,7 +129,8 @@ export const crearUnidad = async (courseId, unidadData) => {
         },
       }
     );
-    return response.data;
+    
+    return { success: true }; // Asegúrate de devolver esta estructura
   } catch (error) {
     console.error("Error al crear unidad:", error);
     return { success: false, message: "Error al crear unidad" };

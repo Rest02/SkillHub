@@ -15,10 +15,11 @@ import PrivateRoute from "../src/components/PrivateRoute.jsx";
 import NavBarInstructor from "../src/components/NavBarComponent/NavBarInstructor.jsx";
 import NavBarEstudiante from "../src/components/NavBarComponent/NavBarEstudiante.jsx";
 import NavBar from "./components/NavBarComponent/NavBar.jsx";
-import FormCurso from '../src/components/MisCursosComponents/FormCurso.jsx'
-import VerEditarCursoPage from '../src/pages/MisCursosPage/VerEditarCursoPage.jsx'
-import CreateUnidadForm from '../src/components/MisCursosComponents/CreateUnidadForm.jsx'
-import CreateClaseVideo from '../src/components/MisCursosComponents/CreateClaseVideo.jsx'
+import FormCurso from "../src/components/MisCursosComponents/FormCurso.jsx";
+import VerEditarCursoPage from "../src/pages/MisCursosPage/VerEditarCursoPage.jsx";
+import CreateUnidadForm from "../src/components/MisCursosComponents/CreateUnidadForm.jsx";
+import CreateClaseVideo from "../src/components/MisCursosComponents/CreateClaseVideo.jsx";
+import { SnackbarProvider } from "notistack";
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -28,8 +29,8 @@ const AppContent = () => {
       return <NavBarInstructor />;
     } else if (userRole === "estudiante") {
       return <NavBarEstudiante />;
-    } else if (userRole == null){
-      return <NavBar/>
+    } else if (userRole == null) {
+      return <NavBar />;
     }
     return null;
   };
@@ -42,8 +43,14 @@ const AppContent = () => {
         <Route path="/register" element={<AuthPageRegister />} />
         <Route path="/login" element={<AuthPageLogin />} />
         <Route path="/forgetPassword" element={<AuthPageForgetPassword />} />
-        <Route path="/verifyRecoveryCode/:token" element={<AuthPageVerifyCode />} />
-        <Route path="/changePassword/:token" element={<AuthPageNewPassword />} />
+        <Route
+          path="/verifyRecoveryCode/:token"
+          element={<AuthPageVerifyCode />}
+        />
+        <Route
+          path="/changePassword/:token"
+          element={<AuthPageNewPassword />}
+        />
         <Route path="/perfil" element={<PerfilPage />} />
         <Route path="/createCourse" element={<FormCurso />} />
 
@@ -56,9 +63,12 @@ const AppContent = () => {
             />
           }
         />
-        <Route path = "/cursos/:courseId/unitsandvideos" element={<VerEditarCursoPage/>}/>
-        <Route path = "/courses/:courseId/units" element={<CreateUnidadForm/>}/>
-        <Route path = "/units/:courseId/videos" element={<CreateClaseVideo/>}/>
+        <Route
+          path="/cursos/:courseId/unitsandvideos"
+          element={<VerEditarCursoPage />}
+        />
+        <Route path="/courses/:courseId/units" element={<CreateUnidadForm />} />
+        <Route path="/units/:courseId/videos" element={<CreateClaseVideo />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -68,11 +78,13 @@ const AppContent = () => {
 
 function App() {
   return (
-    <AuthContextProvider>
-      <MisCursosProvider>
-        <AppContent /> {/* Mueve el contenido principal aquí */}
-      </MisCursosProvider>
-    </AuthContextProvider>
+    <SnackbarProvider maxSnack={3}>
+      <AuthContextProvider>
+        <MisCursosProvider>
+          <AppContent /> {/* Mueve el contenido principal aquí */}
+        </MisCursosProvider>
+      </AuthContextProvider>
+    </SnackbarProvider>
   );
 }
 

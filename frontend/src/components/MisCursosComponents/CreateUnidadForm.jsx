@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useSnackbar } from "notistack"; // Importa useSnackbar
 import { MisCursosContext } from "../../context/MisCursosContext.jsx"; // Asegúrate de que MisCursosContext esté configurado correctamente
 
 function CreateUnidadForm() {
   const { courseId } = useParams(); // Obtiene el ID del curso desde los parámetros de la URL
   const navigate = useNavigate(); // Usamos useNavigate para redirigir al usuario
   const { createUnidad } = useContext(MisCursosContext); // Accede a la función createUnidad desde el contexto
+  const { enqueueSnackbar } = useSnackbar(); // Hook de notistack para mostrar notificaciones
 
   const [formData, setFormData] = useState({
     titulo: "",
@@ -17,7 +18,6 @@ function CreateUnidadForm() {
 
   const [error, setError] = useState(null);
 
-  // Manejador de cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -26,24 +26,23 @@ function CreateUnidadForm() {
     });
   };
 
-  // Manejador del envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Llamamos a la función createUnidad con los datos del formulario
       const response = await createUnidad(courseId, formData);
 
-      // Si la creación fue exitosa, redirigimos al usuario a la página de unidades del curso
       if (response.success) {
-        navigate(`/curso/${courseId}/unidades`);
+        // Muestra una notificación de éxito
+        enqueueSnackbar("¡Unidad creada exitosamente!", { variant: "success" });
+
+        // Redirige al usuario
+        navigate(`/cursos/${courseId}/unitsandvideos`);
       } else {
-        // Si hubo un error, mostramos el mensaje de error
         setError(response.message);
       }
     } catch (err) {
-      // Si ocurre un error inesperado, mostramos un mensaje genérico
-      setError("Error al crear la unidad");
+      setError("Error al crear la unidad.");
     }
   };
 
