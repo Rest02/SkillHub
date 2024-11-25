@@ -16,6 +16,7 @@ export const getMisCursosApi = async () => {
     });
 
     // console.log("datos de los cursos del usuario", response.data)
+    console.log("los cursos del usuario", response.data)
     return response.data;
   } catch (error) {
     // Capturar error 401 y no interrumpir el flujo

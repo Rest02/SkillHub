@@ -1,0 +1,245 @@
+[33mcommit b2f59d387ae9833d3cb4d4a5caf158899a6c50a0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Mon Nov 25 00:18:50 2024 -0300
+
+    0.3.9 Arreglando nuevos erros
+
+[33mcommit 846d003610041d4e0bde552e13aac035a81e9ea0[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Sun Nov 24 22:46:02 2024 -0300
+
+    0.3.8 Arreglando despliegue de unidades segun curso al crear clase
+
+[33mcommit cfe32f619a853ed664f1c150ef71bf8fede3cbb9[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Sun Nov 24 22:08:25 2024 -0300
+
+    0.3.7 Solucionando problemas
+
+[33mcommit 22b25bad6cd22e75426f7389fb48d64e70a61d06[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Sun Nov 24 20:28:59 2024 -0300
+
+    0.3.6 Creando seccion para subir video
+
+[33mcommit 367b8498a9b7aa6a31574f4c71709ebf256ae22f[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Sun Nov 24 20:21:15 2024 -0300
+
+    0.3.5 Actualizando controller de suvir video
+
+[33mcommit c14ab7e4e78e7db2f5fdfa72ee0f62b01f4a6776[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Sun Nov 24 20:09:02 2024 -0300
+
+    0.3.4 Commid de seguridad
+
+[33mcommit 9985e4638335623de130c02ad34c5dc411a2b994[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Nov 22 18:41:09 2024 -0300
+
+    0.3.3 Creando menu desplegable de unidades
+
+[33mcommit 7b4c58613b8370d6f49d270458ab2d9328abc27e[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Nov 22 16:01:21 2024 -0300
+
+    0.3.2 Creando apartado para crear unidad del curso
+
+[33mcommit c3cfaa8523d764f91c9952d9d3cac4c21b8b3208[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Nov 22 14:02:40 2024 -0300
+
+    0.3.1 Commit de seguridad
+
+[33mcommit 0e31f3fd992de3a28e230a31217da77cacea50fa[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Nov 22 04:11:56 2024 -0300
+
+    0.3.0 Correcion de ruta
+
+[33mcommit b9e16168e13829d2a494848e4dc881ff4a9dd54d[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Nov 22 03:49:02 2024 -0300
+
+    0.2.9 Creando apartado de cursosInformation
+
+[33mcommit ef336c7288d923323adc0904064c6b705e75bc70[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Thu Nov 21 12:07:20 2024 -0300
+
+    0.2.8 Corrigiendo errores del form Crear Curso
+
+[33mcommit 5e8b4b67415dd7c0001c27eed30d36f26f400457[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Wed Nov 20 23:05:00 2024 -0300
+
+    0.2.7 Corrigiendo errores
+
+[33mcommit da0b99d4f895d0b8a3f9ac06bee04425cd3925ce[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Wed Nov 20 22:25:46 2024 -0300
+
+    0.2.6 Crear Curso
+
+[33mcommit d90f75e2d2e9c8f409349e3da2b931c77bc13a51[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Wed Nov 20 18:51:40 2024 -0300
+
+    0.2.5 Creando estilos y apartado para crear cursos
+
+[33mcommit 7a037165ec984e19c4a8f0328298291e6c0c0cdb[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Wed Nov 20 00:06:29 2024 -0300
+
+    Creando rutas protegidas de cursos
+
+[33mcommit aec01eb78f5eecbd2b68016f9b7103f40a636cc9[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Nov 15 19:48:09 2024 -0300
+
+    0.2.3 Creando estilos , navbar, seccion mis cursos frontend
+
+[33mcommit e1c8c66ed301a2dfc068b69da5c0bec463711e23[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Thu Nov 14 13:00:05 2024 -0300
+
+    0.2.2 Backend de crear cursos terminado
+
+[33mcommit 15ae0cf91d1a67a0c355d268629dfa952958b2e4[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Wed Nov 13 18:20:31 2024 -0300
+
+    0.2.1 Terminando de ajustar todo en el backend , + validaciones y todo 1/2
+
+[33mcommit 44a157090d7051e7a7948277562ecb81c0c843bf[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Tue Nov 12 14:18:40 2024 -0300
+
+    0.2.0 Crear unidades de los cursos backend 2/3
+
+[33mcommit bc5db78f44c8b3f5fcad7eb555379077b2daac53[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Tue Nov 12 14:00:08 2024 -0300
+
+    0.1.9 Crear Cursos backedn 1/3
+
+[33mcommit f964265a36c41b916b4845c4c3fc2e39b7d8685f[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Mon Nov 11 21:14:12 2024 -0300
+
+    0.1.8 Apartado de creacion de cursos backend + mukter
+
+[33mcommit 308699793b5339f126606d8e8de0558d5de308b7[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Thu Nov 7 20:58:41 2024 -0300
+
+    0.1.7 Estilos en el login 1parte
+
+[33mcommit 8c8e631ccf8682a90718728802f9709a0f3a5535[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Thu Oct 24 11:27:41 2024 -0300
+
+    0.1.6 Guardo de cambios en caso de accidente
+
+[33mcommit 34afb66f2233d6baaf1dd2003472e0a2782c8044[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Oct 11 12:53:22 2024 -0300
+
+    0.1.5 Creando apartados del backend (4/4) usuarios , authenticacion y mas
+
+[33mcommit 47a788982400ebb1fb1a0b80d9a4f15cfd8bbf23[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Thu Oct 10 21:12:09 2024 -0300
+
+    0.1.4 Creando apartados del backend (2/4) Falta changePassword
+
+[33mcommit 042a9fd3f0260a1e0a32c682e3512eafdd7bb10b[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Oct 4 13:44:32 2024 -0300
+
+    0.1.3 Creando parte del backend completa
+
+[33mcommit 66aeda364b31642705871ae873295e574d427e38[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Sep 13 15:40:36 2024 -0300
+
+    0.1.3 Creando apartado para validación de codigo 1/3
+
+[33mcommit 636ac5ac9d0149c37e6db2e2cf1c56914ed3a1c0[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Sep 6 16:44:01 2024 -0400
+
+    0.1.3 Creando componente de login FRONETND 1/3
+
+[33mcommit 713f14ca3e1d94101c39f29a40de860c24137e22[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Sep 6 15:58:05 2024 -0400
+
+    0.1.2 Controllers cambiar contraseña BACKEND
+
+[33mcommit ad42dd5aecc9a0638d902d58480ca878f41463de[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Mon Sep 2 21:04:11 2024 -0400
+
+    0.1.1 Reajustando sección olvide contraseña BACKEND
+
+[33mcommit 91c18d66ade7c3342443089874855f8be093cc1d[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Sat Aug 31 23:53:52 2024 -0400
+
+    0.1.0 Creando seccion olvide contraseña BACKEND
+
+[33mcommit 72b4b2c6aab4ce909e2affa13b1029ed70cd83e9[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Aug 30 16:28:08 2024 -0400
+
+    0.0.9 Almacenando token en la memoria local FRONTEND
+
+[33mcommit d1ce415667b1643764106db997734c13bcf93044[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Aug 30 16:03:09 2024 -0400
+
+    0.0.8 Creando el login con validaciones en  FRONTEND
+
+[33mcommit 27ebbf9e11c03f71e1fb8e93d79b47d8a4152c7b[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Aug 30 15:06:33 2024 -0400
+
+    0.0.7 Organizando Carpetas FRONTEND
+
+[33mcommit a42e0cd38460736d2d8b709f2f2fdbc727137c6f[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Aug 30 14:31:14 2024 -0400
+
+    0.0.6 Creando validaciónes con yum en el FRONTEND
+
+[33mcommit d7ee57caa5c22d9b635394fcf638dad550eb84fb[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Aug 30 02:38:28 2024 -0400
+
+    0.0.5 Creando apartado de register FRONTEND
+
+[33mcommit 0d1aa6e820d14f379bec4162833928bbee92b322[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Aug 30 01:42:47 2024 -0400
+
+    0.0.4 Creando el context FRONTEND
+
+[33mcommit 8d7b2e18dadea72f192715e0403cab25e7c6179d[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Fri Aug 30 01:07:36 2024 -0400
+
+    0.0.3 Creando frontend con React + modulos a ocupar y rutas FRONTEND
+
+[33mcommit a548802f25f07c41cf8a0ecfb5f9981b789f5a1a[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Thu Aug 29 13:32:48 2024 -0400
+
+    0.0.2 Creando el login con autenticacion + token BACKEND
+
+[33mcommit 9f4b5997ecb0a90775ac8e2179f07fc188fe3240[m
+Author: Rest <code.rest.dev@gmail.com>
+Date:   Thu Aug 29 12:52:52 2024 -0400
+
+    0.0.1 Creando register de usuarios BACKEND

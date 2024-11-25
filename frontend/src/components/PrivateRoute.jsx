@@ -5,8 +5,8 @@ import { useAuth } from "../context/AuthContext";
 const PrivateRoute = ({ element, allowedRoles }) => {
   const { userRole, token } = useAuth();
 
-  console.log("Token:", token);
-  console.log("User Role:", userRole);
+  // console.log("Token:", token);
+  // console.log("User Role:", userRole);
 
   // Si no hay token o el rol del usuario no está permitido, redirige al login
   if (token === null || userRole === null) {

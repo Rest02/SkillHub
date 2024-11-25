@@ -20,6 +20,7 @@ import VerEditarCursoPage from "../src/pages/MisCursosPage/VerEditarCursoPage.js
 import CreateUnidadForm from "../src/components/MisCursosComponents/CreateUnidadForm.jsx";
 import CreateClaseVideo from "../src/components/MisCursosComponents/CreateClaseVideo.jsx";
 import { SnackbarProvider } from "notistack";
+import UpdateUnits from '../src/components/MisCursosComponents/UpdateUnits.jsx'
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -69,6 +70,10 @@ const AppContent = () => {
         />
         <Route path="/courses/:courseId/units" element={<CreateUnidadForm />} />
         <Route path="/units/:courseId/videos" element={<CreateClaseVideo />} />
+
+
+
+        <Route path="/units/:courseId/update" element={<UpdateUnits/>} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
