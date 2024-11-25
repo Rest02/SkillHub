@@ -14,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
 const MisCursosCard = () => {
-  const { cursos } = useContext(MisCursosContext);
+  const { cursos, setCursoSeleccionado } = useContext(MisCursosContext);
   const [paginaActual, setPaginaActual] = useState(1);
   const cursosPorPagina = 3;
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,8 +45,10 @@ const MisCursosCard = () => {
 
   // Redirige a la ruta del curso
   const handleViewCourse = (cursoID) => {
-    navigate(`/cursos/${cursoID}/unitsandvideos`);
+    setCursoSeleccionado(cursos.find(curso => curso.id === cursoID)); // Cambiar el curso seleccionado
+    navigate(`/cursos/${cursoID}/unitsandvideos`); // Navegar a la página del curso
   };
+  
 
   return (
     <div>

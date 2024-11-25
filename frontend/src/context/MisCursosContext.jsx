@@ -6,7 +6,7 @@ import {
   getUnitsAndVideosApi,
   crearUnidad,
   getUnitsOfCourseApi,
-  uploadVideoApi
+  uploadVideoApi,
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -16,6 +16,9 @@ export const MisCursosProvider = ({ children }) => {
   const [cursos, setCursos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [unidades, setUnidades] = useState([]); // Define el estado de las unidades
+
+  const [cursoSeleccionado, setCursoSeleccionado] = useState(null); // Estado para el curso seleccionado
+
   const { userRole } = useContext(AuthContext);
 
   // Obtener los cursos
@@ -48,28 +51,20 @@ export const MisCursosProvider = ({ children }) => {
     fetchCategorias();
   }, [userRole]);
 
-
   // Obtener las categorías
   useEffect(() => {
     const fetchUnidades = async () => {
-      if (userRole && cursos.length > 0) { // Verificar si cursos están disponibles
+      if (userRole && cursoSeleccionado) {
         try {
-          // Asegúrate de obtener un curso específico, por ejemplo, el primero de la lista
-          const courseId = cursos[0]?.id; // O selecciona el curso adecuado
-          if (courseId) {
-            const data = await getUnitsOfCourseApi(courseId); // Pasar courseId
-            setUnidades(data);
-          }
+          const data = await getUnitsOfCourseApi(cursoSeleccionado.id); // Obtener unidades del curso seleccionado
+          setUnidades(data);
         } catch (error) {
           console.error("Error al obtener unidades:", error);
         }
       }
     };
     fetchUnidades();
-  }, [userRole, cursos]); // Dependencia de cursos
-  
-
-
+  }, [userRole, cursoSeleccionado]); // Dependencia en cursoSeleccionado
 
   // Obtener unidades y videos
   const getUnitsAndVideos = async (courseId) => {
@@ -119,7 +114,6 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
 
-
   return (
     <MisCursosContext.Provider
       value={{
@@ -130,6 +124,7 @@ export const MisCursosProvider = ({ children }) => {
         createUnidad,
         unidades,
         uploadVideo,
+        setCursoSeleccionado
       }}
     >
       {children}

@@ -14,10 +14,9 @@ import {
   Alert,
   AlertTitle,
 } from "@mui/material";
-import { useSnackbar } from "notistack"; // Importa useSnackbar
 
 function CreateClaseVideo() {
-  const { cursos, unidades, uploadVideo } = useContext(MisCursosContext);
+  const { cursos, unidades, uploadVideo, createUnidad } = useContext(MisCursosContext);
   const [selectedUnidad, setSelectedUnidad] = useState("");
   const [videoData, setVideoData] = useState({ nombre: "", descripcion: "" });
   const [videoFile, setVideoFile] = useState(null);
@@ -25,7 +24,6 @@ function CreateClaseVideo() {
   const [successAlert, setSuccessAlert] = useState(false);
   const [errorAlert, setErrorAlert] = useState(false);
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar(); // Hook de notistack para mostrar notificaciones
 
   // Asegúrate de que las unidades se actualicen si cambian
   useEffect(() => {
@@ -76,11 +74,12 @@ function CreateClaseVideo() {
         setVideoData({ nombre: "", descripcion: "" });
         setSelectedUnidad("");
 
-        // Muestra una notificación de éxito utilizando notistack
-        enqueueSnackbar("¡Video subido exitosamente!", { variant: "success" });
-
-        // Redirige al usuario
-        navigate(`/cursos/${cursoId}/unitsandvideos`);
+        // Redirigir al usuario después de subir el video
+        setTimeout(() => {
+          navigate(`/cursos/${cursoId}/unitsandvideos`);
+          // Mostrar alerta después de redirigir
+          setSuccessAlert(true);
+        }, 1500);
       } else {
         setErrorAlert(true);
       }
@@ -94,6 +93,13 @@ function CreateClaseVideo() {
       <Typography variant="h4" component="h2" gutterBottom>
         Crear Clase en Video
       </Typography>
+
+      {successAlert && (
+        <Alert severity="success" onClose={() => setSuccessAlert(false)} sx={{ mb: 3 }}>
+          <AlertTitle>Éxito</AlertTitle>
+          El video se subió correctamente.
+        </Alert>
+      )}
 
       {errorAlert && (
         <Alert severity="error" onClose={() => setErrorAlert(false)} sx={{ mb: 3 }}>
