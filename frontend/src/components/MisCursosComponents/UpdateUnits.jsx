@@ -9,20 +9,55 @@ import {
   Select,
   MenuItem,
   Box,
+  TextField,
+  Button,
 } from "@mui/material";
 
 const UpdateUnits = () => {
-  const { courseId } = useParams(); // Obtiene el ID del curso desde los parámetros
-  const { unidades, setCursoSeleccionado } = useContext(MisCursosContext);
+  const { courseId } = useParams(); 
+  const { unidades, setCursoSeleccionado, actualizarUnidad } = useContext(MisCursosContext); 
   const [selectedUnidad, setSelectedUnidad] = useState("");
+  const [unidadData, setUnidadData] = useState({
+    titulo: "",
+    descripcion: "",
+    objetivos: "",
+    tema: "",
+  });
 
-  // Cuando se monta el componente, asegura que el curso seleccionado se establece
   useEffect(() => {
     setCursoSeleccionado({ id: courseId });
   }, [courseId, setCursoSeleccionado]);
 
   const handleSelectChange = (event) => {
-    setSelectedUnidad(event.target.value);
+    const unidadId = event.target.value;
+    setSelectedUnidad(unidadId);
+
+    const unidadSeleccionada = unidades.find((unidad) => unidad.unidad_id === unidadId);
+    if (unidadSeleccionada) {
+      setUnidadData({
+        titulo: unidadSeleccionada.unidad_titulo,
+        descripcion: unidadSeleccionada.unidad_descripcion,
+        objetivos: unidadSeleccionada.unidad_objetivos || "",
+        tema: unidadSeleccionada.unidad_tema || "",
+      });
+    }
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setUnidadData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleUpdateUnidad = async () => {
+    const result = await actualizarUnidad(courseId, selectedUnidad, unidadData);
+    if (result) {
+      console.log("Unidad actualizada exitosamente", result);
+    } else {
+      console.error("Error al actualizar la unidad");
+    }
   };
 
   return (
@@ -52,6 +87,54 @@ const UpdateUnits = () => {
               ))}
             </Select>
           </FormControl>
+          {selectedUnidad && (
+            <Box sx={{ mt: 3 }}>
+              <TextField
+                label="Título de la unidad"
+                variant="outlined"
+                fullWidth
+                name="titulo"
+                value={unidadData.titulo}
+                onChange={handleInputChange}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Descripción de la unidad"
+                variant="outlined"
+                fullWidth
+                name="descripcion"
+                value={unidadData.descripcion}
+                onChange={handleInputChange}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Objetivos de la unidad"
+                variant="outlined"
+                fullWidth
+                name="objetivos"
+                value={unidadData.objetivos}
+                onChange={handleInputChange}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Tema de la unidad"
+                variant="outlined"
+                fullWidth
+                name="tema"
+                value={unidadData.tema}
+                onChange={handleInputChange}
+                sx={{ mb: 2 }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={handleUpdateUnidad}
+              >
+                Actualizar Unidad
+              </Button>
+            </Box>
+          )}
         </Box>
       ) : (
         <Typography variant="body1" sx={{ mt: 2 }}>

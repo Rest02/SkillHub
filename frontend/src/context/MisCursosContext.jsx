@@ -7,6 +7,7 @@ import {
   crearUnidad,
   getUnitsOfCourseApi,
   uploadVideoApi,
+  updateUnidadApi 
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -114,6 +115,21 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
 
+  // Exponer updateUnidadApi en el contexto
+  const actualizarUnidad = async (courseId, unidadId, unidadData) => {
+    try {
+      const result = await updateUnidadApi(courseId, { unidadId, ...unidadData });
+      if (result) {
+        const updatedUnidades = await getUnitsOfCourseApi(courseId);
+        setUnidades(updatedUnidades); // Actualizar las unidades del estado después de editar
+      }
+      return result;
+    } catch (error) {
+      console.error("Error al actualizar la unidad:", error);
+      return null;
+    }
+  };
+
   return (
     <MisCursosContext.Provider
       value={{
@@ -124,7 +140,8 @@ export const MisCursosProvider = ({ children }) => {
         createUnidad,
         unidades,
         uploadVideo,
-        setCursoSeleccionado
+        setCursoSeleccionado,
+        actualizarUnidad
       }}
     >
       {children}

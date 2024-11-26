@@ -293,11 +293,16 @@ export const getCourseUnitsAndVideos = async (req, res) => {
 export const getUnitsOfCourse = async (req, res) => {
   try {
     const instructor_id = req.user.id;
-    const {curso_id} = req.params; // Recibe el curso_id de la URL
-
+    const { curso_id } = req.params; // Recibe el curso_id de la URL
 
     const [unidades] = await pool.query(
-      `SELECT u.id AS unidad_id, u.titulo AS unidad_titulo
+      `SELECT 
+         u.id AS unidad_id, 
+         u.titulo AS unidad_titulo,
+         u.descripcion AS unidad_descripcion,
+         u.objetivos AS unidad_objetivos,
+         u.tema AS unidad_tema,
+         u.fecha_creacion AS unidad_fecha_creacion
        FROM units u
        INNER JOIN courses c ON u.curso_id = c.id
        WHERE c.instructor_id = ? AND c.id = ?`,
@@ -312,5 +317,81 @@ export const getUnitsOfCourse = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener unidades:", error);
     res.status(500).json({ message: "Error al obtener las unidades del curso." });
+  }
+};
+
+
+
+
+ //  ------------- update unidad --------------
+
+ export const getUnidadById = async (req, res) => {
+  const { unidadId } = req.body; // ID de la unidad obtenido del body
+  const instructor_id = req.user.id; // ID del instructor desde el token
+
+  try {
+    // Verificar si la unidad existe y pertenece a un curso del instructor
+    const [unidad] = await pool.query(
+      `SELECT u.* 
+       FROM units u 
+       INNER JOIN courses c ON u.curso_id = c.id 
+       WHERE u.id = ? AND c.instructor_id = ?`,
+      [unidadId, instructor_id]
+    );
+
+    if (!unidad.length) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Unidad no encontrada o acceso denegado" });
+    }
+
+    res.json({ success: true, data: unidad[0] });
+  } catch (error) {
+    console.error("Error al obtener unidad:", error);
+    res.status(500).json({ success: false, message: "Error al obtener unidad" });
+  }
+};
+
+
+// update unidad
+export const updateUnidad = async (req, res) => {
+  const { unidadId, titulo, descripcion, objetivos, tema } = req.body; // Datos del body
+  const instructor_id = req.user.id; // ID del instructor desde el token
+
+  try {
+    // Verificar si la unidad existe y pertenece a un curso del instructor
+    const [unidadExistente] = await pool.query(
+      `SELECT u.* 
+       FROM units u 
+       INNER JOIN courses c ON u.curso_id = c.id 
+       WHERE u.id = ? AND c.instructor_id = ?`,
+      [unidadId, instructor_id]
+    );
+
+    if (!unidadExistente.length) {
+      return res.status(404).json({
+        success: false,
+        message: "Unidad no encontrada o acceso denegado",
+      });
+    }
+
+    // Actualizar los campos de la unidad
+    const [result] = await pool.query(
+      `UPDATE units 
+       SET titulo = ?, descripcion = ?, objetivos = ?, tema = ?
+       WHERE id = ?`,
+      [titulo, descripcion, objetivos, tema, unidadId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No se pudo actualizar la unidad" });
+    }
+
+    res.json({ success: true, message: "Unidad actualizada correctamente" });
+  } catch (error) {
+    console.error("Error al actualizar unidad:", error);
+    res.status(500).json({ success: false, message: "Error al actualizar unidad" });
   }
 };

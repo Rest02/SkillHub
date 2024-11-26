@@ -72,4 +72,13 @@ router.get("/units/:curso_id/videos", verifyToken, checkInstructorRole, courseCo
 
 // --------------------------------------------------------
 
+
+
+// ----------- Update Units ----------
+
+router.get("/units/:curso_id/update", verifyToken, checkInstructorRole, courseControllers.getUnidadById)
+router.put("/units/:curso_id/update", verifyToken, checkInstructorRole, courseControllers.updateUnidad)
+
+
+
 export default router;

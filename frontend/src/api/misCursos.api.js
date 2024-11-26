@@ -154,7 +154,7 @@ export const getUnitsOfCourseApi = async (courseId) => {
       }
     );
     
-    // console.log("estas son las diferentes unidades de tal curso : ",response.data)
+    console.log("estas son las diferentes unidades de tal curso : ",response.data)
     return response.data; // Retorna las unidades del curso
   } catch (error) {
     console.error("Error al obtener unidades:", error);
@@ -198,5 +198,35 @@ export const uploadVideoApi = async (cursoId, unidadId, videoData, videoFile) =>
   } catch (error) {
     console.error("Error al subir el video:", error.response || error.message);
     return null;
+  }
+};
+
+
+export const updateUnidadApi = async (courseId, unidadData) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se ha iniciado sesión.");
+      return null;
+    }
+
+    const response = await axios.put(
+
+
+
+      `http://localhost:4000/units/${courseId}/update`, // Aquí va la ruta para actualizar una unidad
+      unidadData, // Los datos de la unidad que deseas actualizar
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data; // Devuelve la respuesta con los datos actualizados
+  } catch (error) {
+    console.error("Error al actualizar la unidad:", error.response || error.message);
+    return null; // Retorna null si hay un error
   }
 };
