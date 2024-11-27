@@ -395,3 +395,86 @@ export const updateUnidad = async (req, res) => {
     res.status(500).json({ success: false, message: "Error al actualizar unidad" });
   }
 };
+
+export const getVideosByUnidad = async (req, res) => {
+  const { courseId } = req.params; // ID del curso desde la URL
+  const { unidadId } = req.body; // ID de la unidad desde el cuerpo
+
+  if (!unidadId) {
+    return res.status(400).json({ message: "unidadId es requerido" });
+  }
+
+  try {
+    // Verifica que el curso existe (opcional, pero útil para seguridad)
+    const [curso] = await pool.query("SELECT * FROM courses WHERE id = ?", [courseId]);
+    if (curso.length === 0) {
+      return res.status(404).json({ message: "Curso no encontrado" });
+    }
+
+    // Obtén los videos asociados a la unidad
+    const [videos] = await pool.query(
+      "SELECT * FROM videos WHERE unidad_id = ?",
+      [unidadId]
+    );
+    res.status(200).json(videos);
+  } catch (error) {
+    console.error("Error al obtener los videos:", error);
+    res.status(500).json({ message: "Error al obtener los videos" });
+  }
+};
+
+// Controlador para actualizar curso
+// Controlador para actualizar un video
+
+export const updateVideo = async (req, res) => {
+  try {
+    const { videoId, nombre, descripcion } = req.body;  // Obtén los datos desde el body
+    const videoPath = req.file ? req.file.path : null;  // Si hay un archivo nuevo, obtener la ruta del archivo
+
+    // Verificar si el video existe
+    const [video] = await pool.query(
+      `SELECT * FROM videos WHERE id = ?`,
+      [videoId]
+    );
+
+    if (video.length === 0) {
+      return res.status(404).json({ message: "Video no encontrado." });
+    }
+
+    // Mantener la URL del video actual
+    let video_url = video[0].video_url;
+
+    if (videoPath) {
+      // Si se sube un archivo nuevo, eliminamos el archivo anterior
+      if (fs.existsSync(video_url)) {
+        fs.unlinkSync(video_url); // Elimina el archivo de video anterior si existe
+      }
+      video_url = videoPath; // Asignamos la nueva URL del archivo de video
+    }
+
+    // Actualizar los datos del video en la base de datos
+    const [result] = await pool.query(
+      `UPDATE videos
+       SET nombre = ?, descripcion = ?, video_url = ?
+       WHERE id = ?`,
+      [nombre, descripcion, video_url, videoId]
+    );
+
+    // Verificar si la actualización fue exitosa
+    if (result.affectedRows === 0) {
+      return res.status(400).json({ message: "No se pudo actualizar el video." });
+    }
+
+    res.status(200).json({ message: "Video actualizado correctamente" });
+
+  } catch (error) {
+    console.error("Error al actualizar el video:", error);
+
+    // Si hubo un error y se subió un archivo, eliminar el archivo subido para evitar archivos huérfanos
+    if (req.file && req.file.path) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+};

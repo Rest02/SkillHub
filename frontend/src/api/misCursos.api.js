@@ -230,3 +230,75 @@ export const updateUnidadApi = async (courseId, unidadData) => {
     return null; // Retorna null si hay un error
   }
 };
+
+
+
+
+
+export const getVideosByUnidad = async (courseId, unidadId) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se ha iniciado sesión.");
+      return [];
+    }
+
+    const response = await axios.post(
+      `http://localhost:4000/clase/${courseId}/videos`, // Ruta actualizada
+      { unidadId }, // Enviar unidadId en el cuerpo
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json", // Especificar JSON como tipo de contenido
+        },
+      }
+    );
+
+    console.log("Videos obtenidos de la unidad:", response.data);
+    return response.data; // Retorna los videos asociados a la unidad
+  } catch (error) {
+    console.error("Error al obtener los videos:", error);
+    return []; // Retorna un array vacío en caso de error
+  }
+};
+
+
+
+
+export const updateVideoApi = async (courseId, videoId, videoData, videoFile) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se ha iniciado sesión.");
+      return null;
+    }
+
+    // Crear un FormData para enviar los datos del video y el archivo
+    const formData = new FormData();
+    formData.append("videoId", videoId);  // ID del video que se va a actualizar
+    formData.append("nombre", videoData.nombre); // Nombre del video
+    formData.append("descripcion", videoData.descripcion); // Descripción del video
+
+    if (videoFile) {
+      formData.append("video", videoFile);  // Archivo de video (si hay uno)
+    }
+
+    // Realizar la solicitud PUT para actualizar el video
+    const response = await axios.put(
+      `http://localhost:4000/clase/${courseId}/videos`,  // Ruta del endpoint
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Asegúrate de incluir el token de autenticación
+          "Content-Type": "multipart/form-data",  // Especifica que el contenido es FormData
+        },
+      }
+    );
+
+    console.log("Video actualizado correctamente:", response.data);
+    return response.data;  // Devuelve los datos de la respuesta del servidor
+  } catch (error) {
+    console.error("Error al actualizar el video:", error.response || error.message);
+    return null;  // Retorna null si hay un error
+  }
+};

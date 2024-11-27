@@ -7,7 +7,8 @@ import {
   crearUnidad,
   getUnitsOfCourseApi,
   uploadVideoApi,
-  updateUnidadApi 
+  updateUnidadApi,
+  updateVideoApi
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -130,6 +131,18 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
 
+
+    // Asegúrate de agregar esta función en tu contexto para actualizar videos
+  const updateVideo = async (courseId, videoId, videoData, videoFile) => {
+    try {
+      const result = await updateVideoApi(courseId, videoId, videoData, videoFile);
+      return result; // Devuelve el resultado, que será utilizado en el componente
+    } catch (error) {
+      console.error("Error al actualizar el video:", error);
+      return { success: false, message: "Error al actualizar el video" };
+    }
+  };
+
   return (
     <MisCursosContext.Provider
       value={{
@@ -141,7 +154,8 @@ export const MisCursosProvider = ({ children }) => {
         unidades,
         uploadVideo,
         setCursoSeleccionado,
-        actualizarUnidad
+        actualizarUnidad,
+        updateVideo
       }}
     >
       {children}

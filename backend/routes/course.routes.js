@@ -80,5 +80,12 @@ router.get("/units/:curso_id/update", verifyToken, checkInstructorRole, courseCo
 router.put("/units/:curso_id/update", verifyToken, checkInstructorRole, courseControllers.updateUnidad)
 
 
+router.post("/clase/:courseId/videos", verifyToken, checkInstructorRole, courseControllers.getVideosByUnidad);
+
+
+router.put("/clase/:courseId/videos", verifyToken, checkInstructorRole, uploadVideo.single("video"), courseControllers.updateVideo);
+
+
+
 
 export default router;
