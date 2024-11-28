@@ -1,5 +1,7 @@
 // course.controller.js
 import { pool } from "../db.js"; // Asegúrate de tener la conexión a la base de datos
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import fs from "fs";
 
@@ -479,7 +481,10 @@ export const updateVideo = async (req, res) => {
   }
 };
 
-// Controlador para eliminar un curso
+// Obtener la ruta del directorio actual
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export const deleteCourse = async (req, res) => {
   try {
     const { courseId } = req.body; // ID del curso a eliminar
@@ -523,9 +528,13 @@ export const deleteCourse = async (req, res) => {
     await pool.query(`DELETE FROM units WHERE curso_id = ?`, [courseId]);
 
     // Eliminar archivo de miniatura si existe
-    const thumbnailPath = course[0].imagen_portada;
+    const thumbnailPath = path.resolve(__dirname, '..', 'public', course[0].imagen_portada);
+    console.log("Ruta absoluta de la miniatura:", thumbnailPath);
     if (thumbnailPath && fs.existsSync(thumbnailPath)) {
       fs.unlinkSync(thumbnailPath);
+      console.log("Archivo eliminado exitosamente.");
+    } else {
+      console.log("Archivo no encontrado en la ruta especificada.");
     }
 
     // Eliminar el curso de la base de datos

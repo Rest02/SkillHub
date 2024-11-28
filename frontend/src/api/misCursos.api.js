@@ -137,12 +137,19 @@ export const getUnitsAndVideosApi = async (courseId) => {
       }
     );
 
+    // Si no hay unidades o videos, retorna un objeto vacío o maneja el caso
+    if (!response.data || response.data.length === 0) {
+      console.log("No se encontraron unidades o videos para este curso.");
+      return { units: [], videos: [] }; // Ajustar según tu lógica
+    }
+
     return response.data; // Devuelve los datos de la API
   } catch (error) {
     console.error("Error al obtener las unidades y videos del curso:", error);
     return null;
   }
 };
+
 
 
 export const crearUnidad = async (courseId, unidadData) => {
