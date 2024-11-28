@@ -30,6 +30,35 @@ export const getMisCursosApi = async () => {
   }
 };
 
+export const deleteCursoApi = async (courseId) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se inicia sesión");
+      return null;
+    }
+
+    const response = await axios.delete("http://localhost:4000/misCursos", {
+      headers: {
+        Authorization: `Bearer ${token}`, // Incluye el token en los headers
+        "Content-Type": "application/json", // Asegúrate de incluir este encabezado
+      },
+      data: { courseId }, // Envía el courseId en el cuerpo
+    });
+
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      console.error("Error de autenticación. Usuario no autorizado.");
+    } else {
+      console.error("Error al eliminar el curso:", error);
+    }
+    return null; // Retorna null si ocurre un error
+  }
+};
+
+
+
 // Crear un curso
 export const createCourseApi = async (courseData, thumbnailFile) => {
   try {

@@ -14,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
 const MisCursosCard = () => {
-  const { cursos, setCursoSeleccionado } = useContext(MisCursosContext);
+  const { cursos, setCursoSeleccionado , deleteCurso } = useContext(MisCursosContext);
   const [paginaActual, setPaginaActual] = useState(1);
   const cursosPorPagina = 3;
   const [searchQuery, setSearchQuery] = useState("");
@@ -50,6 +50,16 @@ const MisCursosCard = () => {
     navigate(`/cursos/${cursoID}/unitsandvideos`); // Navegar a la página del curso
   };
   
+  const handleDeleteCourse = async (courseId) => {
+    if (window.confirm("¿Estás seguro de que deseas eliminar este curso?")) {
+      const result = await deleteCurso(courseId);
+      if (result?.success) {
+        alert("Curso eliminado con éxito");
+      } else {
+        alert(result?.message || "Hubo un error al intentar eliminar el curso");
+      }
+    }
+  };
   
 
   return (
@@ -196,6 +206,7 @@ const MisCursosCard = () => {
                     <Grid item xs={4}>
                       <Button
                         variant="contained"
+                        onClick={() => handleDeleteCourse(curso.id)} // Llama a handleDeleteCourse con el ID del curso
                         fullWidth
                         sx={{
                           backgroundColor: "#000000",

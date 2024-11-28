@@ -8,7 +8,8 @@ import {
   getUnitsOfCourseApi,
   uploadVideoApi,
   updateUnidadApi,
-  updateVideoApi
+  updateVideoApi,
+  deleteCursoApi
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -119,7 +120,10 @@ export const MisCursosProvider = ({ children }) => {
   // Exponer updateUnidadApi en el contexto
   const actualizarUnidad = async (courseId, unidadId, unidadData) => {
     try {
-      const result = await updateUnidadApi(courseId, { unidadId, ...unidadData });
+      const result = await updateUnidadApi(courseId, {
+        unidadId,
+        ...unidadData,
+      });
       if (result) {
         const updatedUnidades = await getUnitsOfCourseApi(courseId);
         setUnidades(updatedUnidades); // Actualizar las unidades del estado después de editar
@@ -131,15 +135,35 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
 
-
-    // Asegúrate de agregar esta función en tu contexto para actualizar videos
+  // Asegúrate de agregar esta función en tu contexto para actualizar videos
   const updateVideo = async (courseId, videoId, videoData, videoFile) => {
     try {
-      const result = await updateVideoApi(courseId, videoId, videoData, videoFile);
+      const result = await updateVideoApi(
+        courseId,
+        videoId,
+        videoData,
+        videoFile
+      );
       return result; // Devuelve el resultado, que será utilizado en el componente
     } catch (error) {
       console.error("Error al actualizar el video:", error);
       return { success: false, message: "Error al actualizar el video" };
+    }
+  };
+
+  // Función para eliminar un curso
+  const deleteCurso = async (courseId) => {
+    try {
+      const result = await deleteCursoApi(courseId);
+      if (result) {
+        // Actualizar la lista de cursos en el estado después de eliminar
+        const updatedCursos = cursos.filter((curso) => curso.id !== courseId);
+        setCursos(updatedCursos);
+      }
+      return result;
+    } catch (error) {
+      console.error("Error al eliminar el curso:", error);
+      return { success: false, message: "Error al eliminar el curso" };
     }
   };
 
@@ -155,7 +179,8 @@ export const MisCursosProvider = ({ children }) => {
         uploadVideo,
         setCursoSeleccionado,
         actualizarUnidad,
-        updateVideo
+        updateVideo,
+        deleteCurso
       }}
     >
       {children}

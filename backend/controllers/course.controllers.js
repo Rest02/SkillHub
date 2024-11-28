@@ -478,3 +478,62 @@ export const updateVideo = async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 };
+
+// Controlador para eliminar un curso
+export const deleteCourse = async (req, res) => {
+  try {
+    const { courseId } = req.body; // ID del curso a eliminar
+    const instructor_id = req.user.id; // ID del instructor desde el token
+
+    // Verificar si el curso existe y pertenece al instructor
+    const [course] = await pool.query(
+      `SELECT * FROM courses WHERE id = ? AND instructor_id = ?`,
+      [courseId, instructor_id]
+    );
+
+    if (course.length === 0) {
+      return res.status(404).json({ message: "Curso no encontrado o acceso denegado" });
+    }
+
+    // Obtener las unidades del curso
+    const [units] = await pool.query(
+      `SELECT id FROM units WHERE curso_id = ?`,
+      [courseId]
+    );
+
+    // Eliminar videos asociados a cada unidad
+    for (const unit of units) {
+      const [videos] = await pool.query(
+        `SELECT video_url FROM videos WHERE unidad_id = ?`,
+        [unit.id]
+      );
+
+      // Eliminar archivos de video físicos
+      for (const video of videos) {
+        if (fs.existsSync(video.video_url)) {
+          fs.unlinkSync(video.video_url);
+        }
+      }
+
+      // Eliminar videos de la base de datos
+      await pool.query(`DELETE FROM videos WHERE unidad_id = ?`, [unit.id]);
+    }
+
+    // Eliminar unidades del curso
+    await pool.query(`DELETE FROM units WHERE curso_id = ?`, [courseId]);
+
+    // Eliminar archivo de miniatura si existe
+    const thumbnailPath = course[0].imagen_portada;
+    if (thumbnailPath && fs.existsSync(thumbnailPath)) {
+      fs.unlinkSync(thumbnailPath);
+    }
+
+    // Eliminar el curso de la base de datos
+    await pool.query(`DELETE FROM courses WHERE id = ?`, [courseId]);
+
+    res.status(200).json({ message: "Curso eliminado exitosamente" });
+  } catch (error) {
+    console.error("Error al eliminar el curso:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+};

@@ -86,6 +86,12 @@ router.post("/clase/:courseId/videos", verifyToken, checkInstructorRole, courseC
 router.put("/clase/:courseId/videos", verifyToken, checkInstructorRole, uploadVideo.single("video"), courseControllers.updateVideo);
 
 
+router.delete(
+  "/misCursos",
+  verifyToken,
+  checkInstructorRole,
+  courseControllers.deleteCourse
+);
 
 
 export default router;
