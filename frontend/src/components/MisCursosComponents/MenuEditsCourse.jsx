@@ -33,6 +33,11 @@ function MenuEditsCourse() {
     handleCloseMenu();
   };
 
+  const handleEditarClase = () => {
+    navigate(`/clase/${courseId}/update`); // Redirige a la ruta específica para editar clase
+    handleCloseMenu();
+  };
+
   return (
     <Box
       sx={{
@@ -135,7 +140,7 @@ function MenuEditsCourse() {
         {menuType === "editar" && (
           <div>
             <MenuItem onClick={handleEditarUnidad}>Editar Unidad</MenuItem>
-            <MenuItem onClick={handleCloseMenu}>Editar Clase</MenuItem>
+            <MenuItem onClick={handleEditarClase}>Editar Clase</MenuItem> {/* Nueva opción */}
           </div>
         )}
         {menuType === "eliminar" && (

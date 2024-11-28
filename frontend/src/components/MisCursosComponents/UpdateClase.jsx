@@ -6,7 +6,7 @@ import {
   Typography,
   FormControl,
   InputLabel,
-  Select,
+Select,
   MenuItem,
   Box,
   CircularProgress,
