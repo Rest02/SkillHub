@@ -1,9 +1,22 @@
-import React from 'react'
+import React from "react";
+import ImageBar from "../../components/HomeComponents/ImageBar";
+import ThreeContainerInfo from '../../components/HomeComponents/ThreeContainerInfo'
+import WelcomeInformation from '../../components/HomeComponents/WelcomeInformation'
 
 function HomePage() {
   return (
-    <div></div>
-  )
+    <div className="container">
+      <div>
+        <ImageBar />
+      </div>
+      <div>
+        <ThreeContainerInfo/>
+      </div>
+      <div>
+        <WelcomeInformation/>
+      </div>
+    </div>
+  );
 }
 
-export default HomePage
+export default HomePage;
