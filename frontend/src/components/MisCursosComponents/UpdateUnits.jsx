@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 import {
   Container,
@@ -12,10 +12,12 @@ import {
   TextField,
   Button,
 } from "@mui/material";
+import { useSnackbar } from "notistack"; // Importa useSnackbar para las alertas
 
 const UpdateUnits = () => {
-  const { courseId } = useParams(); 
-  const { unidades, setCursoSeleccionado, actualizarUnidad } = useContext(MisCursosContext); 
+  const { courseId } = useParams();
+  const { unidades, setCursoSeleccionado, actualizarUnidad } = useContext(MisCursosContext);
+  const { enqueueSnackbar } = useSnackbar(); // Hook de notistack para mostrar notificaciones
   const [selectedUnidad, setSelectedUnidad] = useState("");
   const [unidadData, setUnidadData] = useState({
     titulo: "",
@@ -23,6 +25,7 @@ const UpdateUnits = () => {
     objetivos: "",
     tema: "",
   });
+  const navigate = useNavigate(); // Usamos navigate para redirigir al usuario
 
   useEffect(() => {
     setCursoSeleccionado({ id: courseId });
@@ -52,11 +55,26 @@ const UpdateUnits = () => {
   };
 
   const handleUpdateUnidad = async () => {
-    const result = await actualizarUnidad(courseId, selectedUnidad, unidadData);
-    if (result) {
-      console.log("Unidad actualizada exitosamente", result);
-    } else {
-      console.error("Error al actualizar la unidad");
+    if (!selectedUnidad || !unidadData.titulo || !unidadData.descripcion) {
+      enqueueSnackbar("Por favor, completa todos los campos antes de actualizar.", { variant: "error" });
+      return;
+    }
+
+    try {
+      const result = await actualizarUnidad(courseId, selectedUnidad, unidadData);
+      if (result) {
+        // Muestra una notificación de éxito
+        enqueueSnackbar("Unidad actualizada correctamente.", { variant: "success" });
+        
+        // Redirige a la página de unidades después de un breve retraso
+        setTimeout(() => {
+          navigate(`/cursos/${courseId}/unitsandvideos`);
+        });
+      } else {
+        enqueueSnackbar("Ocurrió un error al actualizar la unidad.", { variant: "error" });
+      }
+    } catch (error) {
+      enqueueSnackbar("Error al intentar actualizar la unidad. Intenta nuevamente.", { variant: "error" });
     }
   };
 

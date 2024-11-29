@@ -11,20 +11,18 @@ import {
   InputLabel,
   FormControl,
   Box,
-  Alert,
-  AlertTitle,
 } from "@mui/material";
+import { useSnackbar } from "notistack"; // Importa useSnackbar
 
 function CreateClaseVideo() {
   const { courseId } = useParams();
-  const { cursos, unidades, uploadVideo, createUnidad } = useContext(MisCursosContext);
+  const { cursos, unidades, uploadVideo } = useContext(MisCursosContext);
   const [selectedUnidad, setSelectedUnidad] = useState("");
   const [videoData, setVideoData] = useState({ nombre: "", descripcion: "" });
   const [videoFile, setVideoFile] = useState(null);
   const [videoPreview, setVideoPreview] = useState("");
-  const [successAlert, setSuccessAlert] = useState(false);
-  const [errorAlert, setErrorAlert] = useState(false);
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar(); // Hook de notistack para mostrar notificaciones
 
   useEffect(() => {
     if (cursos.length > 0) {
@@ -56,7 +54,7 @@ function CreateClaseVideo() {
     event.preventDefault();
 
     if (!selectedUnidad || !videoData.nombre || !videoData.descripcion || !videoFile) {
-      alert("Por favor, completa todos los campos y selecciona un archivo.");
+      enqueueSnackbar("Por favor, completa todos los campos y selecciona un archivo.", { variant: "error" });
       return;
     }
 
@@ -70,38 +68,26 @@ function CreateClaseVideo() {
         setVideoData({ nombre: "", descripcion: "" });
         setSelectedUnidad("");
 
+        // Muestra una notificación de éxito
+        enqueueSnackbar("¡El video se subió correctamente!", { variant: "success" });
+
+        // Redirige después de un pequeño retraso
         setTimeout(() => {
           navigate(`/cursos/${courseId}/unitsandvideos`);
-          setSuccessAlert(true);
-        }, 1500);
+        });
       } else {
-        setErrorAlert(true);
+        enqueueSnackbar("Ocurrió un error al subir el video. Inténtalo de nuevo.", { variant: "error" });
       }
     } catch (error) {
-      setErrorAlert(true);
+      enqueueSnackbar("Ocurrió un error al subir el video. Inténtalo de nuevo.", { variant: "error" });
     }
   };
-
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" component="h2" gutterBottom>
         Crear Clase en Video
       </Typography>
-
-      {successAlert && (
-        <Alert severity="success" onClose={() => setSuccessAlert(false)} sx={{ mb: 3 }}>
-          <AlertTitle>Éxito</AlertTitle>
-          El video se subió correctamente.
-        </Alert>
-      )}
-
-      {errorAlert && (
-        <Alert severity="error" onClose={() => setErrorAlert(false)} sx={{ mb: 3 }}>
-          <AlertTitle>Error</AlertTitle>
-          Ocurrió un error al subir el video. Inténtalo de nuevo.
-        </Alert>
-      )}
 
       {cursos.length > 0 && unidades.length > 0 ? (
         <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 4 }}>
