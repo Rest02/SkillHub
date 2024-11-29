@@ -94,4 +94,6 @@ router.delete(
 );
 
 
+router.delete("/unidad/:courseId/delete", verifyToken, checkInstructorRole, courseControllers.deleteUnit )
+
 export default router;

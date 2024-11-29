@@ -20,8 +20,10 @@ import VerEditarCursoPage from "../src/pages/MisCursosPage/VerEditarCursoPage.js
 import CreateUnidadForm from "../src/components/MisCursosComponents/CreateUnidadForm.jsx";
 import CreateClaseVideo from "../src/components/MisCursosComponents/CreateClaseVideo.jsx";
 import { SnackbarProvider } from "notistack";
-import UpdateUnits from '../src/components/MisCursosComponents/UpdateUnits.jsx'
-import UpdateClase from '../src/components/MisCursosComponents/UpdateClase.jsx'
+import UpdateUnits from "../src/components/MisCursosComponents/UpdateUnits.jsx";
+import UpdateClase from "../src/components/MisCursosComponents/UpdateClase.jsx";
+import DeleteUnidad from "../src/components/MisCursosComponents/DeleteUnidad.jsx";
+import DeleteClase from "../src/components/MisCursosComponents/DeleteClase.jsx";
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -72,12 +74,12 @@ const AppContent = () => {
         <Route path="/courses/:courseId/units" element={<CreateUnidadForm />} />
         <Route path="/units/:courseId/videos" element={<CreateClaseVideo />} />
 
+        <Route path="/units/:courseId/update" element={<UpdateUnits />} />
 
+        <Route path="/clase/:courseId/update" element={<UpdateClase />} />
 
-        <Route path="/units/:courseId/update" element={<UpdateUnits/>} />
-
-        <Route path="/clase/:courseId/update" element={<UpdateClase/>} />
-
+        <Route path="/unidad/:courseId/delete" element={<DeleteUnidad />} />
+        <Route path="/clase/:courseId/delete" element={<DeleteClase />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

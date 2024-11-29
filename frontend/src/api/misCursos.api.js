@@ -59,6 +59,42 @@ export const deleteCursoApi = async (courseId) => {
 
 
 
+export const deleteUnitApi = async (courseId, unidadId) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se ha iniciado sesión.");
+      return null;
+    }
+
+    // Realizar la solicitud DELETE con datos en el body
+    const response = await axios.delete(
+      `http://localhost:4000/unidad/${courseId}/delete`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        data: { unidadId }, // Enviar el unidadId en el body
+      }
+    );
+
+    console.log("Unidad eliminada exitosamente:", response.data);
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      console.error("Error de autenticación. Usuario no autorizado.");
+    } else if (error.response && error.response.status === 404) {
+      console.error("Unidad no encontrada o acceso denegado.");
+    } else {
+      console.error("Error al eliminar la unidad:", error.response || error.message);
+    }
+    return null;
+  }
+};
+
+
+
 // Crear un curso
 export const createCourseApi = async (courseData, thumbnailFile) => {
   try {

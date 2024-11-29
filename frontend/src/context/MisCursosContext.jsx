@@ -9,7 +9,8 @@ import {
   uploadVideoApi,
   updateUnidadApi,
   updateVideoApi,
-  deleteCursoApi
+  deleteCursoApi,
+  deleteUnitApi
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -167,6 +168,22 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
 
+  const deleteUnidad = async (courseId, unidadId) => {
+    try {
+      const result = await deleteUnitApi(courseId, unidadId);
+      if (result) {
+        // Actualiza el estado de unidades eliminando la unidad eliminada
+        const updatedUnidades = unidades.filter((unidad) => unidad.id !== unidadId);
+        setUnidades(updatedUnidades);
+      }
+      return result; // Devuelve el resultado a quien llame la función
+    } catch (error) {
+      console.error("Error al eliminar la unidad:", error);
+      return { success: false, message: "Error al eliminar la unidad" };
+    }
+  };
+  
+
   return (
     <MisCursosContext.Provider
       value={{
@@ -180,7 +197,8 @@ export const MisCursosProvider = ({ children }) => {
         setCursoSeleccionado,
         actualizarUnidad,
         updateVideo,
-        deleteCurso
+        deleteCurso,
+        deleteUnidad
       }}
     >
       {children}

@@ -286,7 +286,7 @@ export const getCourseUnitsAndVideos = async (req, res) => {
     });
   } catch (error) {
     console.error('Error al obtener las unidades y videos del curso:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(200).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -544,5 +544,57 @@ export const deleteCourse = async (req, res) => {
   } catch (error) {
     console.error("Error al eliminar el curso:", error);
     res.status(500).json({ message: "Error interno del servidor" });
+  }
+};
+
+// Eliminar una unidad específica
+export const deleteUnit = async (req, res) => {
+  const { unidadId } = req.body; // ID de la unidad a eliminar
+  const instructor_id = req.user.id; // ID del instructor desde el token
+
+  try {
+    // Verificar si la unidad pertenece a un curso del instructor
+    const [unit] = await pool.query(
+      `SELECT u.id, c.id AS curso_id 
+       FROM units u 
+       INNER JOIN courses c ON u.curso_id = c.id 
+       WHERE u.id = ? AND c.instructor_id = ?`,
+      [unidadId, instructor_id]
+    );
+
+    if (unit.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Unidad no encontrada o acceso denegado." });
+    }
+
+    // Obtener y eliminar videos asociados a la unidad
+    const [videos] = await pool.query(
+      `SELECT video_url FROM videos WHERE unidad_id = ?`,
+      [unidadId]
+    );
+
+    for (const video of videos) {
+      if (fs.existsSync(video.video_url)) {
+        fs.unlinkSync(video.video_url); // Eliminar el archivo físico
+      }
+    }
+
+    // Eliminar videos de la base de datos
+    await pool.query(`DELETE FROM videos WHERE unidad_id = ?`, [unidadId]);
+
+    // Eliminar la unidad de la base de datos
+    const [result] = await pool.query(`DELETE FROM units WHERE id = ?`, [unidadId]);
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(400)
+        .json({ message: "No se pudo eliminar la unidad." });
+    }
+
+    res.status(200).json({ message: "Unidad eliminada con éxito." });
+  } catch (error) {
+    console.error("Error al eliminar la unidad:", error);
+    res.status(500).json({ message: "Error interno del servidor." });
   }
 };
