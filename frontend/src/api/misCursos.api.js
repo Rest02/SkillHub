@@ -59,6 +59,39 @@ export const deleteCursoApi = async (courseId) => {
 
 
 
+export const deleteClaseApi = async (courseId, unidad_Id, video_Id) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("Aún no se ha iniciado sesión.");
+      return null;
+    }
+
+
+    // Realizar la solicitud DELETE para eliminar la clase (video) de la unidad
+    const response = await axios.delete(
+      `http://localhost:4000/clase/${courseId}/delete`, // Aquí está la ruta correcta
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          unidad_id: unidad_Id, // Asegúrate de enviar estos datos correctamente en el cuerpo
+          video_id: video_Id,
+        },
+      }
+    );
+
+    return response.data; // Asegúrate de retornar la respuesta para usarla en el frontend
+  } catch (error) {
+    console.error("Error al eliminar la clase:", error);
+    return null;
+  }
+};
+
+
+
 export const deleteUnitApi = async (courseId, unidadId) => {
   try {
     const token = localStorage.getItem("token");

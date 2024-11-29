@@ -1,7 +1,7 @@
 // course.controller.js
 import { pool } from "../db.js"; // Asegúrate de tener la conexión a la base de datos
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 
 import fs from "fs";
 
@@ -77,11 +77,9 @@ export const createUnit = async (req, res) => {
 
     // Si no existe el curso o no pertenece al instructor, devuelve un error
     if (!course.length) {
-      return res
-        .status(403)
-        .json({
-          message: "No tienes permiso para crear unidades en este curso.",
-        });
+      return res.status(403).json({
+        message: "No tienes permiso para crear unidades en este curso.",
+      });
     }
 
     // Ahora, puedes crear la unidad
@@ -115,7 +113,6 @@ export const uploadVideo = async (req, res) => {
       return res.status(400).json({ message: "Datos incompletos" });
     }
 
-
     // Verificar si la unidad pertenece al curso proporcionado y si el curso es del instructor
     const [unit] = await pool.query(
       `SELECT units.id 
@@ -128,7 +125,8 @@ export const uploadVideo = async (req, res) => {
     if (unit.length === 0) {
       // Si no se encuentra la unidad o no pertenece al curso del instructor
       return res.status(403).json({
-        message: "No tienes permiso para agregar videos a esta unidad o la unidad no existe",
+        message:
+          "No tienes permiso para agregar videos a esta unidad o la unidad no existe",
       });
     }
 
@@ -183,12 +181,10 @@ export const uploadThumbnail = async (req, res) => {
       return res.status(404).json({ message: "Video no encontrado" });
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Miniatura subida exitosamente",
-        thumbnailUrl: thumbnailPath,
-      });
+    res.status(200).json({
+      message: "Miniatura subida exitosamente",
+      thumbnailUrl: thumbnailPath,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al subir la miniatura" });
@@ -227,17 +223,19 @@ export const getCategorias = async (req, res) => {
   }
 };
 
-
 // Controlador para obtener las unidades y videos de un curso
 export const getCourseUnitsAndVideos = async (req, res) => {
   const { courseId } = req.params;
 
   try {
     // Verifica si el curso existe
-    const [course] = await pool.query('SELECT titulo FROM courses WHERE id = ?', [courseId]);
+    const [course] = await pool.query(
+      "SELECT titulo FROM courses WHERE id = ?",
+      [courseId]
+    );
     if (course.length === 0) {
-      console.log('El curso no existe');
-      return res.status(404).json({ error: 'El curso no existe' });
+      console.log("El curso no existe");
+      return res.status(404).json({ error: "El curso no existe" });
     }
 
     // Obtén las unidades del curso
@@ -250,7 +248,7 @@ export const getCourseUnitsAndVideos = async (req, res) => {
 
     // Si no hay unidades, devuelve solo los datos del curso
     if (units.length === 0) {
-      console.log('No hay unidades para este curso');
+      console.log("No hay unidades para este curso");
       return res.json({ course: course[0], units: [] });
     }
 
@@ -263,7 +261,9 @@ export const getCourseUnitsAndVideos = async (req, res) => {
           FROM units u
           WHERE u.id = ?;
         `;
-        const [unitDetails] = await pool.query(unitDetailsQuery, [unit.unidad_id]);
+        const [unitDetails] = await pool.query(unitDetailsQuery, [
+          unit.unidad_id,
+        ]);
 
         // Query para obtener los videos de la unidad
         const videosQuery = `
@@ -285,11 +285,10 @@ export const getCourseUnitsAndVideos = async (req, res) => {
       units: unitsWithDetails,
     });
   } catch (error) {
-    console.error('Error al obtener las unidades y videos del curso:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error("Error al obtener las unidades y videos del curso:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 };
-
 
 // GET para obtener las unidades de uncurso
 export const getUnitsOfCourse = async (req, res) => {
@@ -312,22 +311,23 @@ export const getUnitsOfCourse = async (req, res) => {
     );
 
     if (unidades.length === 0) {
-      return res.status(201).json({ message: "No se encontraron unidades para este curso." });
+      return res
+        .status(201)
+        .json({ message: "No se encontraron unidades para este curso." });
     }
 
     res.status(200).json(unidades);
   } catch (error) {
     console.error("Error al obtener unidades:", error);
-    res.status(500).json({ message: "Error al obtener las unidades del curso." });
+    res
+      .status(500)
+      .json({ message: "Error al obtener las unidades del curso." });
   }
 };
 
+//  ------------- update unidad --------------
 
-
-
- //  ------------- update unidad --------------
-
- export const getUnidadById = async (req, res) => {
+export const getUnidadById = async (req, res) => {
   const { unidadId } = req.body; // ID de la unidad obtenido del body
   const instructor_id = req.user.id; // ID del instructor desde el token
 
@@ -342,18 +342,20 @@ export const getUnitsOfCourse = async (req, res) => {
     );
 
     if (!unidad.length) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Unidad no encontrada o acceso denegado" });
+      return res.status(404).json({
+        success: false,
+        message: "Unidad no encontrada o acceso denegado",
+      });
     }
 
     res.json({ success: true, data: unidad[0] });
   } catch (error) {
     console.error("Error al obtener unidad:", error);
-    res.status(500).json({ success: false, message: "Error al obtener unidad" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error al obtener unidad" });
   }
 };
-
 
 // update unidad
 export const updateUnidad = async (req, res) => {
@@ -394,7 +396,9 @@ export const updateUnidad = async (req, res) => {
     res.json({ success: true, message: "Unidad actualizada correctamente" });
   } catch (error) {
     console.error("Error al actualizar unidad:", error);
-    res.status(500).json({ success: false, message: "Error al actualizar unidad" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error al actualizar unidad" });
   }
 };
 
@@ -408,7 +412,9 @@ export const getVideosByUnidad = async (req, res) => {
 
   try {
     // Verifica que el curso existe (opcional, pero útil para seguridad)
-    const [curso] = await pool.query("SELECT * FROM courses WHERE id = ?", [courseId]);
+    const [curso] = await pool.query("SELECT * FROM courses WHERE id = ?", [
+      courseId,
+    ]);
     if (curso.length === 0) {
       return res.status(404).json({ message: "Curso no encontrado" });
     }
@@ -430,14 +436,13 @@ export const getVideosByUnidad = async (req, res) => {
 
 export const updateVideo = async (req, res) => {
   try {
-    const { videoId, nombre, descripcion } = req.body;  // Obtén los datos desde el body
-    const videoPath = req.file ? req.file.path : null;  // Si hay un archivo nuevo, obtener la ruta del archivo
+    const { videoId, nombre, descripcion } = req.body; // Obtén los datos desde el body
+    const videoPath = req.file ? req.file.path : null; // Si hay un archivo nuevo, obtener la ruta del archivo
 
     // Verificar si el video existe
-    const [video] = await pool.query(
-      `SELECT * FROM videos WHERE id = ?`,
-      [videoId]
-    );
+    const [video] = await pool.query(`SELECT * FROM videos WHERE id = ?`, [
+      videoId,
+    ]);
 
     if (video.length === 0) {
       return res.status(404).json({ message: "Video no encontrado." });
@@ -464,11 +469,12 @@ export const updateVideo = async (req, res) => {
 
     // Verificar si la actualización fue exitosa
     if (result.affectedRows === 0) {
-      return res.status(400).json({ message: "No se pudo actualizar el video." });
+      return res
+        .status(400)
+        .json({ message: "No se pudo actualizar el video." });
     }
 
     res.status(200).json({ message: "Video actualizado correctamente" });
-
   } catch (error) {
     console.error("Error al actualizar el video:", error);
 
@@ -497,7 +503,9 @@ export const deleteCourse = async (req, res) => {
     );
 
     if (course.length === 0) {
-      return res.status(404).json({ message: "Curso no encontrado o acceso denegado" });
+      return res
+        .status(404)
+        .json({ message: "Curso no encontrado o acceso denegado" });
     }
 
     // Obtener las unidades del curso
@@ -528,7 +536,12 @@ export const deleteCourse = async (req, res) => {
     await pool.query(`DELETE FROM units WHERE curso_id = ?`, [courseId]);
 
     // Eliminar archivo de miniatura si existe
-    const thumbnailPath = path.resolve(__dirname, '..', 'public', course[0].imagen_portada);
+    const thumbnailPath = path.resolve(
+      __dirname,
+      "..",
+      "public",
+      course[0].imagen_portada
+    );
     console.log("Ruta absoluta de la miniatura:", thumbnailPath);
     if (thumbnailPath && fs.existsSync(thumbnailPath)) {
       fs.unlinkSync(thumbnailPath);
@@ -584,7 +597,9 @@ export const deleteUnit = async (req, res) => {
     await pool.query(`DELETE FROM videos WHERE unidad_id = ?`, [unidadId]);
 
     // Eliminar la unidad de la base de datos
-    const [result] = await pool.query(`DELETE FROM units WHERE id = ?`, [unidadId]);
+    const [result] = await pool.query(`DELETE FROM units WHERE id = ?`, [
+      unidadId,
+    ]);
 
     if (result.affectedRows === 0) {
       return res
@@ -596,5 +611,68 @@ export const deleteUnit = async (req, res) => {
   } catch (error) {
     console.error("Error al eliminar la unidad:", error);
     res.status(500).json({ message: "Error interno del servidor." });
+  }
+};
+
+export const deleteClase = async (req, res) => {
+  const { unidad_id, video_id } = req.body; // Obtenemos los IDs desde el body
+  const { courseId } = req.params; // Obtenemos el ID del curso desde los params
+
+
+  if (!unidad_id || !video_id || !courseId) {
+    return res.status(400).json({
+      success: false,
+      message: "Curso ID, Unidad ID y Video ID son requeridos.",
+    });
+  }
+
+  try {
+    // Verificar si la unidad pertenece al curso
+    const [existingUnidad] = await pool.query(
+      "SELECT * FROM units WHERE id = ? AND curso_id = ?",
+      [unidad_id, courseId]
+    );
+
+    if (existingUnidad.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "La unidad no existe o no pertenece al curso especificado.",
+      });
+    }
+
+    // Verificar si el video pertenece a la unidad
+    const [existingClase] = await pool.query(
+      "SELECT video_url FROM videos WHERE id = ? AND unidad_id = ?",
+      [video_id, unidad_id]
+    );
+
+    if (existingClase.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "La clase no existe o no pertenece a la unidad especificada.",
+      });
+    }
+
+    // Obtener la URL del archivo del video
+    const videoUrl = existingClase[0].video_url;
+
+    // Eliminar el archivo físico del servidor si existe
+    if (fs.existsSync(videoUrl)) {
+      fs.unlinkSync(videoUrl);
+    }
+
+    // Eliminar la clase (video) de la base de datos
+    await pool.query("DELETE FROM videos WHERE id = ?", [video_id]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Clase eliminada correctamente.",
+    });
+  } catch (error) {
+    console.error("Error al eliminar la clase:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Ocurrió un error al eliminar la clase.",
+    });
   }
 };

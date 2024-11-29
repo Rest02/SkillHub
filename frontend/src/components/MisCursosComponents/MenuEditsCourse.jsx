@@ -6,7 +6,7 @@ function MenuEditsCourse() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuType, setMenuType] = useState(null);
   const navigate = useNavigate();
-  const { courseId } = useParams();
+  const { courseId } = useParams(); // Asegúrate de obtener el courseId correctamente
 
   const handleOpenMenu = (event, type) => {
     setAnchorEl(event.currentTarget);
@@ -34,12 +34,17 @@ function MenuEditsCourse() {
   };
 
   const handleEditarClase = () => {
-    navigate(`/clase/${courseId}/update`); // Redirige a la ruta específica para editar clase
+    navigate(`/clase/${courseId}/update`);
     handleCloseMenu();
   };
 
   const handleEliminarUnidad = () => {
-    navigate(`/unidad/${courseId}/delete`); // Redirige a la ruta para eliminar unidad
+    navigate(`/unidad/${courseId}/delete`);
+    handleCloseMenu();
+  };
+
+  const handleEliminarClase = () => {
+    navigate(`/clase/${courseId}/delete`); // Redirige a la ruta de eliminación de clase
     handleCloseMenu();
   };
 
@@ -150,8 +155,8 @@ function MenuEditsCourse() {
         )}
         {menuType === "eliminar" && (
           <div>
-            <MenuItem onClick={handleEliminarUnidad}>Eliminar Unidad</MenuItem> {/* Redirección aquí */}
-            <MenuItem onClick={handleCloseMenu}>Eliminar Clase</MenuItem>
+            <MenuItem onClick={handleEliminarUnidad}>Eliminar Unidad</MenuItem>
+            <MenuItem onClick={handleEliminarClase}>Eliminar Clase</MenuItem> {/* Aquí se redirige */}
           </div>
         )}
       </Menu>

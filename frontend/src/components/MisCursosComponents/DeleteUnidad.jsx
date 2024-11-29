@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack"; // Importa useSnackbar
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 import {
   Container,
@@ -14,7 +15,9 @@ import {
 
 const DeleteUnidad = () => {
   const { courseId } = useParams();
+  const navigate = useNavigate();
   const { unidades, setCursoSeleccionado, deleteUnidad } = useContext(MisCursosContext);
+  const { enqueueSnackbar } = useSnackbar(); // Hook de notistack para mostrar notificaciones
   const [selectedUnidad, setSelectedUnidad] = useState("");
 
   // Configura el curso seleccionado al montar el componente
@@ -30,7 +33,7 @@ const DeleteUnidad = () => {
   // Maneja la eliminación de la unidad
   const handleDeleteUnidad = async () => {
     if (!selectedUnidad) {
-      alert("Selecciona una unidad para eliminar.");
+      enqueueSnackbar("Selecciona una unidad para eliminar.", { variant: "warning" });
       return;
     }
 
@@ -41,10 +44,14 @@ const DeleteUnidad = () => {
     if (confirmDelete) {
       const result = await deleteUnidad(courseId, selectedUnidad);
       if (result && result.success) {
-        alert("Unidad eliminada con éxito.");
+        enqueueSnackbar("¡Unidad eliminada con éxito!", { variant: "success" });
+
+        // Redirige al usuario a la página de unidades y videos directamente después de la eliminación
+        navigate(`/cursos/${courseId}/unitsandvideos`);
+
         setSelectedUnidad(""); // Resetea la selección
       } else {
-        alert(result?.message || "Error al eliminar la unidad.");
+        enqueueSnackbar(result?.message || "Error al eliminar la unidad.", { variant: "error" });
       }
     }
   };

@@ -96,4 +96,8 @@ router.delete(
 
 router.delete("/unidad/:courseId/delete", verifyToken, checkInstructorRole, courseControllers.deleteUnit )
 
+
+router.delete("/clase/:courseId/delete", verifyToken, checkInstructorRole, courseControllers.deleteClase )
+
+
 export default router;
