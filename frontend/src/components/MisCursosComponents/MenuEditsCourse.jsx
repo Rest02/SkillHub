@@ -38,6 +38,11 @@ function MenuEditsCourse() {
     handleCloseMenu();
   };
 
+  const handleEliminarUnidad = () => {
+    navigate(`/unidad/${courseId}/delete`); // Redirige a la ruta para eliminar unidad
+    handleCloseMenu();
+  };
+
   return (
     <Box
       sx={{
@@ -140,12 +145,12 @@ function MenuEditsCourse() {
         {menuType === "editar" && (
           <div>
             <MenuItem onClick={handleEditarUnidad}>Editar Unidad</MenuItem>
-            <MenuItem onClick={handleEditarClase}>Editar Clase</MenuItem> {/* Nueva opción */}
+            <MenuItem onClick={handleEditarClase}>Editar Clase</MenuItem>
           </div>
         )}
         {menuType === "eliminar" && (
           <div>
-            <MenuItem onClick={handleCloseMenu}>Eliminar Unidad</MenuItem>
+            <MenuItem onClick={handleEliminarUnidad}>Eliminar Unidad</MenuItem> {/* Redirección aquí */}
             <MenuItem onClick={handleCloseMenu}>Eliminar Clase</MenuItem>
           </div>
         )}
