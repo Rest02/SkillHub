@@ -3,7 +3,7 @@ import { Box, Typography, Avatar } from '@mui/material';
 
 function ThreeContainerInfo() {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%'}}>
       {/* Primer contenedor */}
       <Box
         sx={{

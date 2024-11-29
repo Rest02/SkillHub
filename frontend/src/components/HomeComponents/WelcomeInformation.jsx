@@ -26,7 +26,6 @@ function WelcomeInformation() {
           maxHeight: "500px", // Ajusta la altura máxima para que coincida con el texto
           borderRadius: "8px",
           objectFit: "cover",
-          
         }}
       />
 
@@ -58,12 +57,15 @@ function WelcomeInformation() {
         <Button
           variant="contained"
           sx={{
+            border: "2px solid black",
             backgroundColor: "black",
             color: "white",
             borderRadius: "20px",
             padding: "10px 20px",
             "&:hover": {
-              backgroundColor: "#333",
+              backgroundColor: "#9B111E", // Cambia el color del fondo
+              color: "black", // Cambia el color del texto
+              border: "2px solid black", // Añade bordes negros
             },
           }}
         >

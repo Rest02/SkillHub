@@ -24,10 +24,10 @@ function ImageBar() {
           marginBottom: 2,
         }}
       >
-        <Typography variant="h6" sx={{ marginBottom: 1, fontFamily: 'Lato', fontWeight: 600 }}>
+        <Typography variant="h4" sx={{ marginBottom: 1, fontFamily: 'Lato', fontWeight: 600 }}>
           Create and sell
         </Typography>
-        <Typography variant="h5" sx={{ marginBottom: 2, fontFamily: 'Lato', fontWeight: 400 }}>
+        <Typography variant="h2" sx={{ marginBottom: 2, fontFamily: 'Lato', fontWeight: 400 }}>
           your own beautiful online courses
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
