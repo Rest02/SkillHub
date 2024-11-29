@@ -286,7 +286,7 @@ export const getCourseUnitsAndVideos = async (req, res) => {
     });
   } catch (error) {
     console.error('Error al obtener las unidades y videos del curso:', error);
-    res.status(200).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -312,7 +312,7 @@ export const getUnitsOfCourse = async (req, res) => {
     );
 
     if (unidades.length === 0) {
-      return res.status(404).json({ message: "No se encontraron unidades para este curso." });
+      return res.status(201).json({ message: "No se encontraron unidades para este curso." });
     }
 
     res.status(200).json(unidades);

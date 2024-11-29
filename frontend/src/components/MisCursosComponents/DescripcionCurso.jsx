@@ -52,6 +52,11 @@ function DescripcionCurso({ course, units }) {
   const [paginaActual, setPaginaActual] = useState(1);
   const unidadesPorPagina = 10;
 
+  if (!units || units.length === 0) {
+    return <Typography variant="body1">No hay unidades disponibles para este curso.</Typography>;
+  }
+
+
   // Función para manejar el cambio de página
   const handleChangePagina = (event, value) => {
     setPaginaActual(value);
