@@ -62,6 +62,7 @@ function WelcomeInformation() {
             color: "white",
             borderRadius: "20px",
             padding: "10px 20px",
+            transition: 'color 0.6s', // Suaviza el cambio de color
             "&:hover": {
               backgroundColor: "#9B111E", // Cambia el color del fondo
               color: "black", // Cambia el color del texto

@@ -42,12 +42,13 @@ const NavBarInstructor = () => {
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "#C0C0C0", // Azul marino para el fondo principal
+        backgroundColor: "#ffffff", // Azul marino para el fondo principal
         borderRadius: "15px",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
         height: "60px",
         justifyContent: "center",
         padding: "0 20px",
+        border : "1px solid black"
       }}
     >
       <Toolbar
@@ -84,6 +85,7 @@ const NavBarInstructor = () => {
             sx={{
               bgcolor: "#ffffff",
               borderRadius: "20px",
+              border: "1px solid black",
               height: "40px",
               "& .MuiOutlinedInput-root": {
                 height: "40px",
