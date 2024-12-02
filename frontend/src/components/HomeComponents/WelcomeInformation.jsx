@@ -58,14 +58,13 @@ function WelcomeInformation() {
           variant="contained"
           sx={{
             border: "2px solid black",
-            backgroundColor: "black",
+            backgroundColor: "#D32F2F",
             color: "white",
             borderRadius: "20px",
             padding: "10px 20px",
             transition: 'color 0.6s', // Suaviza el cambio de color
             "&:hover": {
               backgroundColor: "#9B111E", // Cambia el color del fondo
-              color: "black", // Cambia el color del texto
               border: "2px solid black", // Añade bordes negros
             },
           }}

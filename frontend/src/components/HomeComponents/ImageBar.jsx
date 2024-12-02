@@ -1,55 +1,82 @@
-import React from 'react';
-import { Box, TextField, Button, Typography } from '@mui/material';
-import BackImage from '../../assets/img/BackImage.png'; // Asegúrate de que la ruta sea correcta
+import React from "react";
+import { Box, TextField, Button, Typography } from "@mui/material";
+import BackImage from "../../assets/img/BackImage.png";
 
 function ImageBar() {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column', // Apilar elementos verticalmente
-        justifyContent: 'center', // Centrar verticalmente
-        alignItems: 'center', // Centrar horizontalmente
-        height: '100vh', // Ocupa toda la altura de la ventana
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
         padding: 2,
       }}
     >
       <Box
         sx={{
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           borderRadius: 2,
           padding: 3,
-          width: '70%',
-          textAlign: 'center',
+          width: "70%",
+          textAlign: "center",
           marginBottom: 2,
         }}
       >
-        <Typography variant="h4" sx={{ marginBottom: 1, fontFamily: 'Lato', fontWeight: 600 }}>
+        {/* Título principal */}
+        <Typography
+          variant="h4"
+          sx={{
+            marginBottom: 1,
+            fontFamily: "Poppins, sans-serif",
+            fontWeight: 700,
+            color: "#1D63FF",
+          }}
+        >
           Create and sell
         </Typography>
-        <Typography variant="h2" sx={{ marginBottom: 2, fontFamily: 'Lato', fontWeight: 400 }}>
+
+        {/* Subtítulo */}
+        <Typography
+          variant="h2"
+          sx={{
+            marginBottom: 2,
+            fontFamily: "Lato, sans-serif",
+            fontWeight: 400,
+            color: "#1D63FF",
+          }}
+        >
           your own beautiful online courses
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+
+        {/* Campo de búsqueda */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            gap: 1, // Separación uniforme entre elementos
+          }}
+        >
           <TextField
             variant="outlined"
             placeholder="Search for courses..."
             fullWidth
             sx={{
-              marginRight: 1,
-              borderRadius: '20px',
-              backgroundColor: 'white',
-              height: '60px',
-              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)', // Sombra añadida
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  border: 'none', // Eliminar el borde predeterminado
+              borderRadius: "20px",
+              backgroundColor: "#F7F7F7",
+              "& .MuiOutlinedInput-root": {
+                height: "60px", // Altura uniforme
+                "& fieldset": {
+                  border: "1px solid #1D63FF",
+                  borderRadius: "20px",
                 },
-                '&:hover fieldset': {
-                  border: 'none',
+                "&:hover fieldset": {
+                  border: "1px solid #1D63FF",
                 },
-                '&.Mui-focused fieldset': {
-                  border: 'none',
+                "&.Mui-focused fieldset": {
+                  border: "1px solid #1D63FF",
                 },
               },
             }}
@@ -57,13 +84,20 @@ function ImageBar() {
           <Button
             variant="contained"
             sx={{
-              height: '60px',
-              backgroundColor: 'black',
-              color: 'white',
-              borderRadius: '20px',
-              flexGrow: 1,
-              '&:hover': {
-                backgroundColor: '#333',
+              height: "60px",
+              minWidth: "150px", // Tamaño más manejable
+              backgroundColor: "#1D63FF",
+              color: "#FFFFFF",
+              borderRadius: "30px",
+              fontSize: "1rem",
+              fontWeight: "bold",
+              boxShadow: "none",
+              "&:hover": {
+                backgroundColor: "#145BB2",
+                boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.25)",
+              },
+              "&:active": {
+                boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
               },
             }}
           >
@@ -76,11 +110,11 @@ function ImageBar() {
         src={BackImage}
         alt="Background"
         sx={{
-          width: '50%',
-          height: 'auto',
+          width: "50%",
+          height: "auto",
           borderRadius: 2,
           flexGrow: 1,
-          alignSelf: 'center',
+          alignSelf: "center",
         }}
       />
     </Box>
