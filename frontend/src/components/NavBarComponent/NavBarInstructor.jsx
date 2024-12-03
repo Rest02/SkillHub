@@ -54,6 +54,8 @@ const NavBarInstructor = () => {
     fontFamily: "Kanit, sans-serif",
     width: "80%", // Hacemos que el navbar ocupe el 80% del ancho de la página
     margin: "0 auto", // Centramos el navbar horizontalmente
+    border : "1px solid black"
+
   }}
 >
   <Toolbar
