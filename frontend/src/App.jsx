@@ -27,6 +27,8 @@ import DeleteClase from "../src/components/MisCursosComponents/DeleteClase.jsx";
 import CursosPage from '../src/pages/CursosPage/CursosPage.jsx'
 import { ShowCourseProvider } from '../src/context/ShowCourseContext.jsx'; // Importa el proveedor
 import MostrarCursoUserPage from '../src/pages/MostrarCursoUser/MostrarCursoUserPage.jsx'
+import CarritoPage from '../src/pages/CarritoPage/CarritoPage.jsx'
+import {CarritoProvider } from './context/CarritoContext.jsx'
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -89,6 +91,9 @@ const AppContent = () => {
 
         <Route path="/showcourseuser/:courseId/details" element={<MostrarCursoUserPage />} />
 
+        <Route path="/cart" element={<CarritoPage />} />
+
+
 
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -102,7 +107,9 @@ function App() {
       <AuthContextProvider>
         <MisCursosProvider>
           <ShowCourseProvider>  {/* Usa el proveedor aquí */}
-            <AppContent /> {/* Mueve el contenido principal aquí */}
+            <CarritoProvider>
+              <AppContent /> {/* Mueve el contenido principal aquí */}
+            </CarritoProvider>
           </ShowCourseProvider>
         </MisCursosProvider>
       </AuthContextProvider>

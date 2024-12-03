@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.routes.js'
 import perfilRoutes from './routes/perfil.routes.js'
 import courseRoutes from './routes/course.routes.js'
 import showCourseRoutes from './routes/showCourses.routes.js'
+import cartRoutes from './routes/carrito.routes.js'
 
 
 
@@ -21,6 +22,7 @@ app.use(authRoutes)
 app.use(perfilRoutes)
 app.use(courseRoutes)
 app.use(showCourseRoutes)
+app.use(cartRoutes)
 
 
 app.listen(process.env.PORT)
