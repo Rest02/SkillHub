@@ -24,6 +24,8 @@ import UpdateUnits from "../src/components/MisCursosComponents/UpdateUnits.jsx";
 import UpdateClase from "../src/components/MisCursosComponents/UpdateClase.jsx";
 import DeleteUnidad from "../src/components/MisCursosComponents/DeleteUnidad.jsx";
 import DeleteClase from "../src/components/MisCursosComponents/DeleteClase.jsx";
+import CursosPage from '../src/pages/CursosPage/CursosPage.jsx'
+import { ShowCourseProvider } from '../src/context/ShowCourseContext.jsx'; // Importa el proveedor
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -81,6 +83,9 @@ const AppContent = () => {
         <Route path="/unidad/:courseId/delete" element={<DeleteUnidad />} />
         <Route path="/clase/:courseId/delete" element={<DeleteClase />} />
 
+
+        <Route path="/cursos" element={<CursosPage />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
@@ -92,7 +97,9 @@ function App() {
     <SnackbarProvider maxSnack={3}>
       <AuthContextProvider>
         <MisCursosProvider>
-          <AppContent /> {/* Mueve el contenido principal aquí */}
+          <ShowCourseProvider>  {/* Usa el proveedor aquí */}
+            <AppContent /> {/* Mueve el contenido principal aquí */}
+          </ShowCourseProvider>
         </MisCursosProvider>
       </AuthContextProvider>
     </SnackbarProvider>

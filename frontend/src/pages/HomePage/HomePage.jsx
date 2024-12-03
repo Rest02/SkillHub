@@ -6,17 +6,17 @@ import TopCategories from '../../components/HomeComponents/TopCategories'
 
 function HomePage() {
   return (
-    <div className="container">
-      <div>
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="w-full max-w-[1200px] mx-auto">
         <ImageBar />
       </div>
-      <div>
+      <div className="w-full max-w-[1200px] mx-auto">
         <ThreeContainerInfo/>
       </div>
-      <div>
+      <div className="w-full max-w-[1200px] mx-auto">
         <WelcomeInformation/>
       </div>
-      <div>
+      <div className="w-full max-w-[1200px] mx-auto">
         <TopCategories/>
       </div>
     </div>

@@ -4,6 +4,8 @@ import indexRoutes from './routes/index.routes.js'
 import authRoutes from './routes/auth.routes.js'
 import perfilRoutes from './routes/perfil.routes.js'
 import courseRoutes from './routes/course.routes.js'
+import showCourseRoutes from './routes/showCourses.routes.js'
+
 
 
 const app = express()
@@ -18,6 +20,7 @@ app.use(indexRoutes)
 app.use(authRoutes)
 app.use(perfilRoutes)
 app.use(courseRoutes)
+app.use(showCourseRoutes)
 
 
 app.listen(process.env.PORT)
