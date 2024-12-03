@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { useCursos } from "../../context/ShowCourseContext.jsx"; // Asegúrate de importar el hook
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
+
 
 function CursoCardShow({ searchQuery }) {
+  const navigate = useNavigate(); // Hook para navegar entre rutas
+
   const { cursos, loading, error, fetchCursos } = useCursos(); // Consumimos el contexto aquí
   const cursosPorPagina = 18; // 3 filas x 6 columnas
   const [paginaActual, setPaginaActual] = useState(1);
@@ -53,6 +57,14 @@ if (cursosFiltrados.length === 0 && !loading) {
     }
   };
 
+  const handleViewCourse = (courseId) => {
+    if (!courseId) {
+      console.error("El ID del curso no es válido:", courseId);
+      return;
+    }
+    navigate(`/showcourseuser/${courseId}/details`); // Navegar a la ruta con el ID del curso
+  };
+
   return (
     <div className="flex justify-center items-center">
       <div className="max-w-[1200px] mx-auto">
@@ -86,6 +98,8 @@ if (cursosFiltrados.length === 0 && !loading) {
                   <button
                     className="align-middle select-none font-sans font-bold text-center uppercase transition-all text-white bg-[#000000] py-3 px-6 rounded-lg shadow-lg hover:bg-[#1D63FF] active:shadow-md block w-full"
                     type="button"
+                    onClick={() => handleViewCourse(curso.id)} // Redirige al curso específico
+
                   >
                     Añadir al carrito
                   </button>

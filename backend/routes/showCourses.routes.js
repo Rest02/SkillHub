@@ -7,6 +7,8 @@ import { checkInstructorRole } from "../middlewares/isInstructorMiddleware.js";
 const router = Router()
 
 router.get("/cursos", showCourseControllers.getCourses)
+router.get("/courses/:courseId/details", showCourseControllers.getCourseDetails);
+
 
 
 export default router

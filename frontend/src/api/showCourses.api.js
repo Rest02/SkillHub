@@ -15,3 +15,20 @@ export const getCursosApiNoAuth = async (filters = {}) => {
     throw error; // Puedes lanzar el error o devolver un valor por defecto
   }
 };
+
+
+
+export const getCourseDetailsApi = async (courseId) => {
+  try {
+    // Realizar la solicitud GET al endpoint de detalles del curso
+    const response = await axios.get(`http://localhost:4000/courses/${courseId}/details`);
+    
+    console.log(response.data); // Imprimir los datos recibidos (opcional)
+    return response.data; // Devuelve los detalles del curso
+  } catch (error) {
+    // Manejo de errores
+    console.error(`Error fetching course details for course ID ${courseId}:`, error);
+    throw error; // Lanza el error para manejarlo en el lugar donde se llama a la función
+  }
+};
+

@@ -26,6 +26,7 @@ import DeleteUnidad from "../src/components/MisCursosComponents/DeleteUnidad.jsx
 import DeleteClase from "../src/components/MisCursosComponents/DeleteClase.jsx";
 import CursosPage from '../src/pages/CursosPage/CursosPage.jsx'
 import { ShowCourseProvider } from '../src/context/ShowCourseContext.jsx'; // Importa el proveedor
+import MostrarCursoUserPage from '../src/pages/MostrarCursoUser/MostrarCursoUserPage.jsx'
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -85,6 +86,9 @@ const AppContent = () => {
 
 
         <Route path="/cursos" element={<CursosPage />} />
+
+        <Route path="/showcourseuser/:courseId/details" element={<MostrarCursoUserPage />} />
+
 
         <Route path="*" element={<NotFound />} />
       </Routes>
