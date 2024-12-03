@@ -1,61 +1,22 @@
 import React, { useState } from "react";
-import { styled } from "@mui/material/styles";
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import MuiAccordion from "@mui/material/Accordion";
-import MuiAccordionSummary, {
-  accordionSummaryClasses,
-} from "@mui/material/AccordionSummary";
-import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import Pagination from "@mui/material/Pagination";  // Importamos el componente Pagination
-import Stack from "@mui/material/Stack";  // Importamos Stack para la disposición de los componentes
-
-// Estilizado del Accordion con colores personalizados
-const Accordion = styled((props) => (
-  <MuiAccordion disableGutters elevation={0} square {...props} />
-))(({ theme }) => ({
-  border: `1px solid black`,
-  backgroundColor: "#FFFFFF",
-  "&:not(:last-child)": {
-    borderBottom: 0,
-  },
-  "&::before": {
-    display: "none",
-  },
-}));
-
-const AccordionSummary = styled((props) => (
-  <MuiAccordionSummary
-    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem", color: "#000000" }} />}
-    {...props}
-  />
-))(({ theme }) => ({
-  backgroundColor: "#9B111E",
-  color: "#FFFFFF",
-  flexDirection: "row-reverse",
-  [`& .${accordionSummaryClasses.expandIconWrapper}.${accordionSummaryClasses.expanded}`]: {
-    transform: "rotate(90deg)",
-  },
-  [`& .${accordionSummaryClasses.content}`]: {
-    marginLeft: theme.spacing(1),
-  },
-}));
-
-const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
-  padding: theme.spacing(2),
-  backgroundColor: "#C0C0C0",
-  borderTop: "1px solid black",
-}));
+import { useNavigate } from "react-router-dom";
+import Pagination from "@mui/material/Pagination"; // Si usas pagination de Material UI para mantener la misma funcionalidad
 
 function DescripcionCurso({ course, units }) {
   const [expanded, setExpanded] = useState(false);
   const [paginaActual, setPaginaActual] = useState(1);
   const unidadesPorPagina = 10;
+  const navigate = useNavigate();
 
   if (!units || units.length === 0) {
-    return <Typography variant="body1">No hay unidades disponibles para este curso.</Typography>;
+    return (
+      <div className="flex justify-center items-center p-6 bg-black text-white">
+        <p className="text-xl font-semibold text-center bg-red-600 px-6 py-4 rounded-lg shadow-md">
+          No hay unidades disponibles para este curso.
+        </p>
+      </div>
+    );
   }
-
 
   // Función para manejar el cambio de página
   const handleChangePagina = (event, value) => {
@@ -76,74 +37,45 @@ function DescripcionCurso({ course, units }) {
   const totalPaginas = Math.ceil(units.length / unidadesPorPagina);
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1
-        style={{
-          textAlign: "left",
-          color: "white",
-          fontSize: "2rem",
-          marginBottom: "20px",
-          textDecoration: "underline",
-        }}
-      >
-        {course.titulo}
-      </h1>
+    <div className="p-6 text-white">
+      <h1 className="text-3xl mb-6 underline text-black">{course.titulo}</h1>
 
       {unidadesAMostrar.map((unit, index) => (
-        <Accordion
-          key={unit.unidad_id}
-          expanded={expanded === `panel${index}`}
-          onChange={handleChange(`panel${index}`)}
-        >
-          <AccordionSummary
-            aria-controls={`panel${index}-content`}
-            id={`panel${index}-header`}
+        <div key={unit.unidad_id} className="group flex flex-col gap-3 bg-gray-800 p-4 rounded-lg mb-4">
+          <div
+            className="flex cursor-pointer items-center justify-between text-lg font-semibold"
+            onClick={() => setExpanded(expanded === `panel${index}` ? false : `panel${index}`)}
           >
-            <Typography variant="h6">
-              Unidad {index + 1}: {unit.unidad_titulo}
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="body1" component="div">
-              <ul style={{ paddingLeft: "20px", margin: 0 }}>
-                {unit.videos.map((video, videoIndex) => (
-                  <li
-                    key={video.video_id}
-                    style={{
-                      fontSize: "1.1rem",
-                      color: "#000000",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <span style={{ fontWeight: "bold" }}>
-                      {videoIndex + 1}. {video.video_nombre}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
+            <span>{`Unidad ${index + 1}: ${unit.unidad_titulo}`}</span>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/9/96/Chevron-icon-drop-down-menu-WHITE.png"
+              className={`h-3 w-4 transition-all duration-500 ${expanded === `panel${index}` ? "-rotate-180" : ""}`}
+            />
+          </div>
+
+          <div
+            className={`transition-all max-h-0 overflow-hidden ${expanded === `panel${index}` ? "max-h-screen opacity-100 visible" : "opacity-0 invisible"}`}
+          >
+            <ul className="pl-4 text-sm">
+              {unit.videos.map((video, videoIndex) => (
+                <li key={video.video_id} className="mb-1">
+                  <span className="font-semibold">{`${videoIndex + 1}. ${video.video_nombre}`}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       ))}
 
-      {/* Paginación con el componente de Material-UI, centrado */}
-      <Stack
-        spacing={2}
-        style={{
-          marginTop: "20px", 
-          display: "flex", // Usamos flexbox
-          justifyContent: "center", // Centramos horizontalmente
-          alignItems: "center", // Alineamos también verticalmente si es necesario
-        }}
-      >
+      {/* Paginación */}
+      <div className="flex justify-center mt-6">
         <Pagination
           count={totalPaginas}
           page={paginaActual}
           onChange={handleChangePagina}
-          color="primary"  // Puedes cambiar el color si lo deseas
-          siblingCount={1}  // Número de botones de páginas adyacentes
+          color="primary" // Aquí puedes ajustar el color
         />
-      </Stack>
+      </div>
     </div>
   );
 }

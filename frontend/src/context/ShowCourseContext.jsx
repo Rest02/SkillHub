@@ -6,30 +6,42 @@ const ShowCourseContext = createContext();
 
 // Crear el proveedor del contexto
 export const ShowCourseProvider = ({ children }) => {
-  const [cursos, setCursos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [cursos, setCursos] = useState([]); // Cursos cargados
+  const [loading, setLoading] = useState(false); // Estado de carga
+  const [error, setError] = useState(null); // Manejo de errores
+  const [filters, setFilters] = useState({}); // Filtros aplicados
 
-  // Obtener los cursos al cargar el componente
-  useEffect(() => {
-    const fetchCursos = async () => {
-      setLoading(true);
-      try {
-        const data = await getCursosApiNoAuth(); // Llamada a la API
-        setCursos(data); // Guardar los cursos en el estado
-      } catch (err) {
-        setError("Error al obtener los cursos."); // Manejar el error
-      } finally {
-        setLoading(false); // Cambiar el estado de carga
+  // Función para obtener cursos desde la API
+  const fetchCursos = async (appliedFilters = {}) => {
+    setLoading(true);
+    setError(null);  // Limpiar error antes de realizar la búsqueda
+    try {
+      const data = await getCursosApiNoAuth(appliedFilters);
+      if (data.length === 0) {
+        setError("No se encontraron cursos con esos filtros.");  // Establecer un error si no hay resultados
       }
-    };
+      setCursos(data);
+    } catch (err) {
+      setError("Error al obtener los cursos.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
-    fetchCursos(); // Llamada a la función para obtener los cursos
-  }, []);
+  // Efecto para cargar cursos cuando los filtros cambian
+  useEffect(() => {
+    fetchCursos(filters); // Llama a la API con los filtros actuales
+  }, [filters]);
+
+  // Función para actualizar los filtros
+  const applyFilters = (newFilters) => {
+    setFilters((prevFilters) => ({ ...prevFilters, ...newFilters })); // Mezcla los filtros nuevos con los existentes
+  };
 
   // Exponer el contexto
   return (
-    <ShowCourseContext.Provider value={{ cursos, loading, error }}>
+    <ShowCourseContext.Provider value={{ cursos, loading, error, applyFilters }}>
       {children}
     </ShowCourseContext.Provider>
   );

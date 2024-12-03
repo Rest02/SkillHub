@@ -2,28 +2,41 @@ import React, { useState } from "react";
 import { useCursos } from "../../context/ShowCourseContext.jsx"; // Asegúrate de importar el hook
 
 function CursoCardShow({ searchQuery }) {
-  const { cursos, loading, error } = useCursos(); // Consumimos el contexto aquí
+  const { cursos, loading, error, fetchCursos } = useCursos(); // Consumimos el contexto aquí
   const cursosPorPagina = 18; // 3 filas x 6 columnas
   const [paginaActual, setPaginaActual] = useState(1);
 
-  if (loading) return <div>Cargando cursos...</div>; // Muestra un mensaje mientras se cargan los cursos
-  if (error) return <div>{error}</div>; // Muestra el error si ocurre
+  const handleSearch = (query) => {
+    let filters = {
+      titulo: query.titulo || "",
+      maxPrice: query.maxPrice || "",
+      rating: query.rating || "",
+      modalidad: query.modalidad || "",
+    };
+  
+    // Eliminar las propiedades con valor vacío
+    filters = Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== ""));
+  
+    fetchCursos(filters);  // Realizar la búsqueda con los filtros actualizados
+  };
 
-  // Filtrar los cursos según el texto de búsqueda
+  if (loading) return <div>Cargando cursos...</div>;
+  if (error) return <div>{error}</div>; // Asegúrate de que se limpie el error cuando se obtienen nuevos cursos
+  
   const cursosFiltrados = cursos.filter((curso) =>
-    curso.titulo.toLowerCase().includes(searchQuery.toLowerCase()) // Filtra por el título del curso
-  );
+  curso.titulo.toLowerCase().includes(searchQuery.toLowerCase())
+);
 
-  // Si no hay cursos que coincidan con la búsqueda
-  if (cursosFiltrados.length === 0) {
-    return (
-      <div className="flex justify-center items-center">
-        <div className="max-w-[1200px] mx-auto">
-          <p className="text-center text-xl text-gray-600">No se encontraron cursos con ese nombre.</p>
-        </div>
+if (cursosFiltrados.length === 0 && !loading) {
+  return (
+    <div className="flex justify-center items-center">
+      <div className="max-w-[1200px] mx-auto">
+        <p className="text-center text-xl text-gray-600">No se encontraron cursos con ese nombre.</p>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   // Calcular los cursos que se mostrarán en la página actual
   const totalPaginas = Math.ceil(cursosFiltrados.length / cursosPorPagina);
@@ -71,10 +84,10 @@ function CursoCardShow({ searchQuery }) {
                 </p>
                 <div className="mt-auto pt-6">
                   <button
-                    className="align-middle select-none font-sans font-bold text-center uppercase transition-all text-white bg-[#1D63FF] py-3 px-6 rounded-lg shadow-lg hover:bg-[#000000] active:shadow-md block w-full"
+                    className="align-middle select-none font-sans font-bold text-center uppercase transition-all text-white bg-[#000000] py-3 px-6 rounded-lg shadow-lg hover:bg-[#1D63FF] active:shadow-md block w-full"
                     type="button"
                   >
-                    Add to Cart
+                    Añadir al carrito
                   </button>
                 </div>
               </div>
@@ -97,11 +110,10 @@ function CursoCardShow({ searchQuery }) {
               <li key={index}>
                 <button
                   onClick={() => handlePaginaChange(index + 1)}
-                  className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full ${
-                    paginaActual === index + 1
-                      ? "bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-md shadow-pink-500/20"
-                      : "border border-blue-gray-100 bg-transparent text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300"
-                  }`}
+                  className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full ${paginaActual === index + 1
+                    ? "bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-md shadow-pink-500/20"
+                    : "border border-blue-gray-100 bg-transparent text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300"
+                    }`}
                 >
                   {index + 1}
                 </button>

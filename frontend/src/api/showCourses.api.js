@@ -1,10 +1,13 @@
 import axios from 'axios';
 
-export const getCursosApiNoAuth = async () => {
+export const getCursosApiNoAuth = async (filters = {}) => {
   try {
-    // Realizar la solicitud GET para obtener los cursos
-    const response = await axios.get("http://localhost:4000/cursos"); // Asegúrate que la ruta sea correcta
-    console.log(response.data)
+    // Convertir el objeto de filtros en una query string
+    const queryParams = new URLSearchParams(filters).toString();
+    
+    // Realizar la solicitud GET con los parámetros de consulta
+    const response = await axios.get(`http://localhost:4000/cursos?${queryParams}`); // Agrega los filtros dinámicamente
+    console.log(response.data);
     return response.data; // Devuelve los cursos obtenidos
   } catch (error) {
     // Manejo de errores en caso de que la solicitud falle
