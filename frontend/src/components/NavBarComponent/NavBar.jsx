@@ -1,31 +1,27 @@
 import React from "react";
-import { AppBar, Toolbar, Box, TextField, Button, IconButton, InputAdornment } from "@mui/material";
-import { AccountCircle, Search } from "@mui/icons-material";
-import logo from "../../assets/img/logo.png"; // Importa el logo
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { AppBar, Toolbar, Box, Button } from "@mui/material";
+import logo from "../../assets/img/logo.png"; // Asegúrate de usar la ruta correcta
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
-  const navigate = useNavigate(); // Inicializa el hook useNavigate
+  const navigate = useNavigate();
 
-  // Funciones para redireccionar
-  const goToMisCursos = () => {
-    navigate("/miscursos"); // Redirige a /misCursos
-  };
-
-  const goToLogin = () => {
-    navigate("/login"); // Redirige a /misCursos
-  };
+  const goToNosotros = () => navigate("/nosotros");
+  const goToCursos = () => navigate("/cursos");
+  const goToAprendizaje = () => navigate("/aprendizaje");
+  const goToLogin = () => navigate("/login");
+  const goToRegister = () => navigate("/register");
 
   return (
     <AppBar
       position="static"
       sx={{
-        backgroundColor: "#C0C0C0", // Mismo color de fondo que el navbar del instructor
-        borderRadius: "15px",
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-        height: "60px", // Altura de la barra
-        justifyContent: "center",
-        padding: "0 20px",
+        backgroundColor: "transparent",
+        boxShadow: "none",
+        padding: "20px 50px",
+        fontFamily: "Kanit, sans-serif",
+        width: "80%",
+        margin: "0 auto",
       }}
     >
       <Toolbar
@@ -35,79 +31,107 @@ const NavBar = () => {
           alignItems: "center",
         }}
       >
-        {/* Logo */}
-        <Box
-          component="img"
-          src={logo}
-          alt="Logo"
-          sx={{
-            height: "40px", // Altura fija para el logo
-            width: "auto", // Mantiene proporciones
-          }}
-        />
-
-        {/* Barra de búsqueda */}
-        <Box sx={{ flexGrow: 1, mx: 3 }}>
-          <TextField
-            fullWidth
-            placeholder="Busca tu futuro curso"
-            variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search sx={{ color: "#FFFFFF" }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              bgcolor: "#ffffff",
-              borderRadius: "20px",
-              height: "40px",
-              "& .MuiOutlinedInput-root": {
-                height: "40px",
-                "& fieldset": { border: "none" },
-              },
-            }}
-          />
-        </Box>
-
-        {/* Botones de navegación */}
-        <Box sx={{ display: "flex", gap: 2 }}>
+        {/* Opciones de navegación izquierda */}
+        <Box sx={{ display: "flex", gap: 3 }}>
           <Button
             variant="text"
+            onClick={goToNosotros}
             sx={{
+              position: "relative",
               color: "#000000",
               fontWeight: "bold",
-              "&:hover": { color: "#9B111E" }, // Rojo rubí al pasar el ratón
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
+              "&:hover": { color: "#1D63FF" },
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "0%",
+                height: "2px",
+                backgroundColor: "#1D63FF",
+                transition: "width 0.3s ease-in-out",
+              },
+              "&:hover::after": {
+                width: "100%",
+              },
             }}
           >
             Nosotros
           </Button>
           <Button
             variant="text"
-            onClick={goToMisCursos}
+            onClick={goToCursos}
             sx={{
+              position: "relative",
               color: "#000000",
               fontWeight: "bold",
-              "&:hover": { color: "#9B111E" },
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
+              "&:hover": { color: "#1D63FF" },
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "0%",
+                height: "2px",
+                backgroundColor: "#1D63FF",
+                transition: "width 0.3s ease-in-out",
+              },
+              "&:hover::after": {
+                width: "100%",
+              },
             }}
           >
             Cursos
           </Button>
           <Button
             variant="text"
+            onClick={goToAprendizaje}
             sx={{
+              position: "relative",
               color: "#000000",
               fontWeight: "bold",
-              "&:hover": { color: "#9B111E" },
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
+              "&:hover": { color: "#1D63FF" },
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "0%",
+                height: "2px",
+                backgroundColor: "#1D63FF",
+                transition: "width 0.3s ease-in-out",
+              },
+              "&:hover::after": {
+                width: "100%",
+              },
             }}
           >
             Aprendizaje
           </Button>
         </Box>
 
-        {/* Perfil y botones de acción */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, paddingLeft: " 20px" }}>
+        {/* Logo centrado */}
+        <Box
+          component="img"
+          src={logo}
+          alt="SkillHub Logo"
+          sx={{
+            height: "80px",
+            width: "auto",
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        />
+
+        {/* Botones de acciones derecha */}
+        <Box sx={{ display: "flex", gap: 3 }}>
           <Button
             variant="outlined"
             onClick={goToLogin}
@@ -115,11 +139,13 @@ const NavBar = () => {
               color: "#000000",
               borderColor: "#000000",
               fontWeight: "bold",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
               borderRadius: "20px",
               "&:hover": {
-                backgroundColor: "#9B111E",
+                backgroundColor: "#1D63FF",
                 color: "#FFFFFF",
-                borderColor: "#9B111E",
+                borderColor: "#1D63FF",
               },
             }}
           >
@@ -127,14 +153,17 @@ const NavBar = () => {
           </Button>
           <Button
             variant="contained"
+            onClick={goToRegister}
             sx={{
-              backgroundColor: "#9B111E", // Rojo rubí
-              color: "#ffffff",
+              backgroundColor: "#1D63FF",
+              color: "#FFFFFF",
               fontWeight: "bold",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
               borderRadius: "20px",
               "&:hover": {
-                backgroundColor: "#C0C0C0", // Gris claro al pasar el ratón
-                color: "#000000",
+                backgroundColor: "#000000",
+                color: "#FFFFFF",
               },
             }}
           >

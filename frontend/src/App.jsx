@@ -24,14 +24,19 @@ import UpdateUnits from "../src/components/MisCursosComponents/UpdateUnits.jsx";
 import UpdateClase from "../src/components/MisCursosComponents/UpdateClase.jsx";
 import DeleteUnidad from "../src/components/MisCursosComponents/DeleteUnidad.jsx";
 import DeleteClase from "../src/components/MisCursosComponents/DeleteClase.jsx";
-import CursosPage from '../src/pages/CursosPage/CursosPage.jsx'
-import { ShowCourseProvider } from '../src/context/ShowCourseContext.jsx'; // Importa el proveedor
-import MostrarCursoUserPage from '../src/pages/MostrarCursoUser/MostrarCursoUserPage.jsx'
-import CarritoPage from '../src/pages/CarritoPage/CarritoPage.jsx'
-import {CarritoProvider } from './context/CarritoContext.jsx'
+import CursosPage from "../src/pages/CursosPage/CursosPage.jsx";
+import { ShowCourseProvider } from "../src/context/ShowCourseContext.jsx"; // Importa el proveedor
+import MostrarCursoUserPage from "../src/pages/MostrarCursoUser/MostrarCursoUserPage.jsx";
+import CarritoPage from "../src/pages/CarritoPage/CarritoPage.jsx";
+import { CarritoProvider } from "./context/CarritoContext.jsx";
+import AprendizajePage from "../src/pages/AprendizajePage/AprendizajePage.jsx";
+import { useLocation } from "react-router-dom";
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
+  const location = useLocation(); // Ruta actual
+  const noNavbarRoutes = ["/register"];
+  const shouldShowNavbar = !noNavbarRoutes.includes(location.pathname);
 
   const renderNavBar = () => {
     if (userRole === "instructor") {
@@ -46,7 +51,8 @@ const AppContent = () => {
 
   return (
     <>
-      {renderNavBar()}
+      {shouldShowNavbar && renderNavBar()}
+
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<AuthPageRegister />} />
@@ -86,14 +92,16 @@ const AppContent = () => {
         <Route path="/unidad/:courseId/delete" element={<DeleteUnidad />} />
         <Route path="/clase/:courseId/delete" element={<DeleteClase />} />
 
-
         <Route path="/cursos" element={<CursosPage />} />
 
-        <Route path="/showcourseuser/:courseId/details" element={<MostrarCursoUserPage />} />
+        <Route
+          path="/showcourseuser/:courseId/details"
+          element={<MostrarCursoUserPage />}
+        />
 
         <Route path="/cart" element={<CarritoPage />} />
 
-
+        <Route path="/aprendizaje" element={<AprendizajePage />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -106,7 +114,9 @@ function App() {
     <SnackbarProvider maxSnack={3}>
       <AuthContextProvider>
         <MisCursosProvider>
-          <ShowCourseProvider>  {/* Usa el proveedor aquí */}
+          <ShowCourseProvider>
+            {" "}
+            {/* Usa el proveedor aquí */}
             <CarritoProvider>
               <AppContent /> {/* Mueve el contenido principal aquí */}
             </CarritoProvider>

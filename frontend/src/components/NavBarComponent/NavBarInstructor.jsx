@@ -58,7 +58,6 @@ const NavBarInstructor = () => {
         fontFamily: "Kanit, sans-serif",
         width: "80%",
         margin: "0 auto",
-        border: "1px solid black",
       }}
     >
       <Toolbar
