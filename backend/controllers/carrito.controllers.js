@@ -35,3 +35,34 @@ export const getCarrito = async (req, res) => {
   }
 };
 
+// Controlador para eliminar un curso del carrito
+export const deleteFromCarrito = async (req, res) => {
+  const userId = req.user.id; // ID del usuario autenticado
+  const { carritoId } = req.body; // ID del ítem en el carrito que se va a eliminar
+
+  if (!carritoId) {
+    return res.status(400).json({ message: "El carritoId es requerido" });
+  }
+
+  try {
+    // Verificar si el ítem pertenece al usuario
+    const [result] = await pool.query(
+      `
+      DELETE FROM cart
+      WHERE id = ? AND user_id = ?
+      `,
+      [carritoId, userId]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Item no encontrado o no pertenece al usuario" });
+    }
+
+    // Respuesta de éxito
+    res.status(200).json({ success: true, message: "Item eliminado del carrito correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al eliminar el item del carrito" });
+  }
+};
+

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useCarrito } from "../../context/CarritoContext.jsx";
 
 function Carrito() {
-  const { carrito, loading, error, loadCarrito } = useCarrito();
+  const { carrito, loading, error, loadCarrito, removeFromCarrito } = useCarrito(); // Asegúrate de que removeFromCarrito esté disponible
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -19,12 +19,10 @@ function Carrito() {
     return <p>Error al cargar el carrito: {error}</p>;
   }
 
-  const handleCantidadChange = (id, nuevaCantidad) => {
-    if (nuevaCantidad < 1) return; // Asegurarse de que la cantidad no sea menor a 1
-    // Aquí puedes llamar a una función para actualizar la cantidad en el carrito
-    // (asumir que esta lógica está definida en el contexto)
+  const handleRemoveItem = (carritoId) => {
+    if (!token) return; // Validar que el token exista
+    removeFromCarrito(token, carritoId); // Llamar a la función del contexto
   };
-  console.log(carrito);
 
   return (
     <div className="pt-20">
@@ -32,12 +30,12 @@ function Carrito() {
         <div className="rounded-lg md:w-2/3">
           {carrito.map((producto) => (
             <div
-              key={`${producto.course_id}-${producto.id}`} // Combinamos course_id y id para garantizar unicidad
+              key={`${producto.carrito_id}`} // Usar carrito_id como key único
               className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start"
             >
               <img
-                src={`http://localhost:4000/${producto.imagen}`} // Cambia imagen_portada por imagen
-                alt={producto.nombre} // Usamos titulo para el alt
+                src={`http://localhost:4000/${producto.imagen}`}
+                alt={producto.nombre}
                 className="w-full rounded-lg sm:w-40"
               />
               <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
@@ -51,38 +49,17 @@ function Carrito() {
                 </div>
                 <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
                   <div className="flex items-center border-gray-100">
-                    <span
-                      onClick={() =>
-                        handleCantidadChange(
-                          producto.course_id,
-                          producto.cantidad - 1
-                        )
-                      }
-                      className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50"
-                    >
+                    {/* Controles de cantidad */}
+                    <span className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50">
                       -
                     </span>
                     <input
                       className="h-8 w-8 border bg-white text-center text-xs outline-none"
                       type="number"
                       value={producto.cantidad || 1}
-                      min="1"
-                      onChange={(e) =>
-                        handleCantidadChange(
-                          producto.course_id,
-                          parseInt(e.target.value, 10)
-                        )
-                      }
+                      readOnly
                     />
-                    <span
-                      onClick={() =>
-                        handleCantidadChange(
-                          producto.course_id,
-                          producto.cantidad + 1
-                        )
-                      }
-                      className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50"
-                    >
+                    <span className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50">
                       +
                     </span>
                   </div>
@@ -90,6 +67,7 @@ function Carrito() {
                     <p className="text-sm">
                       {(producto.precio || 0).toLocaleString()} ₭
                     </p>
+                    {/* Botón "X" para eliminar */}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -97,6 +75,7 @@ function Carrito() {
                       strokeWidth="1.5"
                       stroke="currentColor"
                       className="h-5 w-5 cursor-pointer duration-150 hover:text-red-500"
+                      onClick={() => handleRemoveItem(producto.carrito_id)} // Llamar a handleRemoveItem con carrito_id
                     >
                       <path
                         strokeLinecap="round"

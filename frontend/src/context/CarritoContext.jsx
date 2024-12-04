@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { getCarrito } from "../api/carrito.api.js"; // Importa la función de la API
+import { getCarrito, deleteFromCarrito } from "../api/carrito.api.js"; // Importa la función de la API
 
 // Crear el contexto
 const CarritoContext = createContext();
@@ -24,9 +24,26 @@ export const CarritoProvider = ({ children }) => {
     }
   };
 
+  const removeFromCarrito = async (token, carritoId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await deleteFromCarrito(token, carritoId); // Llamar a la API para eliminar
+      setCarrito((prevCarrito) =>
+        prevCarrito.filter((item) => item.carrito_id !== carritoId)
+      ); // Actualizar el estado
+    } catch (err) {
+      setError(err.message); // Capturar errores
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Proveer estado y funciones al contexto
   return (
-    <CarritoContext.Provider value={{ carrito, loading, error, loadCarrito }}>
+    <CarritoContext.Provider
+      value={{ carrito, loading, error, loadCarrito, removeFromCarrito }}
+    >
       {children}
     </CarritoContext.Provider>
   );

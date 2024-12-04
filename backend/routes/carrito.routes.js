@@ -7,4 +7,10 @@ const router = express.Router();
 // Ruta protegida para obtener el carrito del usuario
 router.get("/carrito", verifyToken, cartControllers.getCarrito);
 
+
+
+router.delete("/carrito", verifyToken, cartControllers.deleteFromCarrito);
+
+
+
 export default router;
