@@ -2,9 +2,12 @@ import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function RegisterForm() {
   const { registerUser } = useAuth();
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     nombre: Yup.string()
@@ -20,8 +23,8 @@ function RegisterForm() {
   });
 
   return (
-    <div className="h-screen md:flex">
-      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 justify-around items-center hidden">
+    <div className="h-screen w-screen flex">
+      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-yellow-400 to-blue-700 justify-around items-center hidden">
         <div>
           <h1 className="text-white font-bold text-4xl font-sans">SkillHub</h1>
           <p className="text-white mt-1">Explora, aprende y crece con nosotros</p>
@@ -32,18 +35,24 @@ function RegisterForm() {
             Leer más
           </button>
         </div>
-        <div className="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-        <div className="absolute -bottom-40 -left-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-        <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-        <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
       </div>
       <div className="flex md:w-1/2 justify-center py-10 items-center bg-white">
         <Formik
           initialValues={{ nombre: "", email: "", password: "" }}
           validationSchema={validationSchema}
           onSubmit={async (values) => {
-            console.log(values);
-            await registerUser(values);
+            try {
+              await registerUser(values);
+              toast.success("Registrado con éxito", {
+                position: "bottom-left", // Mensaje en la esquina inferior izquierda
+              });
+              navigate("/");
+            } catch (error) {
+              console.error("Error al registrar al usuario:", error);
+              toast.error("Error al registrarse. Intente de nuevo.", {
+                position: "bottom-left",
+              });
+            }
           }}
         >
           {({ handleChange, handleSubmit }) => (

@@ -1,29 +1,13 @@
 import React, { useState } from "react";
-import { ErrorMessage, Form, Formik } from "formik";
-import { useAuth } from "../../context/AuthContext.jsx";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Card,
-  Grid,
-  Paper,
-  Stack,
-  InputAdornment,
-} from "@mui/material";
-import picture from "../../assets/img/foto.jpg"; // Imagen de la foto (a la izquierda)
-import logo from "../../assets/img/logo.png"; // Logo que irá arriba del formulario
-import { Visibility, VisibilityOff } from "@mui/icons-material"; // Iconos para mostrar/ocultar contraseña
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useAuth } from "../../context/AuthContext.jsx";
+import { useNavigate, Link } from "react-router-dom";
 
 function LoginForm() {
-  const navigate = useNavigate(); // Inicializa el hook useNavigate
-
   const { loginUser } = useAuth();
-  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -35,171 +19,118 @@ function LoginForm() {
   });
 
   return (
-    <Grid
-      container
-      alignItems="center"
-      justifyContent="center"
-      style={{ height: "810px" }}
-    >
-      <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            borderRadius: 2,
-            backgroundColor: "#C0C0C0",
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
-            height: "auto",
+    <div className="bg-sky-100 flex justify-center items-center h-screen">
+      {/* Imagen a la izquierda */}
+      <div className="hidden lg:block w-1/2 h-screen">
+        <img
+          src="https://img.freepik.com/fotos-premium/imagen-fondo_910766-187.jpg?w=826"
+          alt="Login Illustration"
+          className="object-cover w-full h-full"
+        />
+      </div>
+
+      {/* Formulario a la derecha */}
+      <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
+        <h1 className="text-2xl font-semibold mb-4">Iniciar Sesión</h1>
+
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={validationSchema}
+          onSubmit={async (values) => {
+            try {
+              await loginUser(values);
+              navigate("/");
+            } catch (error) {
+              console.error("Error al iniciar sesión", error);
+            }
           }}
         >
-          <Box
-            component="img"
-            src={picture}
-            alt="Descripción de la imagen"
-            sx={{
-              width: "50%",
-              height: "auto",
-              objectFit: "cover",
-              borderRadius: "8px",
-              border: "1px solid #003366", // Azul marino para borde
-              marginRight: "20px",
-            }}
-          />
-          
-          <Card
-            sx={{
-              p: 3,
-              borderRadius: 3,
-              boxShadow: 4,
-              bgcolor: "#ffffff",
-              width: "50%",
-              height: "580px",
-            }}
-          >
-            <Box
-              component="img"
-              src={logo}
-              alt="Logo"
-              sx={{
-                width: "179px",
-                height: "auto",
-                display: "block",
-                margin: "0 auto 20px",
-                paddingTop: "10px",
-                paddingBottom: "10px"
-              }}
-            />
+          {({ handleSubmit }) => (
+            <Form onSubmit={handleSubmit}>
+              {/* Campo de correo */}
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-gray-600">
+                  Correo Electrónico
+                </label>
+                <Field
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
 
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: "bold",
-                color: "#003366", // Azul marino para el título
-                textAlign: "center",
-                mb: 2,
-              }}
-            >
-              Bienvenido otra vez
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ color: "black", textAlign: "center", mb: 3 }}
-            >
-              Aprende haciendo y motívate a por más teniendo en cuenta tus
-              horarios de disposición
-            </Typography>
+              {/* Campo de contraseña */}
+              <div className="mb-4">
+                <label htmlFor="password" className="block text-gray-600">
+                  Contraseña
+                </label>
+                <div className="relative">
+                  <Field
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-2 text-gray-600"
+                  >
+                    {showPassword ? "🙈" : "👁️"}
+                  </button>
+                </div>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
 
-            <Formik
-              validationSchema={validationSchema}
-              initialValues={{ email: "", password: "" }}
-              onSubmit={async (values) => {
-                console.log(values);
-                await loginUser(values);
-                navigate("/");
-              }}
-            >
-              {({ handleChange, handleSubmit, errors, touched }) => (
-                <Form onSubmit={handleSubmit}>
-                  <Stack spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Correo Electrónico"
-                      name="email"
-                      type="email"
-                      onChange={handleChange}
-                      variant="outlined"
-                      error={touched.email && !!errors.email}
-                      helperText={touched.email && errors.email}
-                      sx={{
-                        bgcolor: "white",
-                        borderRadius: "30px",
-                      }}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Contraseña"
-                      name="password"
-                      type={showPassword ? "text" : "password"} 
-                      onChange={handleChange}
-                      variant="outlined"
-                      error={touched.password && !!errors.password}
-                      helperText={touched.password && errors.password}
-                      sx={{
-                        bgcolor: "white",
-                        borderRadius: "30px",
-                      }}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Button
-                              onClick={() => setShowPassword((prev) => !prev)}
-                              sx={{ color: "#003366" }} // Azul marino para el ícono
-                            >
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </Button>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                    <Button
-                      fullWidth
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      sx={{
-                        mt: 2,
-                        borderRadius: "50px",
-                        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-                        backgroundColor: "#000000", // Negro para el botón
-                        color: "#ffffff", // Blanco para el texto
-                        "&:hover": {
-                          backgroundColor: "#9B111E", // Rojo rubí en hover
-                        },
-                      }}
-                    >
-                      Entrar
-                    </Button>
-                  </Stack>
-                </Form>
-              )}
-            </Formik>
-            <Typography align="center" sx={{ mt: 3 }}>
-              <Link to="/forgetPassword" style={{ color: "#9B111E" }}>
-                ¿Olvidaste tu contraseña?
-              </Link>
-            </Typography>
-            <Typography align="center" sx={{ mt: 2 }}>
-              ¿No tienes una cuenta?{" "}
-              <Link to="/register" style={{ color: "#9B111E" }}>
-                Registrarse
-              </Link>
-            </Typography>
-          </Card>
-        </Paper>
-      </Grid>
-    </Grid>
+              {/* Recordarme */}
+              <div className="mb-4 flex items-center">
+                <Field
+                  type="checkbox"
+                  id="remember"
+                  name="remember"
+                  className="text-red-500"
+                />
+                <label htmlFor="remember" className="text-gray-600 ml-2">
+                  Recordarme
+                </label>
+              </div>
+
+              {/* ¿Olvidaste tu contraseña? */}
+              <div className="mb-6 text-blue-500">
+                <Link to="/forgetPassword" className="hover:underline">
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </div>
+
+              {/* Botón de inicio de sesión */}
+              <button
+                type="submit"
+                className="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
+              >
+                Entrar
+              </button>
+            </Form>
+          )}
+        </Formik>
+
+        {/* ¿No tienes cuenta? */}
+        <div className="mt-6 text-green-500 text-center">
+          <Link to="/register" className="hover:underline">
+            ¿No tienes cuenta? Regístrate aquí
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 }
 

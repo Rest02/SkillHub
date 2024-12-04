@@ -31,11 +31,13 @@ import CarritoPage from "../src/pages/CarritoPage/CarritoPage.jsx";
 import { CarritoProvider } from "./context/CarritoContext.jsx";
 import AprendizajePage from "../src/pages/AprendizajePage/AprendizajePage.jsx";
 import { useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
   const location = useLocation(); // Ruta actual
-  const noNavbarRoutes = ["/register"];
+  const noNavbarRoutes = ["/register", "/login"];
   const shouldShowNavbar = !noNavbarRoutes.includes(location.pathname);
 
   const renderNavBar = () => {
@@ -52,6 +54,7 @@ const AppContent = () => {
   return (
     <>
       {shouldShowNavbar && renderNavBar()}
+      <Toaster position="top-right" reverseOrder={false} />
 
       <Routes>
         <Route path="/" element={<HomePage />} />

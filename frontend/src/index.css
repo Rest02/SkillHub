@@ -23,10 +23,12 @@
 body {
   
     background-color: #ffce32;
-    margin: 0;  /* Elimina márgenes por defecto */
-    padding: 20px;  /* Elimina padding por defecto */
-    padding-left: 60px;
-    padding-right: 60px;
+    margin: 0; /* Elimina márgenes por defecto */
+    padding: 0; /* Elimina padding */
+    padding-left: 0;
+    padding-right: 0;
+    
+    
   }
   
 
