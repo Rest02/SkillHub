@@ -1,7 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useCarrito } from "../../context/CarritoContext.jsx"; // Importa el hook para acceder al contexto
 
-function VideoPresentation() {
+function VideoPresentation({ courseId }) {
   const [modalOpen, setModalOpen] = useState(false); // Estado para manejar la apertura del modal
+  const { addToCarritoContext, loading, error } = useCarrito(); // Desestructura el contexto para obtener la función
+  const token = localStorage.getItem("token"); // Obtén el token del usuario desde localStorage (o tu método de autenticación)
+
+  const handleAddToCarrito = async () => {
+    try {
+      console.log("el curso id", courseId)
+      await addToCarritoContext(token, courseId); // Llama a la función para agregar el curso al carrito
+    } catch (err) {
+      console.error("Error al agregar al carrito:", err);
+    }
+  };
 
   return (
     <div className="relative font-inter antialiased">
@@ -42,8 +54,12 @@ function VideoPresentation() {
                 <button className="bg-blue-500 text-white py-2 px-6 rounded-full hover:bg-blue-600 transition-colors duration-300">
                   Comprar
                 </button>
-                <button className="bg-gray-500 text-white py-2 px-6 rounded-full hover:bg-gray-600 transition-colors duration-300">
-                  Agregar al carrito
+                <button
+                  onClick={handleAddToCarrito} // Llama a la función al hacer clic
+                  className="bg-gray-500 text-white py-2 px-6 rounded-full hover:bg-gray-600 transition-colors duration-300"
+                  disabled={loading} // Deshabilitar el botón mientras se carga
+                >
+                  {loading ? "Añadiendo..." : "Agregar al carrito"}
                 </button>
               </div>
 

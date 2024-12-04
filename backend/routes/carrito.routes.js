@@ -12,5 +12,9 @@ router.get("/carrito", verifyToken, cartControllers.getCarrito);
 router.delete("/carrito", verifyToken, cartControllers.deleteFromCarrito);
 
 
+router.post("/showcourseuser/:courseId/details", verifyToken, cartControllers.addToCarrito);
+
+
+
 
 export default router;

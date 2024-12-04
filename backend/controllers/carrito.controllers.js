@@ -66,3 +66,44 @@ export const deleteFromCarrito = async (req, res) => {
   }
 };
 
+// Controlador para añadir un curso al carrito usando courseId en los params
+export const addToCarrito = async (req, res) => {
+  const userId = req.user.id; // ID del usuario autenticado desde el token
+  const { courseId } = req.params; // courseId extraído de los parámetros de la URL
+
+  if (!courseId) {
+    return res.status(400).json({ message: "El courseId es requerido" });
+  }
+
+  try {
+    // Verificar si el curso ya está en el carrito
+    const [existingCartItem] = await pool.query(
+      `
+      SELECT id 
+      FROM cart 
+      WHERE user_id = ? AND course_id = ?
+      `,
+      [userId, courseId]
+    );
+
+    if (existingCartItem.length > 0) {
+      // Si ya existe, no permitir duplicados
+      return res.status(400).json({ message: "El curso ya está en el carrito" });
+    }
+
+    // Si no existe, insertar un nuevo registro
+    await pool.query(
+      `
+      INSERT INTO cart (user_id, course_id, quantity)
+      VALUES (?, ?, ?)
+      `,
+      [userId, courseId, 1] // Siempre se inserta con cantidad 1
+    );
+
+    res.status(201).json({ success: true, message: "Curso añadido al carrito" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al añadir el curso al carrito" });
+  }
+};
+

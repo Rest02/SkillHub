@@ -4,8 +4,10 @@ import VideoPresentation from '../../components/MostrarCursoUserComponents/Video
 import CommentsValorations from '../../components/MostrarCursoUserComponents/CommentsValorations.jsx';
 import ProductActionCard from '../../components/MostrarCursoUserComponents/ProductActionCard.jsx';
 import { Box } from '@mui/material';
+import {useParams} from 'react-router-dom'
 
 function MostrarCursoUserPage() {
+  const {courseId} = useParams()
   const handleBuyNow = () => {
     console.log('Compra realizada');
     // Lógica para manejar la compra
@@ -53,7 +55,7 @@ function MostrarCursoUserPage() {
 
             }}
           >
-            <VideoPresentation />
+            <VideoPresentation courseId={courseId} />
           </Box>
         </div>
 

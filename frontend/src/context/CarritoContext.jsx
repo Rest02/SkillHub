@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { getCarrito, deleteFromCarrito } from "../api/carrito.api.js"; // Importa la función de la API
+import { getCarrito, deleteFromCarrito, addToCarrito } from "../api/carrito.api.js"; // Importa la función de la API
 
 // Crear el contexto
 const CarritoContext = createContext();
@@ -15,25 +15,41 @@ export const CarritoProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getCarrito(token); // Llamada a la API
-      setCarrito(data); // Actualizar el estado con los datos del carrito
+      const data = await getCarrito(token);
+      setCarrito(data);
     } catch (err) {
-      setError(err.message); // Capturar el error
+      setError(err.message);
     } finally {
-      setLoading(false); // Finalizar el estado de carga
+      setLoading(false);
     }
   };
 
+  // Función para añadir un curso al carrito
+  const addToCarritoContext = async (token, courseId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const message = await addToCarrito(token, courseId); // Llamada a la API
+      alert(message); // Mostrar mensaje de éxito (opcional)
+      await loadCarrito(token); // Recargar el carrito actualizado
+    } catch (err) {
+      setError(err.message); // Capturar errores
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Función para eliminar un curso del carrito
   const removeFromCarrito = async (token, carritoId) => {
     setLoading(true);
     setError(null);
     try {
-      await deleteFromCarrito(token, carritoId); // Llamar a la API para eliminar
+      await deleteFromCarrito(token, carritoId);
       setCarrito((prevCarrito) =>
         prevCarrito.filter((item) => item.carrito_id !== carritoId)
-      ); // Actualizar el estado
+      );
     } catch (err) {
-      setError(err.message); // Capturar errores
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -42,7 +58,14 @@ export const CarritoProvider = ({ children }) => {
   // Proveer estado y funciones al contexto
   return (
     <CarritoContext.Provider
-      value={{ carrito, loading, error, loadCarrito, removeFromCarrito }}
+      value={{
+        carrito,
+        loading,
+        error,
+        loadCarrito,
+        addToCarritoContext,
+        removeFromCarrito,
+      }}
     >
       {children}
     </CarritoContext.Provider>

@@ -73,3 +73,26 @@ export const deleteFromCarrito = async (token, carritoId) => {
     }
   }
 };
+
+
+export const addToCarrito = async (token, courseId) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/showcourseuser/${courseId}/details`,
+      {}, // No es necesario enviar cuerpo porque solo usas courseId en los params
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Pasar el token en los headers
+        },
+      }
+    );
+
+    if (response.data && response.data.success) {
+      return response.data.message; // Retornar el mensaje de éxito
+    } else {
+      throw new Error(response.data.message || "Error al añadir el curso al carrito");
+    }
+  } catch (error) {
+    handleError(error, "Error al añadir el curso al carrito");
+  }
+};
