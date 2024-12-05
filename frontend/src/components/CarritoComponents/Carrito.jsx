@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useCarrito } from "../../context/CarritoContext.jsx";
 
 function Carrito() {
-  const { carrito, loading, error, loadCarrito, removeFromCarrito } = useCarrito(); // Asegúrate de que removeFromCarrito esté disponible
+  const { carrito, loading, error, loadCarrito, removeFromCarrito } = useCarrito();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -23,6 +23,19 @@ function Carrito() {
     if (!token) return; // Validar que el token exista
     removeFromCarrito(token, carritoId); // Llamar a la función del contexto
   };
+
+  // Si el carrito está vacío, mostrar un mensaje
+  if (carrito.length === 0) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Tu carrito está vacío</h2>
+          <p className="text-gray-500">Parece que aún no has añadido ningún curso.</p>
+          <p className="text-gray-500">¡Explora nuestros cursos y añade algunos a tu carrito!</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-20">
@@ -65,7 +78,7 @@ function Carrito() {
                   </div>
                   <div className="flex items-center space-x-4">
                     <p className="text-sm">
-                      {(producto.precio || 0).toLocaleString()} ₭
+                      {(producto.precio || 0).toLocaleString()} CLP
                     </p>
                     {/* Botón "X" para eliminar */}
                     <svg
@@ -100,12 +113,8 @@ function Carrito() {
                   0
                 )
                 .toLocaleString()}{" "}
-              ₭
+              CLP
             </p>
-          </div>
-          <div className="flex justify-between">
-            <p className="text-gray-700">Envío</p>
-            <p className="text-gray-700">4.99 ₭</p>
           </div>
           <hr className="my-4" />
           <div className="flex justify-between">
@@ -117,9 +126,9 @@ function Carrito() {
                     (total, item) =>
                       total + (item.precio || 0) * (item.cantidad || 1),
                     0
-                  ) + 4.99
+                  )
                 ).toLocaleString()}{" "}
-                ₭
+                CLP
               </p>
               <p className="text-sm text-gray-700">incluyendo IVA</p>
             </div>

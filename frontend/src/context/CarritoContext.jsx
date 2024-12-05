@@ -16,13 +16,18 @@ export const CarritoProvider = ({ children }) => {
     setError(null);
     try {
       const data = await getCarrito(token);
-      setCarrito(data);
+      if (data && data.length > 0) {
+        setCarrito(data);  // Si el carrito tiene productos, actualiza el estado
+      } else {
+        setCarrito([]);  // Si el carrito está vacío, establece un carrito vacío
+      }
     } catch (err) {
-      setError(err.message);
+      setError("No carrito found");  // Error específico si no se encuentra el carrito
     } finally {
       setLoading(false);
     }
   };
+  
 
   // Función para añadir un curso al carrito
   const addToCarritoContext = async (token, courseId) => {
@@ -44,16 +49,15 @@ export const CarritoProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      await deleteFromCarrito(token, carritoId);
-      setCarrito((prevCarrito) =>
-        prevCarrito.filter((item) => item.carrito_id !== carritoId)
-      );
+      await deleteFromCarrito(token, carritoId);  // Llamada a la API para eliminar el curso
+      setCarrito((prevCarrito) => prevCarrito.filter((item) => item.carrito_id !== carritoId));  // Actualiza el estado
     } catch (err) {
-      setError(err.message);
+      setError(err.message);  // Si hay un error, lo capturas
     } finally {
       setLoading(false);
     }
   };
+  
 
   // Proveer estado y funciones al contexto
   return (

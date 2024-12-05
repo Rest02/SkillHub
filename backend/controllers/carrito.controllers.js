@@ -19,12 +19,13 @@ export const getCarrito = async (req, res) => {
       FROM cart c
       INNER JOIN courses co ON c.course_id = co.id
       WHERE c.user_id = ?
-      `, 
+      `,
       [userId]
     );
 
+    // Si no hay elementos en el carrito, devolver un carrito vacío
     if (rows.length === 0) {
-      return res.status(404).json({ message: "No carrito found" });
+      return res.status(200).json({ carrito: [] });
     }
 
     // Retornamos los resultados del carrito
