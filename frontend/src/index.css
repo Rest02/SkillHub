@@ -32,6 +32,17 @@ body {
   }
   
 
+.truncate-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 10; /* Limita el texto a 5 líneas */
+  -webkit-box-orient: vertical;
+  overflow-y: auto; /* Permite el scroll vertical */
+  max-height: 8.0rem; /* Ajusta la altura según el tamaño de la fuente y el número de líneas */
+  padding-right: 10px; /* Agrega un pequeño margen a la derecha para el scroll */
+}
+  
+  
+
 /* Estilo global para los scrolls */
 ::-webkit-scrollbar {
   width: 10px; /* Ancho del scrollbar vertical */
