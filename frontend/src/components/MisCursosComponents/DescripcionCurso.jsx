@@ -5,19 +5,25 @@ import Pagination from "@mui/material/Pagination"; // Si usas pagination de Mate
 function DescripcionCurso({ course, units }) {
   const [expanded, setExpanded] = useState(false);
   const [paginaActual, setPaginaActual] = useState(1);
-  const unidadesPorPagina = 10;
+  const unidadesPorPagina = 7; // Limitamos a un máximo de 7 unidades por página
   const navigate = useNavigate();
 
   if (!units || units.length === 0) {
     return (
       <div className="flex justify-center items-center p-6 bg-black text-white">
-        <p className="text-xl font-semibold text-center bg-red-600 px-6 py-4 rounded-lg shadow-md">
-          No hay unidades disponibles para este curso.
-        </p>
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-xl font-semibold text-center bg-red-600 px-6 py-4 rounded-lg shadow-md">
+            No hay unidades disponibles para este curso.
+          </p>
+          <p className="text-md text-gray-400">
+            Parece que este curso aún no tiene unidades asignadas. Por favor, intenta más tarde o contacta al administrador.
+          </p>
+        </div>
       </div>
     );
   }
-
+  
+  
   // Función para manejar el cambio de página
   const handleChangePagina = (event, value) => {
     setPaginaActual(value);
@@ -33,7 +39,7 @@ function DescripcionCurso({ course, units }) {
     setExpanded(isExpanded ? panel : false);
   };
 
-  // Calculamos el número total de páginas
+  // Calculamos el número total de páginas basado en un máximo de 7 unidades por página
   const totalPaginas = Math.ceil(units.length / unidadesPorPagina);
 
   return (

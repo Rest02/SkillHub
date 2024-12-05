@@ -47,51 +47,94 @@ function CreateUnidadForm() {
   };
 
   return (
-    <div>
-      <h2>Crear Unidad para el Curso</h2>
+    <div className="flex items-center justify-center py-20 ">
+      <div className="mx-auto w-full max-w-[550px] bg-gray-800 p-8 rounded-lg shadow-lg">
+        <form onSubmit={handleSubmit}>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+          <div className="-mx-3 flex flex-wrap">
+            <div className="w-full px-3">
+              <div className="mb-5">
+                <label
+                  htmlFor="titulo"
+                  className="mb-3 block text-base font-medium text-[#ffffff]"
+                >
+                  Título
+                </label>
+                <input
+                  type="text"
+                  name="titulo"
+                  id="titulo"
+                  value={formData.titulo}
+                  onChange={handleChange}
+                  required
+                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#000000] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                />
+              </div>
+            </div>
+          </div>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Título</label>
-          <input
-            type="text"
-            name="titulo"
-            value={formData.titulo}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Descripción</label>
-          <textarea
-            name="descripcion"
-            value={formData.descripcion}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Objetivos</label>
-          <textarea
-            name="objetivos"
-            value={formData.objetivos}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Tema</label>
-          <textarea
-            name="tema"
-            value={formData.tema}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Crear Unidad</button>
-      </form>
+          <div className="mb-5">
+            <label
+              htmlFor="descripcion"
+              className="mb-3 block text-base font-medium text-[#ffffff]"
+            >
+              Descripción
+            </label>
+            <textarea
+              name="descripcion"
+              id="descripcion"
+              value={formData.descripcion}
+              onChange={handleChange}
+              required
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#000000] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            />
+          </div>
+
+          <div className="mb-5">
+            <label
+              htmlFor="objetivos"
+              className="mb-3 block text-base font-medium text-[#ffffff]"
+            >
+              Objetivos
+            </label>
+            <textarea
+              name="objetivos"
+              id="objetivos"
+              value={formData.objetivos}
+              onChange={handleChange}
+              required
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#000000] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            />
+          </div>
+
+          <div className="mb-5">
+            <label
+              htmlFor="tema"
+              className="mb-3 block text-base font-medium text-[#ffffff]"
+            >
+              Tema
+            </label>
+            <textarea
+              name="tema"
+              id="tema"
+              value={formData.tema}
+              onChange={handleChange}
+              required
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#000000] outline-none focus:border-[#6A64F1] focus:shadow-md"
+            />
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              className="hover:bg-[#FF4081] hover:shadow-lg transition-colors duration-300 rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
+            >
+              Crear Unidad
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 import DescripcionCurso from "../../components/MisCursosComponents/DescripcionCurso.jsx";
-import MenuEditsCourse from '../../components/MisCursosComponents/MenuEditsCourse.jsx'
+import MenuEditsCourse from '../../components/MisCursosComponents/MenuEditsCourse.jsx';
+import VideoIntroduccion from '../../components/MisCursosComponents/VideoIntroduccion.jsx';
+import ValoracionesEnInstructor from '../../components/MisCursosComponents/ValoracionesEnInstructor.jsx';
 
 const CourseDetailsPage = () => {
   const { courseId } = useParams();
@@ -23,12 +25,43 @@ const CourseDetailsPage = () => {
   }
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", gap: "20px"}}>
-      <div style={{ flex: "1", maxWidth: "50%"  , paddingTop : "27px", border: "1px solid black"}}>
-        <MenuEditsCourse />
+    <div>
+      <div style={{ 
+        display: "flex", 
+        justifyContent: "center", 
+        gap: "20px", 
+        width: "100%", 
+        maxWidth: "1200px", 
+        margin: "0 auto" 
+      }}>
+        <div style={{ 
+          flex: "1", 
+          paddingTop: "15px", 
+          paddingRight: "20px", 
+          paddingLeft: "20px",
+          minWidth: "200px",
+        }}>
+          <div style={{ marginBottom: "10px" }}>
+            <VideoIntroduccion />
+          </div>
+          <MenuEditsCourse />
+        </div>
+        <div style={{
+          flex: "2",  
+          paddingRight: "20px", 
+          paddingLeft: "20px", 
+          minWidth: "300px",  
+        }}>
+          <DescripcionCurso course={courseData.course} units={courseData.units} />
+        </div>
       </div>
-      <div style={{ flex: "2", maxWidth: "50%", border: "1px solid black"}}>
-        <DescripcionCurso course={courseData.course} units={courseData.units} />
+      <div style={{
+        width: "60%",  
+        maxWidth: "1200px",  
+        margin: "0 auto",  
+        paddingTop: "30px",  
+      }}>
+        <ValoracionesEnInstructor />
       </div>
     </div>
   );

@@ -1,17 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Container,
-  Typography,
-  Select,
-  MenuItem,
-  TextField,
-  Button,
-  InputLabel,
-  FormControl,
-  Box,
-} from "@mui/material";
 import { useSnackbar } from "notistack"; // Importa useSnackbar
 
 function CreateClaseVideo() {
@@ -84,55 +73,85 @@ function CreateClaseVideo() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" component="h2" gutterBottom>
-        Crear Clase en Video
-      </Typography>
+    <div className="flex items-center justify-center py-8 ">
+      <div className="w-full max-w-[550px] bg-gray-800 p-8 rounded-lg shadow-lg">
+        <h2 className="text-3xl font-semibold text-white mb-6">Crear Clase en Video</h2>
 
-      {cursos.length > 0 && unidades.length > 0 ? (
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 4 }}>
-          <Box component="form" onSubmit={handleSubmit} sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 3 }}>
-            <FormControl fullWidth>
-              <InputLabel id="unidad-label">Seleccionar Unidad</InputLabel>
-              <Select labelId="unidad-label" id="unidad" value={selectedUnidad} onChange={handleSelectChange} label="Seleccionar Unidad">
-                <MenuItem value="">
-                  <em>Seleccione una unidad</em>
-                </MenuItem>
-                {unidades.map((unidad) => (
-                  <MenuItem key={unidad.unidad_id} value={unidad.unidad_id}>
-                    {unidad.unidad_titulo}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+        {cursos.length > 0 && unidades.length > 0 ? (
+          <div className="flex flex-col gap-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              <div className="flex flex-col gap-3">
+                <label htmlFor="unidad" className="text-white">Seleccionar Unidad</label>
+                <select
+                  id="unidad"
+                  value={selectedUnidad}
+                  onChange={handleSelectChange}
+                  className="w-full p-3 rounded-md bg-white text-black focus:outline-none focus:border-[#6A64F1] focus:ring-2 focus:ring-[#6A64F1]"
+                >
+                  <option value="">Seleccione una unidad</option>
+                  {unidades.map((unidad) => (
+                    <option key={unidad.unidad_id} value={unidad.unidad_id}>
+                      {unidad.unidad_titulo}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <TextField fullWidth id="nombre" name="nombre" label="Nombre del Video" value={videoData.nombre} onChange={handleInputChange} variant="outlined" />
+              <div className="flex flex-col gap-3">
+                <label htmlFor="nombre" className="text-white">Nombre del Video</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  value={videoData.nombre}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-md bg-white text-black focus:outline-none focus:border-[#6A64F1] focus:ring-2 focus:ring-[#6A64F1]"
+                />
+              </div>
 
-            <TextField fullWidth id="descripcion" name="descripcion" label="Descripción" value={videoData.descripcion} onChange={handleInputChange} variant="outlined" multiline rows={4} />
+              <div className="flex flex-col gap-3">
+                <label htmlFor="descripcion" className="text-white">Descripción</label>
+                <textarea
+                  id="descripcion"
+                  name="descripcion"
+                  value={videoData.descripcion}
+                  onChange={handleInputChange}
+                  className="w-full p-3 rounded-md bg-white text-black focus:outline-none focus:border-[#6A64F1] focus:ring-2 focus:ring-[#6A64F1]"
+                  rows={4}
+                />
+              </div>
 
-            <Button variant="contained" component="label" sx={{ alignSelf: "flex-start" }}>
-              Subir Archivo de Video
-              <input type="file" id="video" hidden onChange={handleFileChange} accept="video/*" />
-            </Button>
+              <div className="flex flex-col gap-3">
+                <label className="text-white">Subir Archivo de Video</label>
+                <input
+                  type="file"
+                  id="video"
+                  onChange={handleFileChange}
+                  accept="video/*"
+                  className="p-3 rounded-md text-black border border-gray-400 focus:outline-none focus:border-[#6A64F1]"
+                />
+              </div>
 
-            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-              Subir Video
-            </Button>
-          </Box>
+              <button
+                type="submit"
+                className="mt-4 py-3 px-8 rounded-md bg-[#6A64F1] text-white font-semibold transition duration-300 hover:bg-[#FF4081] focus:outline-none"
+              >
+                Subir Video
+              </button>
+            </form>
 
-          {videoPreview && (
-            <Box sx={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", border: "1px solid #ccc", borderRadius: 2, p: 2 }}>
-              <Typography variant="h6" gutterBottom>
-                Vista Previa del Video
-              </Typography>
-              <video controls src={videoPreview} style={{ width: "100%", height: "auto", borderRadius: 8 }} />
-            </Box>
-          )}
-        </Box>
-      ) : (
-        <Typography variant="body1">Cargando unidades...</Typography>
-      )}
-    </Container>
+            {videoPreview && (
+              <div className="flex flex-col items-center justify-center mt-6 border-2 border-gray-500 p-4 rounded-lg">
+                <h3 className="text-white mb-3">Vista Previa del Video</h3>
+                <video controls src={videoPreview} className="w-full rounded-md" />
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className="text-white">Cargando unidades...</p>
+        )}
+      </div>
+    </div>
   );
 }
 

@@ -6,7 +6,7 @@ function MenuEditsCourse() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [menuType, setMenuType] = useState(null);
   const navigate = useNavigate();
-  const { courseId } = useParams(); // Asegúrate de obtener el courseId correctamente
+  const { courseId } = useParams();
 
   const handleOpenMenu = (event, type) => {
     setAnchorEl(event.currentTarget);
@@ -44,41 +44,53 @@ function MenuEditsCourse() {
   };
 
   const handleEliminarClase = () => {
-    navigate(`/clase/${courseId}/delete`); // Redirige a la ruta de eliminación de clase
+    navigate(`/clase/${courseId}/delete`);
     handleCloseMenu();
   };
 
   return (
     <Box
-      sx={{
-        maxWidth: 800,
-        margin: "0 auto",
-        padding: 2,
-        backgroundColor: "#C0C0C0",
-        borderRadius: 2,
-        boxShadow: 3,
-        border: "1px solid black",
-      }}
+    sx={{
+      maxWidth: 600,
+      margin: "0 auto",
+      padding: 2,  // Reducido padding
+      backgroundColor: "#1f2937",
+      borderRadius: 2,
+      boxShadow: 6,
+      border: "1px solid black",
+      transition: "all 0.3s ease",
+      ":hover": {
+        boxShadow: 10,
+      },
+    }}
+  >
+    <Typography
+      variant="h5"
+      align="center"
+      gutterBottom
+      sx={{ fontWeight: 'bold', color: "#fefefefe", paddingBottom: "15px" }} // Menor separación
     >
-      <Typography variant="h6" align="center" gutterBottom>
-        Menú de opciones
-      </Typography>
-      <Box display="flex" justifyContent="center" gap={2}>
+      Menú de opciones
+    </Typography>
+      <Box display="flex" flexDirection="column" alignItems="center" gap={3}>
         {/* Crear */}
         <Button
           variant="contained"
           color="primary"
           sx={{
             textTransform: "none",
-            border: "1px solid black",
-            width: "200px",
-            borderRadius: "20px",
+            border: "1px solid #6A5ACD",
+            width: "240px",
+            borderRadius: "25px",
             backgroundColor: "#6A5ACD",
             color: "#FFFFFF",
+            fontWeight: "bold",
             "&:hover": {
               backgroundColor: "#3FA557",
               color: "#FFFFFF",
             },
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "background-color 0.3s, box-shadow 0.3s",
           }}
           onClick={(e) => handleOpenMenu(e, "crear")}
         >
@@ -87,38 +99,45 @@ function MenuEditsCourse() {
 
         <Button
           variant="contained"
-          color="primary"
+          color="secondary"
           sx={{
             textTransform: "none",
-            border: "1px solid black",
-            width: "200px",
-            borderRadius: "20px",
+            border: "1px solid #4682B4",
+            width: "240px",
+            borderRadius: "25px",
             backgroundColor: "#4682B4",
             color: "#FFFFFF",
+            fontWeight: "bold",
             "&:hover": {
               backgroundColor: "#366589",
               color: "#FFFFFF",
             },
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "background-color 0.3s, box-shadow 0.3s",
           }}
           onClick={(e) => handleOpenMenu(e, "editar")}
         >
           Editar ✏️
         </Button>
+
         {/* Eliminar */}
         <Button
           variant="contained"
           color="error"
           sx={{
             textTransform: "none",
-            border: "1px solid black",
-            width: "200px",
-            borderRadius: "20px",
-            backgroundColor: "black",
+            border: "1px solid #9B111E",
+            width: "240px",
+            borderRadius: "25px",
+            backgroundColor: "#9B111E",
             color: "white",
+            fontWeight: "bold",
             "&:hover": {
-              backgroundColor: "#9B111E",
+              backgroundColor: "#B12E38",
               color: "white",
             },
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            transition: "background-color 0.3s, box-shadow 0.3s",
           }}
           onClick={(e) => handleOpenMenu(e, "eliminar")}
         >
@@ -135,11 +154,13 @@ function MenuEditsCourse() {
           sx: {
             width: anchorEl ? anchorEl.offsetWidth : undefined,
             borderRadius: "12px",
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+            padding: "10px",
           },
         }}
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        sx={{ mt: 1 }}
+        sx={{ mt: 2 }}
       >
         {menuType === "crear" && (
           <div>
@@ -156,7 +177,7 @@ function MenuEditsCourse() {
         {menuType === "eliminar" && (
           <div>
             <MenuItem onClick={handleEliminarUnidad}>Eliminar Unidad</MenuItem>
-            <MenuItem onClick={handleEliminarClase}>Eliminar Clase</MenuItem> {/* Aquí se redirige */}
+            <MenuItem onClick={handleEliminarClase}>Eliminar Clase</MenuItem>
           </div>
         )}
       </Menu>
