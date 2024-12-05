@@ -67,8 +67,8 @@ if (cursosFiltrados.length === 0 && !loading) {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="max-w-[1200px] mx-auto">
-        <div className="grid grid-cols-3 gap-6">
+    <div className="max-w-[1000px] mx-auto">
+      <div className="grid grid-cols-3 gap-6">
           {cursosPaginaActual.map((curso) => (
             <div
               key={curso.id}
