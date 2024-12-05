@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { getCarrito, deleteFromCarrito, addToCarrito } from "../api/carrito.api.js"; // Importa la función de la API
+import { getCarrito, deleteFromCarrito, addToCarrito, handlePaymentApi  } from "../api/carrito.api.js"; // Importa la función de la API
 
 // Crear el contexto
 const CarritoContext = createContext();
@@ -58,6 +58,20 @@ export const CarritoProvider = ({ children }) => {
     }
   };
   
+  // Función para procesar el pago (inscripción a los cursos)
+  const handlePayment = async (token, courseIds) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const message = await handlePaymentApi(token, courseIds); // Llamada a la API para procesar el pago
+      alert(message); // Mostrar mensaje de éxito (opcional)
+      await loadCarrito(token); // Recargar el carrito después del pago
+    } catch (err) {
+      setError(err.message); // Capturar errores
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Proveer estado y funciones al contexto
   return (
@@ -69,6 +83,7 @@ export const CarritoProvider = ({ children }) => {
         loadCarrito,
         addToCarritoContext,
         removeFromCarrito,
+        handlePayment
       }}
     >
       {children}

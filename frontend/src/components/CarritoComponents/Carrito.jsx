@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useCarrito } from "../../context/CarritoContext.jsx";
 
 function Carrito() {
-  const { carrito, loading, error, loadCarrito, removeFromCarrito } = useCarrito();
+  const { carrito, loading, error, loadCarrito, removeFromCarrito, handlePayment } = useCarrito();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -23,6 +23,25 @@ function Carrito() {
     if (!token) return; // Validar que el token exista
     removeFromCarrito(token, carritoId); // Llamar a la función del contexto
   };
+
+
+  const handlePaymentClick = () => {
+    const courseIds = carrito.map((producto) => producto.course_id).filter(id => id != null && id !== "");
+    console.log("Course IDs validos:", courseIds); // Verifica los IDs antes de enviarlos
+  
+    const token = localStorage.getItem("token");
+  
+    if (courseIds.length > 0) {
+      handlePayment(token, courseIds);  // Llamar a handlePayment con los courseIds válidos
+    } else {
+      console.log("No hay cursos válidos en el carrito");
+    }
+  };
+  
+  
+  
+  
+
 
   // Si el carrito está vacío, mostrar un mensaje
   if (carrito.length === 0) {
@@ -133,7 +152,10 @@ function Carrito() {
               <p className="text-sm text-gray-700">incluyendo IVA</p>
             </div>
           </div>
-          <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">
+          <button
+            className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"
+            onClick={handlePaymentClick} // Llamar a handlePayment al hacer clic
+          >
             Pagar
           </button>
         </div>

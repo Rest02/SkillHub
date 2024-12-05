@@ -1,8 +1,11 @@
 import React from 'react'
+import CardCursosAprendizaje from '../../components/AprendizajeComponents/CardCursosAprendizaje'
 
 function AprendizajePage() {
   return (
-    <div>AprendizajePage</div>
+    <div>
+      <CardCursosAprendizaje/>
+    </div>
   )
 }
 

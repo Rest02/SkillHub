@@ -34,6 +34,8 @@ import { useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 
+
+
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
   const location = useLocation(); // Ruta actual
@@ -105,6 +107,10 @@ const AppContent = () => {
         <Route path="/cart" element={<CarritoPage />} />
 
         <Route path="/aprendizaje" element={<AprendizajePage />} />
+
+
+
+
 
         <Route path="*" element={<NotFound />} />
       </Routes>

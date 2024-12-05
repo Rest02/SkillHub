@@ -96,3 +96,37 @@ export const addToCarrito = async (token, courseId) => {
     handleError(error, "Error al añadir el curso al carrito");
   }
 };
+
+
+
+export const handlePaymentApi = async (token, courseIds) => {
+  try {
+    // Verifica que courseIds no esté vacío antes de enviar la solicitud
+    console.log('Course IDs:', courseIds); // Verifica los IDs de los cursos
+    if (!courseIds || courseIds.length === 0) {
+      throw new Error("No se han proporcionado cursos");
+    }
+
+    const response = await axios.post(
+      `${API_BASE_URL}/carrito`,
+      { courseIds },  // Enviar un objeto con la propiedad courseIds
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+    
+
+    if (response.data && response.data.message) {
+      return response.data.message;
+    } else {
+      throw new Error(response.data.message || "Error al procesar el pago");
+    }
+  } catch (error) {
+    console.error("Error en la respuesta:", error.response?.data);
+    throw new Error(error.message || "Error al procesar el pago");
+  }
+};
+
