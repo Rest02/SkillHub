@@ -36,6 +36,7 @@ import { AprendizajeProvider } from "../src/context/AprendizajeContext.jsx";
 import HacerCurso from "../src/pages/HacerCurso/HacerCurso.jsx";
 import { HacerCursosProvider } from "../src/context/HacerCursoContext.jsx"; // Ruta al archivo del contexto
 import ValoracionCursoUser from '../src/pages/valoracionCursoUser/ValoracionCursoUser.jsx';
+import NosotrosPage from '../src/pages/NosotrosPage/NosotrosPage.jsx'
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -112,6 +113,10 @@ const AppContent = () => {
         <Route path="/hacercurso/:courseId" element={<HacerCurso />} />
 
         <Route path="/valoracion/:courseId" element={<ValoracionCursoUser />} />
+
+
+
+        <Route path="/nosotros" element={< NosotrosPage/>} />
 
 
         <Route path="*" element={<NotFound />} />

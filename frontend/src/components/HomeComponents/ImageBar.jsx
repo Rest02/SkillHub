@@ -1,4 +1,5 @@
 import React from "react";
+import imagenportada from "../../../src/assets/img/imagenportada.png";  // Ajusta la ruta según la ubicación real de la imagen
 
 function ImageBar() {
   return (
@@ -8,8 +9,9 @@ function ImageBar() {
           <div className="relative">
             <div className="absolute top-0 -left-48 z-0 opacity-50">
               <img
-                src="https://placehold.co/200x100"
+                src={imagenportada}  // Aquí es donde se coloca la imagen importada
                 className="w-36 z-0 h-full object-fill"
+                alt="Imagen Portada"
               />
             </div>
             <div className="lg:max-w-xl lg:pr-5 relative z-40">
@@ -35,7 +37,7 @@ function ImageBar() {
                 </a>
                 <a
                   href="#"
-                  aria-label=""
+                  aria-label="Ver cómo funciona"
                   className="group inline-flex items-center font-semibold text-blue-600"
                 >
                   Ver cómo funciona
@@ -48,8 +50,8 @@ function ImageBar() {
                     stroke-width="2"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       d="M17 8l4 4m0 0l-4 4m4-4H3"
                     ></path>
                   </svg>
@@ -67,14 +69,14 @@ function ImageBar() {
               stroke-width="2"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M16 17l-4 4m0 0l-4-4m4 4V3"
               ></path>
             </svg>
             <div className="overflow-hidden rounded-[6rem] rounded-br-none rounded-tl-none">
               <img
-                src="https://placehold.co/400x400"
+                src={imagenportada}  // Aquí también se coloca la imagen importada
                 alt="Ilustración"
                 className="w-full h-auto"
               />
@@ -96,8 +98,8 @@ function ImageBar() {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M12 6C12 5.44772 11.5523 5 11 5C10.4477 5 10 5.44772 10 6V16C10 16.5523 10.4477 17 11 17C11.5523 17 12 16.5523 12 16V6ZM9 9C9 8.44772 8.55228 8 8 8C7.44772 8 7 8.44772 7 9V16C7 16.5523 7.44772 17 8 17C8.55228 17 9 16.5523 9 16V9ZM15 9C15 8.44772 14.5523 8 14 8C13.4477 8 13 8.44772 13 9V16C13 16.5523 13.4477 17 14 17C14.5523 17 15 16.5523 15 16V9ZM18 13C18 12.4477 17.5523 12 17 12C16.4477 12 16 12.4477 16 13V16C16 16.5523 16.4477 17 17 17C17.5523 17 18 16.5523 18 16V13ZM6 15C6 14.4477 5.55228 14 5 14C4.44772 14 4 14.4477 4 15V16C4 16.5523 4.44772 17 5 17C5.55228 17 6 16.5523 6 16V15ZM21 15C21 14.4477 20.5523 14 20 14C19.4477 14 19 14.4477 19 15V16C19 16.5523 19.4477 17 20 17C20.5523 17 21 16.5523 21 16V15ZM4 18C3.44772 18 3 18.4477 3 19C3 19.5523 3.44772 20 4 20H21C21.5523 20 22 19.5523 22 19C22 18.4477 21.5523 18 21 18H4Z"
           ></path>
         </svg>

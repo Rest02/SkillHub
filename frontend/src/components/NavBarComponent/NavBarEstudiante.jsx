@@ -7,18 +7,18 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Drawer,
 } from "@mui/material";
-import { AccountCircle, ShoppingCart } from "@mui/icons-material";
+import { AccountCircle, ShoppingCart, Menu as MenuIcon } from "@mui/icons-material";
 import logo from "../../assets/img/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
 
-
 const NavBarEstudiante = () => {
   const { setToken } = useAuth();
-
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const open = Boolean(anchorEl);
 
   const handleMenuOpen = (event) => {
@@ -34,7 +34,6 @@ const NavBarEstudiante = () => {
   const goToAprendizaje = () => navigate("/aprendizaje");
   const goToCarrito = () => navigate("/cart");
 
-
   const goToConfiguracionCuenta = () => {
     handleMenuClose();
     navigate("/perfil");
@@ -48,8 +47,11 @@ const NavBarEstudiante = () => {
   };
 
   const handleCarritoClick = () => {
-    // Lógica para ir al carrito
     navigate("/cart");
+  };
+
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
   };
 
   return (
@@ -71,8 +73,21 @@ const NavBarEstudiante = () => {
           alignItems: "center",
         }}
       >
-        {/* Opciones de navegación izquierda */}
-        <Box sx={{ display: "flex", gap: 3 }}>
+        {/* Menú de hamburguesa (aparece en pantallas pequeñas) */}
+        <IconButton
+          sx={{
+            display: { xs: "block", md: "none" },
+            color: "#000000",
+            position: "absolute",
+            left: "10px", // Mover el icono de hamburguesa a la izquierda
+          }}
+          onClick={toggleDrawer}
+        >
+          <MenuIcon />
+        </IconButton>
+
+        {/* Opciones de navegación izquierda (en pantallas grandes) */}
+        <Box sx={{ display: "flex", gap: 3, display: { xs: "none", md: "flex" } }}>
           <Button
             variant="text"
             onClick={goToNosotros}
@@ -143,8 +158,8 @@ const NavBarEstudiante = () => {
           }}
         />
 
-        {/* Opciones de navegación derecha */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+        {/* Opciones de navegación derecha (en pantallas grandes) */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 3, display: { xs: "none", md: "flex" } }}>
           <Button
             variant="text"
             onClick={goToAprendizaje}
@@ -163,7 +178,7 @@ const NavBarEstudiante = () => {
               color: "#000000",
               "&:hover": { color: "#1D63FF" },
             }}
-            onClick={goToCarrito}
+            onClick={handleCarritoClick}
           >
             <ShoppingCart fontSize="large" />
           </IconButton>
@@ -178,8 +193,7 @@ const NavBarEstudiante = () => {
           </IconButton>
         </Box>
 
-
-        {/* Menú desplegable */}
+        {/* Menú desplegable para configuración de cuenta */}
         <Menu
           anchorEl={anchorEl}
           open={open}
@@ -191,6 +205,28 @@ const NavBarEstudiante = () => {
           <MenuItem onClick={handleCerrarSesion}>Cerrar Sesión</MenuItem>
         </Menu>
       </Toolbar>
+
+      {/* Drawer para el menú de hamburguesa */}
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={toggleDrawer}
+      >
+        <Box
+          sx={{
+            width: 250,
+            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <Button onClick={goToNosotros}>Nosotros</Button>
+          <Button onClick={goToCursos}>Cursos</Button>
+          <Button onClick={goToAprendizaje}>Aprendizaje</Button>
+          <Button onClick={handleCerrarSesion}>Cerrar Sesión</Button>
+        </Box>
+      </Drawer>
     </AppBar>
   );
 };

@@ -7,8 +7,9 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Drawer,
 } from "@mui/material";
-import { AccountCircle, ShoppingCart } from "@mui/icons-material"; // Añadir el icono de carrito
+import { AccountCircle, ShoppingCart, Menu as MenuIcon } from "@mui/icons-material";
 import logo from "../../assets/img/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -17,6 +18,7 @@ const NavBarInstructor = () => {
   const { setToken } = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const open = Boolean(anchorEl);
 
   const handleMenuOpen = (event) => {
@@ -48,6 +50,10 @@ const NavBarInstructor = () => {
     navigate("/cart");
   };
 
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
   return (
     <AppBar
       position="static"
@@ -67,8 +73,8 @@ const NavBarInstructor = () => {
           alignItems: "center",
         }}
       >
-        {/* Opciones de navegación izquierda */}
-        <Box sx={{ display: "flex", gap: 3 }}>
+        {/* Opciones de navegación izquierda (en pantallas grandes) */}
+        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 3 }}>
           <Button
             variant="text"
             onClick={goToNosotros}
@@ -166,7 +172,7 @@ const NavBarInstructor = () => {
           }}
         />
 
-        {/* Opciones de navegación derecha */}
+        {/* Opciones de navegación derecha (en pantallas grandes) */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
           <Button
             variant="text"
@@ -177,6 +183,7 @@ const NavBarInstructor = () => {
               fontFamily: "Kanit, sans-serif",
               fontSize: "1rem",
               "&:hover": { color: "#1D63FF" },
+              display: { xs: "none", md: "inline" },
             }}
           >
             Aprendizaje
@@ -185,6 +192,7 @@ const NavBarInstructor = () => {
             sx={{
               color: "#000000",
               "&:hover": { color: "#1D63FF" },
+              display: { xs: "none", md: "inline" },
             }}
             onClick={handleCarritoClick} // Redirigir al carrito
           >
@@ -194,14 +202,28 @@ const NavBarInstructor = () => {
             sx={{
               color: "#000000",
               "&:hover": { color: "#1D63FF" },
+              display: { xs: "none", md: "inline" },
             }}
             onClick={handleMenuOpen}
           >
             <AccountCircle fontSize="large" />
           </IconButton>
+
+          {/* Menú de hamburguesa (aparece en pantallas pequeñas) */}
+          <IconButton
+            sx={{
+              display: { xs: "block", md: "none" },
+              color: "#000000",
+              position: "absolute",
+              left: "-50px", // Mover el icono de hamburguesa a la izquierda
+            }}
+            onClick={toggleDrawer}
+          >
+            <MenuIcon />
+          </IconButton>
         </Box>
 
-        {/* Menú desplegable */}
+        {/* Menú desplegable para configuración de cuenta */}
         <Menu
           anchorEl={anchorEl}
           open={open}
@@ -212,6 +234,29 @@ const NavBarInstructor = () => {
           <MenuItem onClick={goToConfiguracionCuenta}>Configuración de cuenta</MenuItem>
           <MenuItem onClick={handleCerrarSesion}>Cerrar Sesión</MenuItem>
         </Menu>
+
+        {/* Drawer para el menú de hamburguesa */}
+        <Drawer
+          anchor="left"
+          open={drawerOpen}
+          onClose={toggleDrawer}
+        >
+          <Box
+            sx={{
+              width: 250,
+              padding: "20px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+            }}
+          >
+            <Button onClick={goToNosotros}>Nosotros</Button>
+            <Button onClick={goToMisCursos}>Mis Cursos</Button>
+            <Button onClick={goToCursos}>Cursos</Button>
+            <Button onClick={goToAprendizaje}>Aprendizaje</Button>
+            <Button onClick={handleCerrarSesion}>Cerrar Sesión</Button>
+          </Box>
+        </Drawer>
       </Toolbar>
     </AppBar>
   );

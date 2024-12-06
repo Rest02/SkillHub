@@ -24,7 +24,22 @@ const Aprendizaje = () => {
   }
 
   if (!Array.isArray(courses) || courses.length === 0) {
-    return <div>No tienes cursos.</div>;
+    return (
+      <div className="flex justify-center items-center flex-col p-8">
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Aún no has adquirido ningún curso.
+        </h2>
+        <p className="text-gray-600 mt-4">
+          Explora nuestra variedad de cursos y adquiere el que más te interese.
+        </p>
+        <button
+          onClick={() => navigate("/cursos")}
+          className="mt-6 px-6 py-2 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white transition-colors duration-300"
+        >
+          Ver Cursos Disponibles
+        </button>
+      </div>
+    );
   }
 
   // Paginación: obtener los cursos de la página actual
