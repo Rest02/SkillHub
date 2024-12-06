@@ -1,20 +1,38 @@
-import React from 'react';
+import React, { useEffect } from "react";
+import { useCursos } from "../../context/ShowCourseContext"; // Importamos el hook de contexto
+import { useParams } from 'react-router-dom';
 
-function CommentCard() {
+function ValoracionesEnInstructor() {
+  const { fetchRatingsForCourse, ratings, loading, error } = useCursos(); // Desestructuramos el contexto
+  const { courseId } = useParams();
+  console.log(courseId);
+
+  useEffect(() => {
+    if (courseId) {
+      fetchRatingsForCourse(courseId); // Obtener valoraciones para el curso
+    }
+  }, [courseId]); // Se vuelve a llamar cuando cambia el courseId
+
+  console.log('Valoraciones en el contexto:', ratings);
+
+  if (loading) return <p className="text-white">Cargando valoraciones...</p>;
+
+  if (error) return <p className="text-white">{error}</p>;
+
+  if (ratings.length === 0) return <p className="text-white">No hay valoraciones para este curso.</p>;
+
   return (
-    // <div className="flex justify-center py-4 px-6 bg-gray-100">
-      <div className="relative flex flex-col w-full  rounded-xl bg-white shadow-lg p-6">
-        <div className="relative flex items-center gap-4">
+    <div className="relative flex flex-col w-full rounded-xl bg-gray-800 shadow-lg p-6">
+      {ratings.map((rating) => (
+        <div key={rating.id} className="relative flex gap-4 mb-6 flex-col md:flex-row">
           <img
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1480&amp;q=80"
-            alt="Commentor"
+            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1480&q=80"
+            alt={rating.usuario}
             className="relative inline-block h-[58px] w-[58px] rounded-full object-cover object-center shadow-md"
           />
           <div className="flex flex-col w-full">
             <div className="flex items-center justify-between">
-              <h5 className="font-sans text-xl font-semibold text-blue-gray-900">
-                Tania Andrew
-              </h5>
+              <h5 className="font-sans text-xl font-semibold text-white">{rating.usuario}</h5>
               <div className="flex items-center gap-0">
                 {[...Array(5)].map((_, index) => (
                   <svg
@@ -22,9 +40,7 @@ function CommentCard() {
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className={`h-5 w-5 ${
-                      index < 4 ? 'text-yellow-500' : 'text-gray-300'
-                    }`}
+                    className={`h-5 w-5 ${index < rating.valoracion ? 'text-yellow-500' : 'text-gray-300'}`}
                   >
                     <path
                       fillRule="evenodd"
@@ -35,19 +51,13 @@ function CommentCard() {
                 ))}
               </div>
             </div>
-            <p className="text-sm text-gray-600">Frontend Lead @ Google</p>
+            <p className="text-sm text-gray-600">Fecha: {new Date(rating.fecha_valoracion).toLocaleDateString()}</p>
+            <p className="mt-2 text-base text-white">{rating.comentario}</p>
           </div>
         </div>
-        <div className="mt-4">
-          <p className="text-base text-gray-700">
-            "I found solution to all my design needs from Creative Tim. I use them
-            as a freelancer in my hobby projects for fun! And its really affordable,
-            very humble guys !!!"
-          </p>
-        </div>
-      </div>
-    // </div>
+      ))}
+    </div>
   );
 }
 
-export default CommentCard;
+export default ValoracionesEnInstructor;

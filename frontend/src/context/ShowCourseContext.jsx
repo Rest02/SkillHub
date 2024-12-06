@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { getCursosApiNoAuth, getCourseDetailsApi } from "../api/showCourses.api"; // Importa la función de la API
+import { getCursosApiNoAuth, getCourseDetailsApi, getRatingsForCourseApi } from "../api/showCourses.api"; // Importa la función de la API
 
 // Crear el contexto
 const ShowCourseContext = createContext();
@@ -9,6 +9,7 @@ export const ShowCourseProvider = ({ children }) => {
   const [cursos, setCursos] = useState([]); // Cursos cargados
   const [loading, setLoading] = useState(false); // Estado de carga
   const [courseDetails, setCourseDetails] = useState(null); // Detalles de un curso específico
+  const [ratings, setRatings] = useState([]); // Valoraciones de un curso
   const [error, setError] = useState(null); // Manejo de errores
   const [filters, setFilters] = useState({}); // Filtros aplicados
 
@@ -53,6 +54,21 @@ export const ShowCourseProvider = ({ children }) => {
     setFilters((prevFilters) => ({ ...prevFilters, ...newFilters })); // Mezcla los filtros nuevos con los existentes
   };
 
+  // Función para obtener valoraciones de un curso específico
+  const fetchRatingsForCourse = async (courseId) => {
+    setLoading(true);
+    setError(null); // Limpiar error antes de realizar la búsqueda
+    try {
+      const data = await getRatingsForCourseApi(courseId); // Llamamos a la API de valoraciones
+      setRatings(data.ratings); // Guardamos las valoraciones en el estado
+    } catch (err) {
+      setError("Error al obtener las valoraciones del curso.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  
   // Exponer el contexto
   return (
     <ShowCourseContext.Provider
@@ -63,6 +79,8 @@ export const ShowCourseProvider = ({ children }) => {
         applyFilters,
         fetchCourseDetails,
         courseDetails,
+        fetchRatingsForCourse, // Exponer la función para obtener valoraciones
+        ratings, // Exponer las valoraciones en el contexto
       }}
     >
       {children}

@@ -32,3 +32,14 @@ export const getCourseDetailsApi = async (courseId) => {
   }
 };
 
+export const getRatingsForCourseApi = async (courseId) => {
+  try {
+    // Hacer la solicitud al backend para obtener las valoraciones de un curso
+    const response = await axios.get(`http://localhost:4000/ratings/${courseId}`);
+    console.log("datos", response.data)
+    return response.data; // Devolver los datos de valoraciones
+  } catch (error) {
+    console.error("Error al obtener las valoraciones del curso:", error);
+    throw error; // Lanzar el error para ser manejado más tarde
+  }
+};

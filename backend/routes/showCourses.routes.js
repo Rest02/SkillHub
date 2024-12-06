@@ -8,6 +8,7 @@ const router = Router()
 
 router.get("/cursos", showCourseControllers.getCourses)
 router.get("/courses/:courseId/details", showCourseControllers.getCourseDetails);
+router.get('/ratings/:courseId', showCourseControllers.getRatingsForCourse);
 
 
 

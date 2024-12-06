@@ -85,7 +85,7 @@ export const getCourseDetails = async (req, res) => {
     // Ejecutar la consulta
     const [rows] = await pool.query(query, [courseId]);
 
-    console.log(rows);
+
 
     // Si no se encuentra el curso
     if (rows.length === 0) {
@@ -125,3 +125,37 @@ export const getCourseDetails = async (req, res) => {
       .json({ message: "Error al recuperar los detalles del curso" });
   }
 };
+
+
+
+export const getRatingsForCourse = async (req, res) => {
+  const { courseId } = req.params; // Obtenemos el ID del curso desde los parámetros de la URL
+
+  // SQL para obtener las valoraciones de un curso
+  const query = `
+    SELECT r.id, r.valoracion, r.comentario, r.fecha_valoracion, u.nombre AS usuario
+    FROM ratings r
+    JOIN users u ON r.usuario_id = u.id
+    WHERE r.curso_id = ?
+    ORDER BY r.fecha_valoracion DESC
+  `;
+
+  try {
+    // Ejecutamos la consulta SQL
+    const [ratings] = await pool.execute(query, [courseId]);
+    console.log(ratings)
+
+    // Si no se encontraron valoraciones, devolvemos un mensaje
+    if (ratings.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron valoraciones para este curso.' });
+    }
+
+    // Si se encuentran valoraciones, las devolvemos en la respuesta
+    return res.status(200).json({ ratings });
+  } catch (err) {
+    console.error('Error al obtener las valoraciones:', err);
+    return res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
+
+
