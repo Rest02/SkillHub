@@ -10,4 +10,7 @@ router.get('/hacercurso/:courseId', verifyToken, hacerCursoController.getCourseU
 router.post('/hacercurso/:courseId', verifyToken, hacerCursoController.createResponse); // Ahora la ruta es POST en la misma URL
 
 
+router.post('/hacercurso/:courseId/comment', verifyToken, hacerCursoController.createComment);
+
+
 export default router;

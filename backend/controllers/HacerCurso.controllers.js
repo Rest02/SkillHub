@@ -153,3 +153,35 @@ export const createResponse = async (req, res) => {
 };
 
 
+// controlador para crear un comentario en un video
+export const createComment = async (req, res) => {
+  const { videoId, content } = req.body; // El videoId y el contenido vienen del cuerpo de la solicitud
+  const userId = req.user.id; // El ID del usuario que está comentando
+
+  // Verificamos si se envió contenido
+  if (!content || content.trim() === "") {
+    return res.status(400).json({ message: "El contenido del comentario no puede estar vacío." });
+  }
+
+  try {
+    // Insertar el comentario en la base de datos
+    const [result] = await pool.query(
+      `INSERT INTO comments_videos (usuario_id, contenido, video_id) 
+       VALUES (?, ?, ?)`,
+      [userId, content, videoId] // Pasamos el ID de usuario, contenido y videoId a la consulta
+    );
+
+    // Devolvemos la respuesta al cliente
+    res.status(201).json({
+      message: "Comentario creado exitosamente.",
+      commentId: result.insertId, // El ID del nuevo comentario creado
+      usuarioId: userId,
+      contenido: content,
+      videoId: videoId,
+      fechaComentario: new Date().toISOString(), // Fecha del comentario
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al crear el comentario." });
+  }
+};
