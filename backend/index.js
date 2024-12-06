@@ -6,6 +6,7 @@ import perfilRoutes from './routes/perfil.routes.js'
 import courseRoutes from './routes/course.routes.js'
 import showCourseRoutes from './routes/showCourses.routes.js'
 import cartRoutes from './routes/carrito.routes.js'
+import aprenzajeRoutes from './routes/Aprendizaje.routes.js'
 
 
 
@@ -23,6 +24,7 @@ app.use(perfilRoutes)
 app.use(courseRoutes)
 app.use(showCourseRoutes)
 app.use(cartRoutes)
+app.use(aprenzajeRoutes)
 
 
 
