@@ -16,3 +16,23 @@ export const fetchCourseUnits = async (token, courseId) => {
     throw error;
   }
 };
+
+
+// Función para crear una respuesta al comentario
+export const createResponseToComment = async (token, courseId, commentId, content) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/hacercurso/${courseId}`, // Ruta para responder al comentario
+      { commentId, content }, // El comentario ID y el contenido de la respuesta
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Token JWT
+        },
+      }
+    );
+    return response.data; // Retorna los datos de la respuesta creada
+  } catch (error) {
+    console.error("Error al crear la respuesta:", error);
+    throw error;
+  }
+};

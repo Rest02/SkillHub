@@ -7,4 +7,7 @@ const router = express.Router();
 // Ruta para obtener las unidades de un curso
 router.get('/hacercurso/:courseId', verifyToken, hacerCursoController.getCourseUnits);
 
+router.post('/hacercurso/:courseId', verifyToken, hacerCursoController.createResponse); // Ahora la ruta es POST en la misma URL
+
+
 export default router;

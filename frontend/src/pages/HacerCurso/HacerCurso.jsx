@@ -3,8 +3,11 @@ import { useParams } from "react-router-dom";
 import { useHacerCurso } from "../../context/HacerCursoContext.jsx";
 
 function HacerCurso() {
+  const [showResponse, setShowResponse] = useState({});
+  const [responseContent, setResponseContent] = useState(""); // Nuevo estado para manejar el contenido de la respuesta
+
   const { courseId } = useParams();
-  const { courseUnits, loading, error, loadCourseUnits } = useHacerCurso();
+  const { courseUnits, loading, error, loadCourseUnits, createResponse } = useHacerCurso();
   const [expandedUnit, setExpandedUnit] = useState(null);
   const [videoUrl, setVideoUrl] = useState("");
   const [selectedComments, setSelectedComments] = useState([]); // Nuevo estado para los comentarios
@@ -47,7 +50,25 @@ function HacerCurso() {
     setVideoUrl(videoUrl); // Actualiza la URL del video
     setSelectedComments(comentarios); // Actualiza los comentarios para este video
   };
-  
+
+  // Función para manejar el envío de la respuesta
+  const handleSendResponse = async (commentId) => {
+    const token = localStorage.getItem("token"); // Obtener el token
+    try {
+      if (token && responseContent.trim()) {
+        const response = await createResponse(token, courseId, commentId, responseContent);
+        setResponseContent(""); // Limpiar el campo de respuesta
+        alert("Respuesta enviada exitosamente.");
+        // Podrías actualizar el estado de los comentarios aquí o hacer un reload de los comentarios
+      } else {
+        alert("Por favor, ingrese un contenido válido para la respuesta.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Hubo un error al enviar la respuesta.");
+    }
+  };
+
   return (
     <div className="py-8 px-4 shadow-lg">
       <div className="max-w-7xl mx-auto space-y-8 border border-black rounded-lg">
@@ -73,24 +94,36 @@ function HacerCurso() {
                         <span>{unit.titulo}</span>
                         <img
                           src="https://upload.wikimedia.org/wikipedia/commons/9/96/Chevron-icon-drop-down-menu-WHITE.png"
-                          className={`h-3 w-4 transition-all duration-500 ${expandedUnit === index ? "-rotate-180" : ""}`}
+                          className={`h-3 w-4 transition-all duration-500 ${
+                            expandedUnit === index ? "-rotate-180" : ""
+                          }`}
                           alt="Toggle"
                         />
                       </div>
 
                       <div
-                        className={`transition-all overflow-hidden ${expandedUnit === index ? "max-h-screen opacity-100 visible" : "max-h-0 opacity-0 invisible"}`}
+                        className={`transition-all overflow-hidden ${
+                          expandedUnit === index
+                            ? "max-h-screen opacity-100 visible"
+                            : "max-h-0 opacity-0 invisible"
+                        }`}
                       >
                         <ul className="pl-4 text-sm">
-                          {unit.clases && unit.clases.map((clase, claseIndex) => (
-                            <li
-                              key={clase.id}
-                              className="mb-1 cursor-pointer font-semibold transition-colors duration-300 hover:text-red-500"
-                              onClick={() => handleClassClick(clase.videoUrl, clase.comentarios)} // Actualiza el video y los comentarios
-                            >
-                              {`${claseIndex + 1}. ${clase.nombre}`}
-                            </li>
-                          ))}
+                          {unit.clases &&
+                            unit.clases.map((clase, claseIndex) => (
+                              <li
+                                key={clase.id}
+                                className="mb-1 cursor-pointer font-semibold transition-colors duration-300 hover:text-red-500"
+                                onClick={() =>
+                                  handleClassClick(
+                                    clase.videoUrl,
+                                    clase.comentarios
+                                  )
+                                } // Actualiza el video y los comentarios
+                              >
+                                {`${claseIndex + 1}. ${clase.nombre}`}
+                              </li>
+                            ))}
                         </ul>
                       </div>
                     </div>
@@ -107,12 +140,23 @@ function HacerCurso() {
               <div className="relative flex justify-center items-center">
                 <div className="rounded-3xl shadow-2xl overflow-hidden w-full h-80">
                   {videoUrl ? (
-                    <video ref={videoRef} className="w-full h-full object-cover" controls autoPlay loop>
-                      <source src={`http://localhost:4000/${videoUrl}`} type="video/mp4" />
+                    <video
+                      ref={videoRef}
+                      className="w-full h-full object-cover"
+                      controls
+                      autoPlay
+                      loop
+                    >
+                      <source
+                        src={`http://localhost:4000/${videoUrl}`}
+                        type="video/mp4"
+                      />
                       Your browser does not support the video tag.
                     </video>
                   ) : (
-                    <div className="flex justify-center items-center text-gray-500">Selecciona una clase para ver el video</div>
+                    <div className="flex justify-center items-center text-gray-500">
+                      Selecciona una clase para ver el video
+                    </div>
                   )}
                 </div>
               </div>
@@ -132,11 +176,53 @@ function HacerCurso() {
                     />
                     <div className="flex flex-col w-full">
                       <div className="flex items-center justify-between">
-                        <h5 className="font-sans text-xl font-semibold text-blue-gray-900">{comment.nombreUsuario}</h5>
-                        <p className="text-gray-600 text-sm">{new Date(comment.fecha).toLocaleString()}</p>
+                        <h5 className="font-sans text-xl font-semibold text-blue-gray-900">
+                          {comment.nombreUsuario}
+                        </h5>
+                        <p className="text-gray-600 text-sm">
+                          {new Date(comment.fecha).toLocaleString()}
+                        </p>
                       </div>
                       <p className="text-sm text-gray-700">{comment.contenido}</p>
                     </div>
+                  </div>
+
+                  {/* Botón para alternar visibilidad de respuesta */}
+                  <button
+                    onClick={() => setShowResponse((prev) => ({
+                      ...prev,
+                      [comment.id]: !prev[comment.id]
+                    }))}
+                    className="mt-2 text-sm text-blue-600 hover:underline"
+                  >
+                    {showResponse[comment.id] ? "Ocultar Respuesta" : "Responder"}
+                  </button>
+
+                  {/* Formulario de Respuesta (solo visible si `showResponse` es true para este comentario) */}
+                  {showResponse[comment.id] && (
+                    <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+                      <h4 className="text-lg font-semibold text-gray-800">
+                        Responde a este comentario
+                      </h4>
+                      <textarea
+                        className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Escribe tu respuesta aquí..."
+                        rows="4"
+                        value={responseContent}
+                        onChange={(e) => setResponseContent(e.target.value)} // Controlar el contenido de la respuesta
+                      />
+                      <button
+                        className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onClick={() => handleSendResponse(comment.id)} // Enviar la respuesta
+                      >
+                        Responder
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Mostrar las respuestas (si las hubieras guardado en el estado) */}
+                  <div className="mt-4 pl-6 border-l-2 border-gray-300">
+                    {/* Aquí podrías mapear las respuestas si las hubieras guardado en el estado */}
                   </div>
                 </div>
               ))}

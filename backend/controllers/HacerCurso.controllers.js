@@ -97,3 +97,35 @@ export const getCourseUnits = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener las unidades, videos y comentarios del curso.' });
   }
 };
+
+
+// controlador para crear una respuesta a un comentario
+export const createResponse = async (req, res) => {
+  const { courseId } = req.params; // courseId está disponible si es necesario en el futuro.
+  const { commentId, content } = req.body; // Valores desde el body: commentId y content.
+
+  const userId = req.user.id; // El ID del usuario que responde.
+
+  console.log(commentId);
+  console.log(content);
+  console.log(userId);
+
+  try {
+    // Insertar la respuesta en la base de datos.
+    const [result] = await pool.query(
+      `INSERT INTO responses_comments_videos (usuario_id, comment_id, contenido) 
+       VALUES (?, ?, ?)`,
+      [userId, commentId, content] // Reemplazamos "commentId" por "comment_id".
+    );
+
+    res.status(201).json({
+      message: 'Respuesta creada exitosamente.',
+      responseId: result.insertId,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al crear la respuesta.' });
+  }
+};
+
+

@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { fetchCourseUnits } from '../api/hacercurso.api';
+import React, { createContext, useContext, useState, useCallback } from "react";
+import {
+  fetchCourseUnits,
+  createResponseToComment,
+} from "../api/hacercurso.api";
 
 // Crear el contexto
 const HacerCursoContext = createContext();
@@ -8,6 +11,8 @@ const HacerCursoContext = createContext();
 export const HacerCursosProvider = ({ children }) => {
   const [courseUnits, setCourseUnits] = useState([]); // Unidades del curso
   const [loading, setLoading] = useState(false); // Estado de carga
+  const [responseLoading, setResponseLoading] = useState(false); // Estado de carga para la respuesta
+  const [responseError, setResponseError] = useState(null); // Estado de error para la respuesta
   const [error, setError] = useState(null); // Estado de error
 
   // Función para cargar las unidades del curso
@@ -24,9 +29,37 @@ export const HacerCursosProvider = ({ children }) => {
     }
   }, []);
 
+  // Función para crear una respuesta a un comentario
+  const createResponse = useCallback(
+    async (token, courseId, commentId, content) => {
+      setResponseLoading(true);
+      setResponseError(null);
+      try {
+        const data = await createResponseToComment(
+          token,
+          courseId,
+          commentId,
+          content,
+          
+        ); // Llamada a la API para crear respuesta
+        return data; // Devuelve los datos de la respuesta creada
+      } catch (err) {
+        setResponseError("Error al crear la respuesta."); // Manejar el error
+        throw err;
+      } finally {
+        setResponseLoading(false); // Desactivar el estado de carga
+      }
+    },
+    []
+  );
+
   // Proveer estado y funciones al contexto
   return (
-    <HacerCursoContext.Provider value={{ courseUnits, loading, error, loadCourseUnits }}>
+    <HacerCursoContext.Provider
+      value={{ courseUnits, loading, error, loadCourseUnits, createResponse,
+        responseLoading,
+        responseError }}
+    >
       {children}
     </HacerCursoContext.Provider>
   );
