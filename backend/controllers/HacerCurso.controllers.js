@@ -52,7 +52,6 @@ export const getCourseUnits = async (req, res) => {
           id: row.video_id,
           nombre: row.video_nombre,
           videoUrl: row.video  // Asegúrate de que `videoUrl` esté correctamente asignado
-
         });
       }
 
@@ -61,6 +60,11 @@ export const getCourseUnits = async (req, res) => {
 
     // Convertir el objeto agrupado en un arreglo
     const result = Object.values(groupedUnits);
+
+    // Invertir el orden de las clases de cada unidad
+    result.forEach(unit => {
+      unit.clases.reverse(); // Invertir las clases de la unidad
+    });
 
     res.status(200).json(result);
   } catch (error) {
