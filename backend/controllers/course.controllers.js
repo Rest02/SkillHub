@@ -101,7 +101,7 @@ export const uploadVideo = async (req, res) => {
   try {
     const { nombre, descripcion, unidad_id } = req.body; // Ahora unidad_id viene en el body
     const curso_id = req.params.curso_id; // curso_id ahora viene de los parámetros
-    const videoPath = req.file ? req.file.path : null;
+    const videoPath = req.file ? `videos/${req.file.filename}` : null;
     const instructor_id = req.user.id; // Obtenemos el ID del instructor desde el token
 
     // Validar que todos los datos necesarios están presentes

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useHacerCurso } from "../../context/HacerCursoContext.jsx";
 
@@ -7,6 +7,7 @@ function HacerCurso() {
   const { courseUnits, loading, error, loadCourseUnits } = useHacerCurso();
   const [expandedUnit, setExpandedUnit] = useState(null);
   const [videoUrl, setVideoUrl] = useState("");
+  const videoRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -14,6 +15,12 @@ function HacerCurso() {
       loadCourseUnits(token, courseId); // Carga las unidades del curso
     }
   }, [courseId, loadCourseUnits]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
+  }, [videoUrl]);
 
   if (loading) {
     return (
@@ -42,7 +49,6 @@ function HacerCurso() {
     }
   };
   
-
   return (
     <div className="py-8 px-4 shadow-lg">
       <div className="max-w-7xl mx-auto space-y-8 border border-black rounded-lg">
@@ -102,8 +108,8 @@ function HacerCurso() {
               <div className="relative flex justify-center items-center">
                 <div className="rounded-3xl shadow-2xl overflow-hidden w-full h-80">
                   {videoUrl ? (
-                    <video className="w-full h-full object-cover" controls autoPlay loop>
-                      <source src={`http://localhost:4000/${courseUnits.videoUrl}`} type="video/mp4" />
+                    <video ref={videoRef} className="w-full h-full object-cover" controls autoPlay loop>
+                      <source src={`http://localhost:4000/${videoUrl}`} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   ) : (
