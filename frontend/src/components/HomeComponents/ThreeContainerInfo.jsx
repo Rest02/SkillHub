@@ -1,157 +1,56 @@
 import React from "react";
-import { Box, Typography, Avatar, Container } from "@mui/material";
 
 function ThreeContainerInfo() {
   return (
-    <Container
-      sx={{
-        maxWidth: "100%", // Ancho máximo del contenedor
-        margin: "auto", // Centrado horizontal
-        padding: "20px", // Espaciado interno
-      }}
-    >
+    <div className="container mx-auto px-6 py-8">
       {/* Contenedor de los tres bloques */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: "20px",
-          flexWrap: "wrap", // Responsividad
-        }}
-      >
+      <div className="flex flex-wrap justify-between gap-8">
         {/* Primer contenedor */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            textAlign: "left",
-            width: "28%", // Ajusta el ancho para que queden 3 en una fila
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            padding: "15px",
-            borderRadius: "8px",
-            backgroundColor: "#fff",
-            transition: "all 0.3s ease",
-            "&:hover": {
-              boxShadow: "0 6px 15px rgba(0, 0, 0, 0.3)",
-            },
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", marginBottom: 1 }}>
-            <Avatar
+        <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 p-4 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center mb-4">
+            <img
               src="https://cdn-icons-png.flaticon.com/512/2293/2293883.png"
               alt="icon1"
-              sx={{ width: 60, height: 60, marginRight: 1 }}
+              className="w-16 h-16 mr-4"
             />
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                transition: "color 0.3s",
-                "&:hover": {
-                  color: "#9B111E", // Cambia este color al que prefieras
-                },
-              }}
-            >
-              Aprende de Creadores
-            </Typography>
-          </Box>
-          <Typography variant="body1">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatum
-            odio expedita aliquam dolor voluptates eveniet consequuntur at ipsa.
-            Sit ea temporibus dolorem hic reprehenderit ullam iusto quis
-            incidunt adipisci harum!
-          </Typography>
-        </Box>
+            <h3 className="text-xl font-semibold text-blue-600">Aprende de Creadores</h3>
+          </div>
+          <p className="text-gray-700">
+            Aprende de los mejores creadores y expertos en el mundo de los cursos online. Nuestro contenido está diseñado para ayudarte a mejorar tus habilidades en áreas clave, desde programación hasta marketing digital.
+          </p>
+        </div>
 
         {/* Segundo contenedor */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            textAlign: "left",
-            width: "28%",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            padding: "15px",
-            borderRadius: "8px",
-            backgroundColor: "#fff",
-            transition: "all 0.3s ease",
-            "&:hover": {
-              boxShadow: "0 6px 15px rgba(0, 0, 0, 0.3)",
-            },
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", marginBottom: 1 }}>
-            <Avatar
+        <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 p-4 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center mb-4">
+            <img
               src="https://cdn-icons-png.flaticon.com/512/2377/2377746.png"
               alt="icon2"
-              sx={{ width: 60, height: 60, marginRight: 1 }}
+              className="w-16 h-16 mr-4"
             />
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                transition: "color 0.3s",
-                "&:hover": {
-                  color: "#9B111E",
-                },
-              }}
-            >
-              Videos y Comentarios
-            </Typography>
-          </Box>
-          <Typography variant="body1">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe,
-            eveniet nesciunt! Nesciunt qui amet deserunt dolorum, odio ab nulla
-            accusantium expedita, quisquam, neque unde delectus sequi veniam
-            officia. Perspiciatis, autem.
-          </Typography>
-        </Box>
+            <h3 className="text-xl font-semibold text-blue-600">Videos y Comentarios</h3>
+          </div>
+          <p className="text-gray-700">
+            Accede a miles de videos educativos y opiniones de estudiantes para ayudarte a elegir el curso adecuado. Los comentarios y valoraciones te permitirán conocer la calidad del contenido y la efectividad de cada lección.
+          </p>
+        </div>
 
         {/* Tercer contenedor */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            textAlign: "left",
-            width: "28%",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            padding: "15px",
-            borderRadius: "8px",
-            backgroundColor: "#fff",
-            transition: "all 0.3s ease",
-            "&:hover": {
-              boxShadow: "0 6px 15px rgba(0, 0, 0, 0.3)",
-            },
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", marginBottom: 1 }}>
-            <Avatar
+        <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 p-4 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center mb-4">
+            <img
               src="https://cdn-icons-png.flaticon.com/512/5406/5406791.png"
               alt="icon3"
-              sx={{ width: 60, height: 60, marginRight: 1 }}
+              className="w-16 h-16 mr-4"
             />
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                transition: "color 0.3s",
-                "&:hover": {
-                  color: "#9B111E",
-                },
-              }}
-            >
-              Certificaciones
-            </Typography>
-          </Box>
-          <Typography variant="body1">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus
-            natus, quasi laborum possimus enim laudantium porro iure, nobis
-            perferendis maxime dolorum harum, architecto illum vel libero
-            corrupti dolores reiciendis eaque?
-          </Typography>
-        </Box>
-      </Box>
-    </Container>
+            <h3 className="text-xl font-semibold text-blue-600">Certificaciones</h3>
+          </div>
+          <p className="text-gray-700">
+            Al finalizar los cursos, obtén certificados oficiales que avalan tus nuevos conocimientos. Estos certificados son ideales para mejorar tu currículum y destacar en el mundo laboral.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
 

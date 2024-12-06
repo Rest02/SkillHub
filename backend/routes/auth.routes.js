@@ -1,5 +1,6 @@
 import {Router} from 'express'
 import * as authControllers from '../controllers/auth.controlles.js'
+import {verifyToken} from '../middlewares/middlewareToken.js'
 
 const router = Router()
 
@@ -9,6 +10,8 @@ router.post("/register", authControllers.registerUser)
 router.post("/forgetPassword", authControllers.forgetPassword)
 router.post("/verifyRecoveryCode/:token", authControllers.verifyRecoveryCode)
 router.post("/changePassword/:token", authControllers.changePassword)
+router.put('/users/update-role', verifyToken, authControllers.updateUserRole);
+
 
 
 

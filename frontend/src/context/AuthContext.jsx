@@ -5,6 +5,8 @@ import {
   forgetPasswordRequest,
   verifyRecoveryCodeRequest,
   changePasswordRequest,
+  updateUserRoleApi  // Importa la función updateUserRoleApi
+
 } from "../api/auth.api";
 import jwt_decode from "jwt-decode"; // Usar jwt_decode, no decode
 
@@ -120,6 +122,21 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
+  // Función para cambiar el rol del usuario
+  const updateRole = async (userId, newRole) => {
+    try {
+      const response = await updateUserRoleApi(userId, newRole);
+      if (response.status === 200) {
+        // Si la actualización es exitosa, actualiza el rol en el estado
+        setUserRole(newRole);
+        alert(response.data.message);
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || 'Error al cambiar el rol');
+    }
+  };
+
+
   return (
     <AuthContext.Provider
       value={{
@@ -130,7 +147,9 @@ export const AuthContextProvider = ({ children }) => {
         changePassword,
         token,
         userRole,
-        setToken
+        setToken,
+        updateRole, // Exponer la función updateRole
+
       }}
     >
       {children}

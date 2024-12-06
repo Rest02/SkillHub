@@ -1,78 +1,37 @@
 import React from "react";
-import { Button, Container, Typography, Box } from "@mui/material";
+import { Button } from "@mui/material";
 import Welcome from "../../assets/img/Welcome.png"; // Asegúrate de que la ruta sea correcta
 
 function WelcomeInformation() {
   return (
-    <Container
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "20px",
-        borderRadius: "8px",
-        maxWidth: "800px",
-        margin: "auto",
-        marginTop: "50px",
-      }}
-    >
-      {/* Imagen */}
-      <Box
-        component="img"
-        src={Welcome} // Cambia la URL por la imagen que desees usar
-        alt="Welcome"
-        sx={{
-          height: "100%",
-          maxHeight: "500px", // Ajusta la altura máxima para que coincida con el texto
-          borderRadius: "8px",
-          objectFit: "cover",
-        }}
-      />
+    <div className="container mx-auto px-6 py-8 bg-white rounded-lg shadow-lg">
+      {/* Contenedor de la imagen y texto */}
+      <div className="flex flex-col lg:flex-row items-center lg:justify-between gap-8">
+        {/* Imagen */}
+        <div className="flex-shrink-0 lg:w-1/2">
+          <img
+            src={Welcome} // Cambia la URL por la imagen que desees usar
+            alt="Welcome"
+            className="w-full h-full object-cover rounded-lg"
+          />
+        </div>
 
-      {/* Texto y botón */}
-      <Box sx={{ marginLeft: "20px", flex: 1 }}>
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: "bold", marginBottom: "10px" }}
-        >
-          Bienvenido a nuestra plataforma
-        </Typography>
-        <Typography
-          variant="h4"
-          sx={{ fontWeight: "bold", marginBottom: "10px" }}
-        >
-          SkillHub
-        </Typography>
-        <Typography variant="body1" sx={{ marginBottom: "20px", color: "gray" }}>
-          Aquí encontrarás toda la información necesaria para comenzar. Estamos
-          encantados de tenerte aquí y esperamos que disfrutes de la
-          experiencia. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          Quas asperiores explicabo expedita eligendi, amet molestiae dolores ex
-          magni reiciendis a maxime recusandae aliquid eveniet iste voluptatem
-          enim ut, ullam harum. Lorem, ipsum dolor sit amet consectetur
-          adipisicing elit. A sequi ex sed magnam odit unde aut ipsam incidunt
-          quisquam iste velit ipsa, excepturi doloribus eaque explicabo
-          reiciendis. Porro, nobis ullam!
-        </Typography>
-        <Button
-          variant="contained"
-          sx={{
-            border: "2px solid black",
-            backgroundColor: "#D32F2F",
-            color: "white",
-            borderRadius: "20px",
-            padding: "10px 20px",
-            transition: 'color 0.6s', // Suaviza el cambio de color
-            "&:hover": {
-              backgroundColor: "#9B111E", // Cambia el color del fondo
-              border: "2px solid black", // Añade bordes negros
-            },
-          }}
-        >
-          Más información
-        </Button>
-      </Box>
-    </Container>
+        {/* Texto y botón */}
+        <div className="lg:w-1/2">
+          <h5 className="text-xl font-bold mb-2 text-blue-600">Bienvenido a nuestra plataforma</h5>
+          <h4 className="text-2xl font-bold mb-2 text-black">SkillHub</h4>
+          <p className="text-base mb-6 text-gray-700">
+            Aquí encontrarás toda la información necesaria para comenzar. Estamos encantados de tenerte aquí y esperamos que disfrutes de la experiencia. En SkillHub, te ofrecemos los mejores recursos para aprender de los expertos y mejorar tus habilidades en diversas áreas, desde programación hasta marketing digital.
+          </p>
+          <Button
+            variant="contained"
+            className="bg-red-600 text-white rounded-full px-6 py-2 hover:bg-red-800 transition duration-300"
+          >
+            Más información
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
 

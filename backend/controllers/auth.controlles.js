@@ -215,3 +215,50 @@ export const changePassword = async (req, res) => {
     });
   }
 };
+
+
+// Controller para actualizar el rol de usuario
+export const updateUserRole = async (req, res) => {
+  const userId  = req.user.id;  // El id del usuario que quiere cambiar su rol
+
+  try {
+    // Verificar si el usuario existe
+    const [user] = await pool.query("SELECT * FROM users WHERE id = ?", [userId]);
+
+    if (user.length === 0) {
+      return res.status(404).json({
+        message: "Usuario no encontrado.",
+      });
+    }
+
+    const currentUser = user[0];
+
+    // Si el usuario es un "admin", no debe poder cambiar su propio rol
+    if (currentUser.rol === "admin") {
+      return res.status(403).json({
+        message: "No puedes cambiar tu rol siendo un admin.",
+      });
+    }
+
+    // Si el usuario es un "estudiante", cambiar a "instructor"
+    if (currentUser.rol === "estudiante") {
+      await pool.query("UPDATE users SET rol = 'instructor' WHERE id = ?", [
+        userId,
+      ]);
+      return res.status(200).json({
+        message: "Rol actualizado a 'instructor'.",
+      });
+    }
+
+    // Si el usuario ya es "instructor", no hacer nada
+    return res.status(200).json({
+      message: "El usuario ya tiene el rol de 'instructor'.",
+    });
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Error al actualizar el rol del usuario.",
+    });
+  }
+};

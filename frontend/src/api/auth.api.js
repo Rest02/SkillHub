@@ -34,3 +34,24 @@ export const changePasswordRequest = async (token, newPassword) => {
 };
 
 //---------------------------------------------------------------------------
+
+
+
+export const updateUserRoleApi = async (userId, newRole) => {
+  const token = localStorage.getItem("token"); // Obtener el token del localStorage
+
+  if (!token) {
+    throw new Error("No hay token disponible");
+  }
+
+  return await axios.put(
+    "http://localhost:4000/users/update-role", 
+    { userId, newRole },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Asegúrate de enviar el token en los encabezados
+      }
+    }
+  );
+};
+

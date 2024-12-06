@@ -14,31 +14,31 @@ function ImageBar() {
             </div>
             <div className="lg:max-w-xl lg:pr-5 relative z-40">
               <p className="flex text-sm uppercase text-blue-600">
-                About Us
+                Sobre Nosotros
               </p>
               <h2 className="mb-6 max-w-lg text-5xl font-light leading-snug tracking-tight text-blue-600 sm:text-7xl sm:leading-snug">
-                We make you look
+                Te ayudamos a lucir
                 <span className="my-1 inline-block border-b-8 border-blue-400 px-4 font-bold text-black animate__animated animate__flash">
-                  different
+                  diferente
                 </span>
               </h2>
               <p className="text-base text-gray-700">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque it.
+                Nuestra misión es ofrecerte los mejores cursos online para que puedas
+                mejorar tus habilidades y avanzar en tu carrera profesional.
               </p>
               <div className="mt-10 flex flex-col items-center md:flex-row">
                 <a
                   href="#"
                   className="mb-3 inline-flex h-12 w-full items-center justify-center rounded bg-green-600 px-6 font-medium tracking-wide text-white shadow-md transition hover:bg-blue-800 focus:outline-none md:mr-4 md:mb-0 md:w-auto"
                 >
-                  View More
+                  Ver más
                 </a>
                 <a
                   href="#"
                   aria-label=""
                   className="group inline-flex items-center font-semibold text-blue-600"
                 >
-                  Watch how it works
+                  Ver cómo funciona
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="ml-4 h-6 w-6 transition-transform group-hover:translate-x-2"
@@ -75,7 +75,7 @@ function ImageBar() {
             <div className="overflow-hidden rounded-[6rem] rounded-br-none rounded-tl-none">
               <img
                 src="https://placehold.co/400x400"
-                alt="Illustration"
+                alt="Ilustración"
                 className="w-full h-auto"
               />
             </div>
@@ -84,7 +84,7 @@ function ImageBar() {
       </div>
 
       <div className="hidden text-9xl varien absolute top-6 left-1/4 text-gray-300 z-40">
-        About Us
+        Sobre Nosotros
       </div>
       <div className="absolute -bottom-24 left-10 z-0 opacity-10">
         <svg

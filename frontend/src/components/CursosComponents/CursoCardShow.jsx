@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useCursos } from "../../context/ShowCourseContext.jsx"; // Asegúrate de importar el hook
 import { useNavigate } from "react-router-dom"; // Importa useNavigate
 
-
 function CursoCardShow({ searchQuery }) {
   const navigate = useNavigate(); // Hook para navegar entre rutas
 
@@ -28,19 +27,18 @@ function CursoCardShow({ searchQuery }) {
   if (error) return <div>{error}</div>; // Asegúrate de que se limpie el error cuando se obtienen nuevos cursos
   
   const cursosFiltrados = cursos.filter((curso) =>
-  curso.titulo.toLowerCase().includes(searchQuery.toLowerCase())
-);
-
-if (cursosFiltrados.length === 0 && !loading) {
-  return (
-    <div className="flex justify-center items-center">
-      <div className="max-w-[1200px] mx-auto">
-        <p className="text-center text-xl text-gray-600">No se encontraron cursos con ese nombre.</p>
-      </div>
-    </div>
+    curso.titulo.toLowerCase().includes(searchQuery.toLowerCase())
   );
-}
 
+  if (cursosFiltrados.length === 0 && !loading) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="max-w-[1200px] mx-auto">
+          <p className="text-center text-xl text-gray-600">No se encontraron cursos con ese nombre.</p>
+        </div>
+      </div>
+    );
+  }
 
   // Calcular los cursos que se mostrarán en la página actual
   const totalPaginas = Math.ceil(cursosFiltrados.length / cursosPorPagina);
@@ -67,21 +65,21 @@ if (cursosFiltrados.length === 0 && !loading) {
 
   return (
     <div className="flex justify-center items-center">
-    <div className="max-w-[1000px] mx-auto">
-      <div className="grid grid-cols-3 gap-6">
+      <div className="max-w-[1000px] mx-auto px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {cursosPaginaActual.map((curso) => (
             <div
               key={curso.id}
-              className="relative flex flex-col text-black bg-white shadow-lg border border-black bg-clip-border rounded-xl min-h-[400px]" // Ajusta la altura mínima según sea necesario
+              className="relative flex flex-col text-black bg-white shadow-lg border border-black bg-clip-border rounded-xl min-h-[400px] overflow-hidden"
             >
-              <div className="relative mx-4 mt-4 overflow-hidden text-black bg-white bg-clip-border rounded-xl h-96">
+              <div className="relative mx-4 mt-4 overflow-hidden text-black bg-white bg-clip-border rounded-xl h-48 sm:h-64 md:h-80">
                 <img
                   src={`http://localhost:4000/${curso.imagen_portada}`} // Cambia la URL según tus datos
                   alt="card"
                   className="object-cover w-full h-full"
                 />
               </div>
-              <div className="p-6 flex flex-col flex-grow">
+              <div className="p-4 sm:p-6 flex flex-col flex-grow">
                 <div className="flex items-center justify-between mb-2">
                   <p className="block font-sans text-base font-medium leading-relaxed text-[#1D63FF]">
                     {curso.titulo} {/* Título dinámico del curso */}
@@ -90,18 +88,17 @@ if (cursosFiltrados.length === 0 && !loading) {
                     ${curso.precio} {/* Precio dinámico del curso */}
                   </p>
                 </div>
-                {/* Descripción: limitada a 6 líneas y con scroll si excede */}
-                <p className="block font-sans text-sm font-normal leading-normal text-[#000000] opacity-75 scrollable-clamp flex-grow">
+                {/* Descripción con scroll */}
+                <div className="block font-sans text-sm font-normal leading-normal text-[#000000] opacity-75 flex-grow max-h-32 overflow-auto">
                   {curso.descripcion}
-                </p>
+                </div>
                 <div className="mt-auto pt-6">
                   <button
                     className="align-middle select-none font-sans font-bold text-center uppercase transition-all text-white bg-[#000000] py-3 px-6 rounded-lg shadow-lg hover:bg-[#1D63FF] active:shadow-md block w-full"
                     type="button"
                     onClick={() => handleViewCourse(curso.id)} // Redirige al curso específico
-
                   >
-                    Añadir al carrito
+                    Ver Curso
                   </button>
                 </div>
               </div>

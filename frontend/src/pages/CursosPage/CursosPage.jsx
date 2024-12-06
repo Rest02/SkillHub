@@ -19,14 +19,14 @@ function CursosPage() {
       </div>
 
       {/* Contenedor principal con filtro y tarjetas */}
-      <div className="flex flex-row gap-4 flex-grow justify-center">
-        {/* Filtro en el lado izquierdo */}
-        <div className="w-[22%]">
+      <div className="flex flex-col md:flex-row gap-4 flex-grow justify-center">
+        {/* Filtro en la parte superior en pantallas pequeñas y al lado de las tarjetas en pantallas grandes */}
+        <div className="w-full md:w-[22%] mb-4 md:mb-0">
           <Filter />
         </div>
 
         {/* Tarjetas de cursos en el lado derecho */}
-        <div className="w-[55%]">
+        <div className="w-full md:w-[55%]">
           <CursoCardShow searchQuery={searchQuery} />  {/* Pasa la query de búsqueda al componente de las tarjetas */}
         </div>
       </div>
