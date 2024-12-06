@@ -26,14 +26,13 @@ export const getCourseUnits = async (req, res) => {
          u.titulo AS unidad_titulo, 
          v.id AS video_id,
          v.nombre AS video_nombre,
-         v.video_url AS video
+         v.video_url AS video,
+         v.miniatura_url AS miniatura_url
        FROM units u
        LEFT JOIN videos v ON u.id = v.unidad_id
        WHERE u.curso_id = ?`,
       [courseIdnumber]
     );
-
-    // console.log("Unidades y videos obtenidos:", units);  // Verifica los datos
 
     // Agrupar las unidades y clases por nombre
     const groupedUnits = units.reduce((acc, row) => {
@@ -51,7 +50,8 @@ export const getCourseUnits = async (req, res) => {
         acc[unitId].clases.push({
           id: row.video_id,
           nombre: row.video_nombre,
-          videoUrl: row.video  // Asegúrate de que `videoUrl` esté correctamente asignado
+          videoUrl: row.video,  // Asegúrate de que `videoUrl` esté correctamente asignado
+          miniaturaUrl: row.miniatura_url // Incluimos la miniatura del video
         });
       }
 
@@ -66,9 +66,34 @@ export const getCourseUnits = async (req, res) => {
       unit.clases.reverse(); // Invertir las clases de la unidad
     });
 
+    // Obtener los comentarios de cada video
+    for (const unit of result) {
+      for (const clase of unit.clases) {
+        const [comments] = await pool.query(
+          `SELECT 
+             c.id AS comment_id, 
+             c.contenido AS comment_content, 
+             c.fecha_comentario AS comment_date, 
+             u.nombre AS commenter_name
+           FROM comments_videos c
+           JOIN users u ON c.usuario_id = u.id
+           WHERE c.video_id = ?`,
+          [clase.id]
+        );
+
+        // Agregar los comentarios al video correspondiente
+        clase.comentarios = comments.map(comment => ({
+          id: comment.comment_id,
+          contenido: comment.comment_content,
+          fecha: comment.comment_date,
+          nombreUsuario: comment.commenter_name
+        }));
+      }
+    }
+
     res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error al obtener las unidades y nombres de las clases del curso.' });
+    res.status(500).json({ message: 'Error al obtener las unidades, videos y comentarios del curso.' });
   }
 };
