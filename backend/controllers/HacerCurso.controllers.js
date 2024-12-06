@@ -86,15 +86,39 @@ export const getCourseUnits = async (req, res) => {
           id: comment.comment_id,
           contenido: comment.comment_content,
           fecha: comment.comment_date,
-          nombreUsuario: comment.commenter_name
+          nombreUsuario: comment.commenter_name,
+          respuestas: [] // Creamos un array vacío para las respuestas
         }));
+
+        // Obtener las respuestas para cada comentario
+        for (const comment of clase.comentarios) {
+          const [responses] = await pool.query(
+            `SELECT 
+               r.id AS response_id,
+               r.contenido AS response_content, 
+               r.fecha_respuesta AS response_date,
+               u.nombre AS responder_name
+             FROM responses_comments_videos r
+             JOIN users u ON r.usuario_id = u.id
+             WHERE r.comment_id = ?`,
+            [comment.id]
+          );
+
+          // Añadir las respuestas al comentario correspondiente
+          comment.respuestas = responses.map(response => ({
+            id: response.response_id,
+            contenido: response.response_content,
+            fecha: response.response_date,
+            responderNombre: response.responder_name
+          }));
+        }
       }
     }
 
     res.status(200).json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error al obtener las unidades, videos y comentarios del curso.' });
+    res.status(500).json({ message: 'Error al obtener las unidades, videos, comentarios y respuestas del curso.' });
   }
 };
 
