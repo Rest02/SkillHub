@@ -7,6 +7,7 @@ import courseRoutes from './routes/course.routes.js'
 import showCourseRoutes from './routes/showCourses.routes.js'
 import cartRoutes from './routes/carrito.routes.js'
 import aprenzajeRoutes from './routes/Aprendizaje.routes.js'
+import hacerCursoRoutes from './routes/HacerCurso.routes.js'
 
 
 
@@ -25,6 +26,7 @@ app.use(courseRoutes)
 app.use(showCourseRoutes)
 app.use(cartRoutes)
 app.use(aprenzajeRoutes)
+app.use(hacerCursoRoutes)
 
 
 

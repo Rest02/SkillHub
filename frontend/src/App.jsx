@@ -33,6 +33,8 @@ import AprendizajePage from "../src/pages/AprendizajePage/AprendizajePage.jsx";
 import { useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AprendizajeProvider } from "../src/context/AprendizajeContext.jsx";
+import HacerCurso from "../src/pages/HacerCurso/HacerCurso.jsx";
+import { HacerCursosProvider } from "../src/context/HacerCursoContext.jsx"; // Ruta al archivo del contexto
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -106,6 +108,8 @@ const AppContent = () => {
 
         <Route path="/aprendizaje" element={<AprendizajePage />} />
 
+        <Route path="/hacercurso/:courseId" element={<HacerCurso />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
@@ -122,7 +126,9 @@ function App() {
             {/* Usa el proveedor aquí */}
             <CarritoProvider>
               <AprendizajeProvider>
-                <AppContent /> {/* Mueve el contenido principal aquí */}
+                <HacerCursosProvider>
+                  <AppContent /> {/* Mueve el contenido principal aquí */}
+                </HacerCursosProvider>
               </AprendizajeProvider>
             </CarritoProvider>
           </ShowCourseProvider>
