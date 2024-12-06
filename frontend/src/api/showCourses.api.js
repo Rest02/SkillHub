@@ -32,6 +32,8 @@ export const getCourseDetailsApi = async (courseId) => {
   }
 };
 
+
+
 export const getRatingsForCourseApi = async (courseId) => {
   try {
     // Hacer la solicitud al backend para obtener las valoraciones de un curso
@@ -41,5 +43,32 @@ export const getRatingsForCourseApi = async (courseId) => {
   } catch (error) {
     console.error("Error al obtener las valoraciones del curso:", error);
     throw error; // Lanzar el error para ser manejado más tarde
+  }
+};
+
+export const createRatingApi = async (courseId, rating, comment) => {
+  try {
+    // Obtener el token desde el almacenamiento local o donde lo tengas almacenado
+    const token = localStorage.getItem("token"); // Asumiendo que el token está guardado en localStorage
+
+    // Realizar la solicitud POST para crear la valoración
+    const response = await axios.post(
+      `http://localhost:4000/valoracion/${courseId}`,
+      {
+        rating,    // Valoración del curso (por ejemplo, un número entre 1 y 5)
+        comment,   // Comentario del curso
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Añadir el token de autenticación al header
+        },
+      }
+    );
+    
+    console.log(response.data); // Imprimir la respuesta del servidor
+    return response.data; // Devuelve la respuesta (mensaje de éxito o error)
+  } catch (error) {
+    console.error("Error al crear la valoración:", error);
+    throw error; // Lanzar el error para manejarlo más tarde
   }
 };

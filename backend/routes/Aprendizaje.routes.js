@@ -10,4 +10,8 @@ const router = express.Router();
 router.get("/aprendizaje", verifyToken, aprendizajeControllers.getUserCourses)
 
 
+router.post("/valoracion/:courseId", verifyToken, aprendizajeControllers.createRating)
+
+
+
 export default router;

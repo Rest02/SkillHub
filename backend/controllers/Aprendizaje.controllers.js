@@ -29,3 +29,68 @@ export const getUserCourses = async (req, res) => {
     }
   };
   
+
+
+
+  export const createRating = async (req, res) => {
+    const { rating, comment } = req.body;  // Datos enviados en el body (curso, valoración, comentario)
+    const userId = req.user.id;  // El id del usuario autenticado
+    const {courseId} = req.params
+    console.log("eñcursoid", courseId)
+    console.log("el comentario", comment)
+  
+    try {
+      // Verificar si el usuario está inscrito en el curso y el estado es 'completado'
+      const [enrollment] = await pool.query(`
+        SELECT e.estado
+        FROM enrollments e
+        WHERE e.usuario_id = ? AND e.curso_id = ? AND e.estado = 'activo'
+      `, [userId, courseId]);
+  
+      if (enrollment.length === 0) {
+        return res.status(400).json({ message: "No puedes valorar este curso, no has completado la inscripción." });
+      }
+  
+      // Verificar si el usuario ya ha valorado este curso
+      const [existingRating] = await pool.query(`
+        SELECT * 
+        FROM ratings
+        WHERE curso_id = ? AND usuario_id = ?
+      `, [courseId, userId]);
+  
+      if (existingRating.length > 0) {
+        return res.status(400).json({ message: "Ya has valorado este curso." });
+      }
+  
+      // Insertar la nueva valoración en la tabla 'ratings'
+      await pool.query(`
+        INSERT INTO ratings (curso_id, usuario_id, valoracion, comentario)
+        VALUES (?, ?, ?, ?)
+      `, [courseId, userId, rating, comment]);
+  
+      // Actualizar el promedio de la valoración en el curso
+      const [course] = await pool.query(`
+        SELECT AVG(valoracion) as avg_rating
+        FROM ratings
+        WHERE curso_id = ?
+      `, [courseId]);
+  
+      const avgRating = course[0].avg_rating || 0;
+  
+      await pool.query(`
+        UPDATE courses
+        SET valoracion_promedio = ?
+        WHERE id = ?
+      `, [avgRating, courseId]);
+  
+      return res.status(201).json({ message: "Valoración creada exitosamente." });
+  
+    } catch (error) {
+      console.error("Error al crear la valoración:", error);
+      return res.status(500).json({ message: "Error al crear la valoración." });
+    }
+  };
+  
+
+
+  

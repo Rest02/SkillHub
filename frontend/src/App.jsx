@@ -35,6 +35,7 @@ import { Toaster } from "react-hot-toast";
 import { AprendizajeProvider } from "../src/context/AprendizajeContext.jsx";
 import HacerCurso from "../src/pages/HacerCurso/HacerCurso.jsx";
 import { HacerCursosProvider } from "../src/context/HacerCursoContext.jsx"; // Ruta al archivo del contexto
+import ValoracionCursoUser from '../src/pages/valoracionCursoUser/ValoracionCursoUser.jsx';
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -109,6 +110,9 @@ const AppContent = () => {
         <Route path="/aprendizaje" element={<AprendizajePage />} />
 
         <Route path="/hacercurso/:courseId" element={<HacerCurso />} />
+
+        <Route path="/valoracion/:courseId" element={<ValoracionCursoUser />} />
+
 
         <Route path="*" element={<NotFound />} />
       </Routes>

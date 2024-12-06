@@ -65,6 +65,17 @@ const Aprendizaje = () => {
                 <span className="text-sm text-gray-500 ">
                   {new Date(course.fecha_inscripcion).toLocaleDateString()}
                 </span>
+
+                {/* Botón para crear valoración */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Evita que navegue al hacer clic en el botón
+                    navigate(`/valoracion/${course.id}`); // Redirige a la página de creación de valoración
+                  }}
+                  className="mt-4 px-6 py-2 border border-black text-black rounded-lg hover:bg-blue-500 hover:text-white transition-colors duration-300"
+                >
+                  Crear Valoración
+                </button>
               </div>
             </div>
           ))}
