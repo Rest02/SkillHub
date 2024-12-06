@@ -1,6 +1,5 @@
 import React from 'react';
 import DescripcionCurso from '../../components/MostrarCursoUserComponents/DescripcionCurso.jsx';
-import VideoPresentation from '../../components/MostrarCursoUserComponents/VideoPresentation.jsx';
 import CommentsValorations from '../../components/MostrarCursoUserComponents/CommentsValorations.jsx';
 import ProductActionCard from '../../components/MostrarCursoUserComponents/ProductActionCard.jsx';
 import { Box } from '@mui/material';
@@ -31,7 +30,7 @@ function MostrarCursoUserPage() {
           {/* Lado izquierdo con DescripcionCurso */}
           <Box
             sx={{
-              width: '50%', // Ocupa la mitad del ancho
+              width: '100%', // Ocupa la mitad del ancho
               height: '100%', // Asegura que ocupe todo el alto de la página
               padding: 2,
               overflowY: 'auto', // Añade scroll si el contenido es largo
@@ -41,22 +40,7 @@ function MostrarCursoUserPage() {
             <DescripcionCurso />
           </Box>
 
-          {/* Lado derecho con VideoPresentation y ProductActionCard */}
-          <Box
-            sx={{
-              width: '50%', // Ocupa la otra mitad
-              height: '100%', // Igual al alto del lado izquierdo
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'space-between', // Asegura separación entre componentes
-              padding: 2,
-              border : "1px solid black"
-
-            }}
-          >
-            <VideoPresentation courseId={courseId} />
-          </Box>
+          
         </div>
 
         {/* CommentsValorations a lo largo */}

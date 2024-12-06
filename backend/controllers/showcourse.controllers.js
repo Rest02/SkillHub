@@ -46,11 +46,9 @@ export const getCourses = async (req, res) => {
 
     // Verificar si hay resultados
     if (rows.length === 0) {
-      return res
-        .status(404)
-        .json({
-          message: "No se encontraron cursos con los filtros aplicados.",
-        });
+      return res.status(404).json({
+        message: "No se encontraron cursos con los filtros aplicados.",
+      });
     }
 
     // Devolver los cursos filtrados
@@ -62,60 +60,68 @@ export const getCourses = async (req, res) => {
 };
 
 export const getCourseDetails = async (req, res) => {
-    try {
-      const { courseId } = req.params; // ID del curso recibido en la URL
-  
-      if (!courseId) { // Verifica que courseId no sea undefined
-        return res.status(400).json({ error: "Course ID is required." });
-      }
-  
-      // Consulta SQL para obtener el título del curso, unidades y nombres de videos
-      const query = `
+  try {
+    const { courseId } = req.params; // ID del curso recibido en la URL
+
+    if (!courseId) {
+      // Verifica que courseId no sea undefined
+      return res.status(400).json({ error: "Course ID is required." });
+    }
+
+    // Consulta SQL para obtener el título del curso, unidades y nombres de videos
+    const query = `
         SELECT 
           c.titulo AS course_title,
           u.titulo AS unit_title,
-          v.nombre AS video_name
+          v.nombre AS video_name,
+          v.video_url AS video_url
         FROM courses c
         LEFT JOIN units u ON c.id = u.curso_id
         LEFT JOIN videos v ON u.id = v.unidad_id
         WHERE c.id = ?
         ORDER BY u.id, v.id
       `;
-  
-      // Ejecutar la consulta
-      const [rows] = await pool.query(query, [courseId]);
-  
-      // Si no se encuentra el curso
-      if (rows.length === 0) {
-        return res.status(404).json({ message: "Curso no encontrado" });
-      }
-  
-      // Formatear los datos agrupados por unidad
-      const courseDetails = {
-        course_title: rows[0].course_title,
-        units: [],
-      };
-  
-      const unitMap = new Map(); // Para evitar duplicados de unidades
-  
-      rows.forEach((row) => {
-        if (!unitMap.has(row.unit_title) && row.unit_title) {
-          unitMap.set(row.unit_title, { unit_title: row.unit_title, videos: [] });
-        }
-  
-        if (row.video_name && unitMap.has(row.unit_title)) {
-          unitMap.get(row.unit_title).videos.push({ video_name: row.video_name });
-        }
-      });
-  
-      courseDetails.units = Array.from(unitMap.values());
-  
-      // Responder con los detalles del curso
-      return res.status(200).json(courseDetails);
-    } catch (error) {
-      console.error(error);
-      return res
-        .status(500)
-        .json({ message: "Error al recuperar los detalles del curso" });
+
+    // Ejecutar la consulta
+    const [rows] = await pool.query(query, [courseId]);
+
+    console.log(rows);
+
+    // Si no se encuentra el curso
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Curso no encontrado" });
     }
-  };
+
+    // Formatear los datos agrupados por unidad
+    const courseDetails = {
+      course_title: rows[0].course_title,
+      units: [],
+    };
+
+    const unitMap = new Map(); // Para evitar duplicados de unidades
+
+    rows.forEach((row) => {
+      if (!unitMap.has(row.unit_title) && row.unit_title) {
+        unitMap.set(row.unit_title, { unit_title: row.unit_title, videos: [] });
+      }
+
+      if (row.video_name && unitMap.has(row.unit_title)) {
+        // Asegúrate de incluir tanto video_name como video_url
+        unitMap.get(row.unit_title).videos.push({
+          video_name: row.video_name,
+          video_url: row.video_url // Añadir la URL del video
+        });
+      }
+    });
+
+    courseDetails.units = Array.from(unitMap.values());
+
+    // Responder con los detalles del curso
+    return res.status(200).json(courseDetails);
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ message: "Error al recuperar los detalles del curso" });
+  }
+};
