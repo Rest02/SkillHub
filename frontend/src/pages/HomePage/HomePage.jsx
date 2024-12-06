@@ -13,7 +13,7 @@ function HomePage() {
       <div className="w-full max-w-[1200px] mx-auto">
         <ThreeContainerInfo/>
       </div>
-      <div className="w-full max-w-[1200px] mx-auto">
+      <div className="w-full max-w-[1200px] mx-auto mt-8"> {/* Aquí agregamos el margen */}
         <WelcomeInformation/>
       </div>
       <div className="w-full max-w-[1200px] mx-auto">

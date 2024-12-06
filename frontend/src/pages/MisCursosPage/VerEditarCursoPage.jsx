@@ -25,42 +25,25 @@ const CourseDetailsPage = () => {
   }
 
   return (
-    <div>
-      <div style={{ 
-        display: "flex", 
-        justifyContent: "center", 
-        gap: "20px", 
-        width: "100%", 
-        maxWidth: "1200px", 
-        margin: "0 auto" 
-      }}>
-        <div style={{ 
-          flex: "1", 
-          paddingTop: "15px", 
-          paddingRight: "20px", 
-          paddingLeft: "20px",
-          minWidth: "200px",
-        }}>
-          <div style={{ marginBottom: "10px" }}>
+    <div className="flex flex-col items-center px-4 py-6">
+      {/* Contenedor principal con la disposición de los elementos */}
+      <div className="flex flex-col md:flex-row gap-6 max-w-[1200px] w-full">
+        {/* Columna de VideoIntroduccion y MenuEditsCourse */}
+        <div className="w-full md:w-1/3">
+          <div className="mb-6">
             <VideoIntroduccion />
           </div>
           <MenuEditsCourse />
         </div>
-        <div style={{
-          flex: "2",  
-          paddingRight: "20px", 
-          paddingLeft: "20px", 
-          minWidth: "300px",  
-        }}>
+
+        {/* Columna de DescripcionCurso */}
+        <div className="w-full md:w-2/3">
           <DescripcionCurso course={courseData.course} units={courseData.units} />
         </div>
       </div>
-      <div style={{
-        width: "60%",  
-        maxWidth: "1200px",  
-        margin: "0 auto",  
-        paddingTop: "30px",  
-      }}>
+
+      {/* Sección de ValoracionesEnInstructor */}
+      <div className="w-full max-w-[1200px] mt-6">
         <ValoracionesEnInstructor />
       </div>
     </div>

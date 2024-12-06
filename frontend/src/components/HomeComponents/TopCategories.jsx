@@ -53,7 +53,7 @@ function TopCategories() {
           variant="body1"
           sx={{
             fontSize: "18px",
-            color: "gray",
+            color: "black",
             textAlign: "justify", // Justificación del texto descriptivo
           }}
         >
