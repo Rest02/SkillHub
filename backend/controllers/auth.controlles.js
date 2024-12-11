@@ -68,8 +68,7 @@ export const registerUser = async (req, res) => {
   }
 
   // Sanitizar los datos
-  const nombreSanitizado = sanitizeInput(nombre);  // Aplicar sanitización
-  const emailSanitizado = sanitizeInput(email);  // Aunque el email puede contener "@", el sanitizeInput lo maneja adecuadamente
+  const nombreSanitizado = sanitizeInput(nombre);  // Aplicar sanitización solo al nombre
 
   // Validar longitud del nombre de usuario (3 a 10 caracteres)
   if (nombreSanitizado.length < 3 || nombreSanitizado.length > 10) {
@@ -77,12 +76,12 @@ export const registerUser = async (req, res) => {
   }
 
   // Validar longitud del email
-  if (emailSanitizado.length > 100) {
+  if (email.length > 100) {
     return res.status(400).json({ message: "El email excede el límite de caracteres" });
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(emailSanitizado)) {
+  if (!emailRegex.test(email)) {  // Validar el email sin sanitización
     return res.status(400).json({ message: "El formato del email no es válido" });
   }
 
@@ -94,7 +93,7 @@ export const registerUser = async (req, res) => {
   }
 
   try {
-    const [userRegister] = await pool.query("SELECT * FROM users WHERE email = ?", [emailSanitizado]);
+    const [userRegister] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
     if (userRegister.length > 0) {
       return res.status(409).json({
         message: "El usuario ya está registrado en la base de datos",
@@ -102,7 +101,7 @@ export const registerUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    await pool.query("INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)", [nombreSanitizado, emailSanitizado, hashedPassword]);
+    await pool.query("INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)", [nombreSanitizado, email, hashedPassword]);
 
     return res.status(200).json({ message: "Usuario ingresado exitosamente" });
   } catch (error) {
@@ -110,6 +109,7 @@ export const registerUser = async (req, res) => {
     return res.status(500).json({ message: "Ocurrió un error inesperado" });
   }
 };
+
 
 
 

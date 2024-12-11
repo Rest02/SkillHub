@@ -13,7 +13,7 @@ function RegisterForm() {
     nombre: Yup.string()
       .matches(/^[a-zA-Z0-9-_]+$/, "El nombre solo puede contener letras, números, guiones y guiones bajos")
       .min(3, "El nombre de usuario debe tener al menos 3 caracteres")
-      .max(10, "El nombre de usuario no debe superar los 10 caracteres") // Ajuste aquí para max 10 caracteres
+      .max(10, "El nombre de usuario no debe superar los 10 caracteres") 
       .required("El nombre de usuario es obligatorio"),
     email: Yup.string()
       .email("Correo electrónico no válido")
@@ -26,7 +26,6 @@ function RegisterForm() {
       )
       .required("La contraseña es obligatoria"),
   });
-  
 
   return (
     <div className="h-screen w-screen flex">
@@ -49,19 +48,19 @@ function RegisterForm() {
           onSubmit={async (values) => {
             try {
               await registerUser(values);
-              toast.success("Registrado con éxito", {
-                position: "bottom-left", // Mensaje en la esquina inferior izquierda
+              toast.success("Usuario creado exitosamente", {
+                position: "bottom-left", // Mostrar el mensaje en la esquina inferior izquierda
               });
-              navigate("/");
+              navigate("/"); // Redirigir después del registro
             } catch (error) {
               console.error("Error al registrar al usuario:", error);
               toast.error("Error al registrarse. Intente de nuevo.", {
-                position: "bottom-left",
+                position: "bottom-left", // Mensaje de error en la esquina inferior izquierda
               });
             }
           }}
         >
-          {({ handleChange, handleSubmit }) => (
+          {({ handleSubmit }) => (
             <Form
               onSubmit={handleSubmit}
               className="bg-white w-full max-w-md p-8"
