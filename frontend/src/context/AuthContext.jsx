@@ -56,12 +56,14 @@ export const AuthContextProvider = ({ children }) => {
 
   const registerUser = async (data) => {
     try {
-      const response = await registerUserApi(data);
-      console.log(response);
+      const response = await registerUserApi(data); // Aquí se realiza la solicitud al backend
+      return response; // Devuelve la respuesta al componente
     } catch (error) {
-      console.log(error);
+      console.error(error.response?.data?.message || "Error desconocido");
+      throw error; // Lanza el error al componente
     }
   };
+  
 
   const loginUser = async (data) => {
     try {

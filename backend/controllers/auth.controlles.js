@@ -51,37 +51,68 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
+
+// Función de sanitización para prevenir XSS e inyecciones
+const sanitizeInput = (input) => {
+  // Eliminar cualquier carácter no permitido (todo excepto letras, números, guiones y guiones bajos)
+  return input.replace(/[^a-zA-Z0-9-_]/g, '');
+};
+
 export const registerUser = async (req, res) => {
   const { nombre, email, password } = req.body;
-  try {
-    if (!nombre || !email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Nombre, email y contraseña son requeridos" });
-    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const [userRegister] = await pool.query(
-      "SELECT * FROM users WHERE email = ?",
-      [email]
-    );
-    if (userRegister.length > 0) {
-      return res.json({
-        message: "El usuario ya esta registrado en la base de datos",
-      });
-    } else {
-      await pool.query(
-        "INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)",
-        [nombre, email, hashedPassword]
-      );
-      res.json("Usuario ingresado exitosamente");
-    }
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
+  // Validaciones
+  if (!nombre || !email || !password) {
+    return res.status(400).json({ message: "Todos los campos son requeridos" });
+  }
+
+  // Sanitizar los datos
+  const nombreSanitizado = sanitizeInput(nombre);  // Aplicar sanitización
+  const emailSanitizado = sanitizeInput(email);  // Aunque el email puede contener "@", el sanitizeInput lo maneja adecuadamente
+
+  // Validar longitud del nombre de usuario (3 a 10 caracteres)
+  if (nombreSanitizado.length < 3 || nombreSanitizado.length > 10) {
+    return res.status(400).json({ message: "El nombre de usuario debe tener entre 3 y 10 caracteres" });
+  }
+
+  // Validar longitud del email
+  if (emailSanitizado.length > 100) {
+    return res.status(400).json({ message: "El email excede el límite de caracteres" });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(emailSanitizado)) {
+    return res.status(400).json({ message: "El formato del email no es válido" });
+  }
+
+  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
+  if (!strongPasswordRegex.test(password)) {
+    return res.status(400).json({
+      message: "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial",
     });
   }
+
+  try {
+    const [userRegister] = await pool.query("SELECT * FROM users WHERE email = ?", [emailSanitizado]);
+    if (userRegister.length > 0) {
+      return res.status(409).json({
+        message: "El usuario ya está registrado en la base de datos",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await pool.query("INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)", [nombreSanitizado, emailSanitizado, hashedPassword]);
+
+    return res.status(200).json({ message: "Usuario ingresado exitosamente" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Ocurrió un error inesperado" });
+  }
 };
+
+
+
 
 // Controllers para olvido de contraseña
 

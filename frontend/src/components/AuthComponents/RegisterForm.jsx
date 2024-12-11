@@ -11,16 +11,22 @@ function RegisterForm() {
 
   const validationSchema = Yup.object({
     nombre: Yup.string()
+      .matches(/^[a-zA-Z0-9-_]+$/, "El nombre solo puede contener letras, números, guiones y guiones bajos")
       .min(3, "El nombre de usuario debe tener al menos 3 caracteres")
-      .max(8, "El nombre de usuario no debe superar los 8 caracteres")
+      .max(10, "El nombre de usuario no debe superar los 10 caracteres") // Ajuste aquí para max 10 caracteres
       .required("El nombre de usuario es obligatorio"),
     email: Yup.string()
       .email("Correo electrónico no válido")
       .required("El correo electrónico es obligatorio"),
     password: Yup.string()
-      .min(6, "La contraseña debe tener al menos 6 caracteres")
+      .min(8, "La contraseña debe tener al menos 8 caracteres")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/,
+        "La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial"
+      )
       .required("La contraseña es obligatoria"),
   });
+  
 
   return (
     <div className="h-screen w-screen flex">
