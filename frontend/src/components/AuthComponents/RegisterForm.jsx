@@ -28,7 +28,7 @@ function RegisterForm() {
   });
 
   return (
-    <div className="h-screen w-screen flex">
+    <div className="h-screen w-screen flex overflow-hidden">
       <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-yellow-400 to-blue-700 justify-around items-center hidden">
         <div>
           <h1 className="text-white font-bold text-4xl font-sans">SkillHub</h1>
@@ -41,7 +41,7 @@ function RegisterForm() {
           </button>
         </div>
       </div>
-      <div className="flex md:w-1/2 justify-center py-10 items-center bg-white">
+      <div className="flex w-full md:w-1/2 justify-center py-10 items-center bg-white">
         <Formik
           initialValues={{ nombre: "", email: "", password: "" }}
           validationSchema={validationSchema}
