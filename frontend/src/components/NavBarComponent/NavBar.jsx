@@ -1,10 +1,32 @@
 import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Drawer,
+} from "@mui/material";
+import { AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
+import logo from "../../assets/img/logo.png"; // Logo para pantallas grandes
+import logoSmall from "../../assets/img/logoSmall.png"; // Logo para pantallas pequeñas
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/img/logo.png"; // Asegúrate de usar la ruta correcta
 
 const NavBar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const open = Boolean(anchorEl);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   const goToNosotros = () => navigate("/nosotros");
   const goToCursos = () => navigate("/cursos");
@@ -12,108 +34,237 @@ const NavBar = () => {
   const goToLogin = () => navigate("/login");
   const goToRegister = () => navigate("/register");
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  const handleCerrarSesion = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
   };
 
   return (
-    <nav className="bg-transparent px-4 py-5 md:px-24 lg:px-8 font-sans">
-      <div className="max-w-screen-xl mx-auto flex justify-between items-center">
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "transparent",
+        boxShadow: "none",
+        padding: "20px 50px",
+        fontFamily: "Kanit, sans-serif",
+        width: "80%",
+        margin: "0 auto",
+        padding: "20px",
+      }}
+    >
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          position: "relative",
+        }}
+      >
+        {/* Menú de hamburguesa */}
+        <IconButton
+          sx={{
+            display: { xs: "block", md: "none" },
+            color: "#000000",
+            marginRight: "16px",
+          }}
+          onClick={toggleDrawer}
+        >
+          <MenuIcon fontSize="large" /> {/* Icono agrandado */}
+        </IconButton>
+
         {/* Logo centrado */}
-        <div className="relative flex-1 flex justify-center lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2">
-          <img src={logo} alt="SkillHub Logo" className="h-16 w-auto" />
-        </div>
+        <Box
+          component="img"
+          onClick={goToHome}
+          src={logo}
+          alt="Logo"
+          sx={{
+            height: "80px",
+            width: "auto",
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: { xs: "none", md: "block" },
+          }}
+        />
 
-        {/* Menú hamburguesa para pantallas pequeñas */}
-        <div className="lg:hidden">
-          <button onClick={toggleMenu} className="text-black focus:outline-none">
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-        </div>
+        {/* Logo pequeño para pantallas móviles */}
+        <Box
+          sx={{
+            display: { xs: "flex", md: "none" },
+            alignItems: "center",
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
+          <Box
+            component="img"
+            onClick={goToHome}
+            src={logoSmall}
+            alt="Logo pequeño"
+            sx={{
+              height: "80px",  // Aumento del tamaño del logo pequeño
+              width: "auto",
+            }}
+          />
+        </Box>
 
-        {/* Opciones de navegación izquierda en pantallas grandes */}
-        <div className="hidden lg:flex items-center space-x-6">
-          <button
+        {/* Opciones de navegación izquierda */}
+        <Box
+          sx={{ display: "flex", gap: 3, display: { xs: "none", md: "flex" } }}
+        >
+          <Button
+            variant="text"
             onClick={goToNosotros}
-            className="relative text-black font-bold text-sm lg:text-lg hover:text-blue-500 transition duration-300"
+            sx={{
+              position: "relative",
+              color: "#000000",
+              fontWeight: "bold",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
+              "&:hover": { color: "#1D63FF" },
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "0%",
+                height: "2px",
+                backgroundColor: "#1D63FF",
+                transition: "width 0.3s ease-in-out",
+              },
+              "&:hover::after": {
+                width: "100%",
+              },
+            }}
           >
             Nosotros
-            <span className="absolute bottom-0 left-0 w-0 h-1 bg-blue-500 transition-all duration-300"></span>
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="text"
             onClick={goToCursos}
-            className="relative text-black font-bold text-sm lg:text-lg hover:text-blue-500 transition duration-300"
+            sx={{
+              position: "relative",
+              color: "#000000",
+              fontWeight: "bold",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
+              "&:hover": { color: "#1D63FF" },
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "0%",
+                height: "2px",
+                backgroundColor: "#1D63FF",
+                transition: "width 0.3s ease-in-out",
+              },
+              "&:hover::after": {
+                width: "100%",
+              },
+            }}
           >
             Cursos
-            <span className="absolute bottom-0 left-0 w-0 h-1 bg-blue-500 transition-all duration-300"></span>
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="text"
             onClick={goToHome}
-            className="relative text-black font-bold text-sm lg:text-lg hover:text-blue-500 transition duration-300"
+            sx={{
+              position: "relative",
+              color: "#000000",
+              fontWeight: "bold",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
+              "&:hover": { color: "#1D63FF" },
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "0%",
+                height: "2px",
+                backgroundColor: "#1D63FF",
+                transition: "width 0.3s ease-in-out",
+              },
+              "&:hover::after": {
+                width: "100%",
+              },
+            }}
           >
             Home
-            <span className="absolute bottom-0 left-0 w-0 h-1 bg-blue-500 transition-all duration-300"></span>
-          </button>
-        </div>
+          </Button>
+        </Box>
 
-        {/* Botones de acciones derecha */}
-        <div className="hidden lg:flex items-center space-x-6">
-          <button
+        {/* Opciones de navegación derecha */}
+        <Box
+          sx={{ display: "flex", gap: 3, display: { xs: "none", md: "flex" } }}
+        >
+          <Button
+            variant="text"
             onClick={goToLogin}
-            className="text-black border border-black font-bold text-sm lg:text-lg px-4 py-2 rounded-full hover:bg-blue-500 hover:text-white transition duration-300"
+            sx={{
+              color: "#000000",
+              fontWeight: "bold",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
+              "&:hover": { color: "#1D63FF" },
+            }}
           >
             Iniciar Sesión
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="contained"
             onClick={goToRegister}
-            className="bg-blue-500 text-white font-bold text-sm lg:text-lg px-4 py-2 rounded-full hover:bg-black transition duration-300"
+            sx={{
+              backgroundColor: "#1D63FF",
+              color: "#fff",
+              fontWeight: "bold",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
+              "&:hover": { backgroundColor: "#0d4b99" },
+            }}
           >
             Registrarse
-          </button>
-        </div>
+          </Button>
+        </Box>
 
-        {/* Menú desplegable para pantallas pequeñas */}
-        <div className={`${isOpen ? "block" : "hidden"} lg:hidden`}>
-          <div className="flex flex-col items-center space-y-4 p-4 bg-white rounded-lg shadow-md">
-            <button
-              onClick={goToNosotros}
-              className="relative text-black font-bold text-sm hover:text-blue-500 transition duration-300"
-            >
-              Nosotros
-              <span className="absolute bottom-0 left-0 w-0 h-1 bg-blue-500 transition-all duration-300"></span>
-            </button>
-            <button
-              onClick={goToCursos}
-              className="relative text-black font-bold text-sm hover:text-blue-500 transition duration-300"
-            >
-              Cursos
-              <span className="absolute bottom-0 left-0 w-0 h-1 bg-blue-500 transition-all duration-300"></span>
-            </button>
-            <button
-              onClick={goToHome}
-              className="relative text-black font-bold text-sm hover:text-blue-500 transition duration-300"
-            >
-              Home
-              <span className="absolute bottom-0 left-0 w-0 h-1 bg-blue-500 transition-all duration-300"></span>
-            </button>
-            <button
-              onClick={goToLogin}
-              className="text-black border border-black font-bold text-sm px-4 py-2 rounded-full hover:bg-blue-500 hover:text-white transition duration-300"
-            >
-              Iniciar Sesión
-            </button>
-            <button
-              onClick={goToRegister}
-              className="bg-blue-500 text-white font-bold text-sm px-4 py-2 rounded-full hover:bg-black transition duration-300"
-            >
-              Registrarse
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
+        {/* Menú desplegable para configuración de cuenta */}
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleMenuClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <MenuItem onClick={handleCerrarSesion}>Cerrar Sesión</MenuItem>
+        </Menu>
+      </Toolbar>
+
+      {/* Drawer para el menú de hamburguesa */}
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
+        <Box
+          sx={{
+            width: 250,
+            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <Button onClick={goToNosotros}>Nosotros</Button>
+          <Button onClick={goToCursos}>Cursos</Button>
+          <Button onClick={goToHome}>Home</Button>
+          <Button onClick={goToLogin}>Iniciar Sesión</Button>
+          <Button onClick={goToRegister}>Registrarse</Button>
+        </Box>
+      </Drawer>
+    </AppBar>
   );
 };
 

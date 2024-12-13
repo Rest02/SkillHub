@@ -3,9 +3,9 @@ import imagenportada from "../../../src/assets/img/imagenportada.png";  // Ajust
 
 function ImageBar() {
   return (
-    <div className="relative flex items-center justify-center overflow-hidden z-50">
+    <div className="relative flex items-center justify-center overflow-hidden z-0">
       <div className="relative mx-auto h-full px-4 pb-20 md:pb-10 sm:max-w-xl md:max-w-full md:px-24 lg:max-w-screen-xl lg:px-8">
-        <div className="flex flex-col items-center justify-between lg:flex-row py-16">
+        <div className="flex flex-col items-center justify-between lg:flex-row py-10">
           <div className="relative">
             <div className="absolute top-0 -left-48 z-0 opacity-50">
               <img

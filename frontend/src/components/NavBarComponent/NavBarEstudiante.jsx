@@ -9,8 +9,13 @@ import {
   MenuItem,
   Drawer,
 } from "@mui/material";
-import { AccountCircle, ShoppingCart, Menu as MenuIcon } from "@mui/icons-material";
+import {
+  AccountCircle,
+  ShoppingCart,
+  Menu as MenuIcon,
+} from "@mui/icons-material";
 import logo from "../../assets/img/logo.png";
+import logoSmall from "../../assets/img/logoSmall.png"; // Logo para pantallas pequeñas
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
 
@@ -33,6 +38,7 @@ const NavBarEstudiante = () => {
   const goToCursos = () => navigate("/cursos");
   const goToAprendizaje = () => navigate("/aprendizaje");
   const goToCarrito = () => navigate("/cart");
+  const goToHome = () => navigate("/");
 
   const goToConfiguracionCuenta = () => {
     handleMenuClose();
@@ -64,6 +70,7 @@ const NavBarEstudiante = () => {
         fontFamily: "Kanit, sans-serif",
         width: "80%",
         margin: "0 auto",
+        padding: "20px",
       }}
     >
       <Toolbar
@@ -71,6 +78,7 @@ const NavBarEstudiante = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          position: "relative",
         }}
       >
         {/* Menú de hamburguesa (aparece en pantallas pequeñas) */}
@@ -78,16 +86,50 @@ const NavBarEstudiante = () => {
           sx={{
             display: { xs: "block", md: "none" },
             color: "#000000",
-            position: "absolute",
-            left: "10px", // Mover el icono de hamburguesa a la izquierda
+            marginRight: "16px", // Separación adicional
           }}
           onClick={toggleDrawer}
         >
-          <MenuIcon />
+          <MenuIcon fontSize="large" /> {/* Cambié el tamaño aquí */}
+        </IconButton>
+
+        {/* Logo centrado */}
+        <Box
+          component="img"
+          onClick={goToHome}
+          src={logo}
+          alt="SkillHub Logo"
+          sx={{
+            height: "80px", // Aumentando el tamaño del logo
+            width: "auto",
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: { xs: "none", md: "block" }, // Solo en pantallas grandes
+            
+
+          }}
+        />
+
+        {/* Ícono del carrito */}
+        <IconButton
+          sx={{
+            display: { xs: "block", md: "none" },
+            color: "#000000",
+          }}
+          onClick={handleCarritoClick}
+        >
+          <ShoppingCart fontSize="large" />
         </IconButton>
 
         {/* Opciones de navegación izquierda (en pantallas grandes) */}
-        <Box sx={{ display: "flex", gap: 3, display: { xs: "none", md: "flex" } }}>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 4, // Aumentando el espacio entre los botones de navegación
+            display: { xs: "none", md: "flex" },
+          }}
+        >
           <Button
             variant="text"
             onClick={goToNosotros}
@@ -142,24 +184,67 @@ const NavBarEstudiante = () => {
           >
             Cursos
           </Button>
+          <Button
+            variant="text"
+            onClick={goToHome}
+            sx={{
+              position: "relative",
+              color: "#000000",
+              fontWeight: "bold",
+              fontFamily: "Kanit, sans-serif",
+              fontSize: "1rem",
+              "&:hover": { color: "#1D63FF" },
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "0%",
+                height: "2px",
+                backgroundColor: "#1D63FF",
+                transition: "width 0.3s ease-in-out",
+              },
+              "&:hover::after": {
+                width: "100%",
+              },
+            }}
+          >
+            Home
+          </Button>
         </Box>
 
-        {/* Logo centrado */}
+        {/* Logo centrado con ícono del carrito en pantallas móviles */}
         <Box
-          component="img"
-          src={logo}
-          alt="SkillHub Logo"
           sx={{
-            height: "80px",
-            width: "auto",
+            display: { xs: "flex", md: "none" }, // Asegura que el logo pequeño se muestra solo en pantallas pequeñas
+            alignItems: "center",
             position: "absolute",
             left: "50%",
             transform: "translateX(-50%)",
+            
           }}
-        />
+        >
+          <Box
+            component="img"
+            onClick={goToHome}
+            src={logoSmall}
+            alt="SkillHub Logo"
+            sx={{
+              height: "80px", // Aumentando el tamaño del logo en pantallas pequeñas
+              width: "auto",
+            }}
+          />
+        </Box>
 
         {/* Opciones de navegación derecha (en pantallas grandes) */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 3, display: { xs: "none", md: "flex" } }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 4, // Aumentando el espacio entre los iconos
+            display: { xs: "none", md: "flex" },
+          }}
+        >
           <Button
             variant="text"
             onClick={goToAprendizaje}
@@ -201,17 +286,15 @@ const NavBarEstudiante = () => {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
         >
-          <MenuItem onClick={goToConfiguracionCuenta}>Configuración de cuenta</MenuItem>
+          <MenuItem onClick={goToConfiguracionCuenta}>
+            Configuración de cuenta
+          </MenuItem>
           <MenuItem onClick={handleCerrarSesion}>Cerrar Sesión</MenuItem>
         </Menu>
       </Toolbar>
 
       {/* Drawer para el menú de hamburguesa */}
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={toggleDrawer}
-      >
+      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
         <Box
           sx={{
             width: 250,
@@ -224,6 +307,7 @@ const NavBarEstudiante = () => {
           <Button onClick={goToNosotros}>Nosotros</Button>
           <Button onClick={goToCursos}>Cursos</Button>
           <Button onClick={goToAprendizaje}>Aprendizaje</Button>
+          <Button onClick={goToHome}>Home</Button>
           <Button onClick={handleCerrarSesion}>Cerrar Sesión</Button>
         </Box>
       </Drawer>
