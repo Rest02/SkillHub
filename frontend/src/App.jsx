@@ -37,6 +37,7 @@ import HacerCurso from "../src/pages/HacerCurso/HacerCurso.jsx";
 import { HacerCursosProvider } from "../src/context/HacerCursoContext.jsx"; // Ruta al archivo del contexto
 import ValoracionCursoUser from '../src/pages/valoracionCursoUser/ValoracionCursoUser.jsx';
 import NosotrosPage from '../src/pages/NosotrosPage/NosotrosPage.jsx'
+import VerifyCodeRegister from '../src/pages/verifyCodeRegister/VerifyCodeRegister.jsx'
 
 const AppContent = () => {
   const { userRole } = useAuth(); // Ahora está dentro del contexto
@@ -59,10 +60,11 @@ const AppContent = () => {
     <>
       {shouldShowNavbar && renderNavBar()}
       <Toaster position="top-right" reverseOrder={false} />
-
+      
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<AuthPageRegister />} />
+        <Route path="/verifycoderegister" element={<VerifyCodeRegister />} />
         <Route path="/login" element={<AuthPageLogin />} />
         <Route path="/forgetPassword" element={<AuthPageForgetPassword />} />
         <Route

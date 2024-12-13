@@ -123,7 +123,6 @@ export const registerUser = async (req, res) => {
 
     // Generar token basado en el correo
     const verificationToken = generateToken(email);
-    console.log(verificationToken)
 
     // Enviar correo con el código de verificación y el token
     const transporter = nodemailer.createTransport({
@@ -141,7 +140,7 @@ export const registerUser = async (req, res) => {
       text: `Tu código de verificación es: ${verificationCode}`,
     });
 
-    return res.status(200).json({ message: "Registro exitoso. Por favor verifica tu correo." });
+    return res.status(200).json({ message: "Registro exitoso. Por favor verifica tu correo.", verificationToken });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Ocurrió un error inesperado" });
@@ -150,9 +149,9 @@ export const registerUser = async (req, res) => {
 
 
 export const verifyUser = async (req, res) => {
-  const { verificationCode } = req.body; // Solo se envía el código
+  const {code} = req.body
 
-  if (!verificationCode) {
+  if (!code) {
     return res.status(400).json({ message: "El código de verificación es requerido." });
   }
 
@@ -163,7 +162,7 @@ export const verifyUser = async (req, res) => {
     // Buscar al usuario en la tabla temporal usando el email y el código de verificación
     const [user] = await pool.query(
       "SELECT * FROM temporary_users WHERE email = ? AND verification_code = ?",
-      [email, verificationCode]
+      [email, code]
     );
 
     if (user.length === 0) {

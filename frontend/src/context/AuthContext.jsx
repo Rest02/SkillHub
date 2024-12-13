@@ -5,7 +5,9 @@ import {
   forgetPasswordRequest,
   verifyRecoveryCodeRequest,
   changePasswordRequest,
-  updateUserRoleApi  // Importa la función updateUserRoleApi
+  updateUserRoleApi,  // Importa la función updateUserRoleApi
+  verifyUserApi,  // Importa la función de verificación
+
 
 } from "../api/auth.api";
 import jwt_decode from "jwt-decode"; // Usar jwt_decode, no decode
@@ -56,13 +58,19 @@ export const AuthContextProvider = ({ children }) => {
 
   const registerUser = async (data) => {
     try {
-      const response = await registerUserApi(data); // Aquí se realiza la solicitud al backend
+      const response = await registerUserApi(data); // Solicitud al backend
+      if (response.data.verificationToken) {
+        const verificationToken = response.data.verificationToken;
+        localStorage.setItem("verificationToken", verificationToken); // Guarda el token en localStorage
+        // Si deseas, puedes actualizar un estado de token en el contexto (si es necesario)
+      }
       return response; // Devuelve la respuesta al componente
     } catch (error) {
       console.error(error.response?.data?.message || "Error desconocido");
       throw error; // Lanza el error al componente
     }
   };
+  
   
 
   const loginUser = async (data) => {
@@ -139,6 +147,16 @@ export const AuthContextProvider = ({ children }) => {
   };
 
 
+  const verifyUser = async (code) => {
+    try {
+      const response = await verifyUserApi(code); // Llamada a la API de verificación
+      return response; // Retorna la respuesta del backend
+    } catch (error) {
+      console.error("Error al verificar al usuario:", error);
+      throw error; // Lanza el error para que sea manejado en el componente
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -151,6 +169,7 @@ export const AuthContextProvider = ({ children }) => {
         userRole,
         setToken,
         updateRole, // Exponer la función updateRole
+        verifyUser
 
       }}
     >

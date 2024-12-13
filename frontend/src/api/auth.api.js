@@ -55,3 +55,29 @@ export const updateUserRoleApi = async (userId, newRole) => {
   );
 };
 
+
+// Función para verificar al usuario registrado , CODIGO
+export const verifyUserApi = async (code) => {
+  const token = localStorage.getItem("verificationToken"); // Obtener el token del localStorage si es necesario
+  console.log("obteniendo el token para verificar", token)
+
+  if (!token) {
+    throw new Error("No hay token disponible");
+  }
+
+  try {
+    const response = await axios.post(
+      `http://localhost:4000/verifyUser`, 
+      { code },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Si necesitas enviar un token de autorización
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error al verificar el usuario", error);
+    throw error;
+  }
+};
