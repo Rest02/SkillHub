@@ -53,6 +53,13 @@ export const loginUser = async (req, res) => {
 };
 
 
+
+
+const generateToken = (email) => {
+  return jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '10m' }); // Expira en 10 minutos
+};
+
+
 // Función de sanitización para prevenir XSS e inyecciones
 const sanitizeInput = (input) => {
   // Eliminar cualquier carácter no permitido (todo excepto letras, números, guiones y guiones bajos)
@@ -93,17 +100,48 @@ export const registerUser = async (req, res) => {
   }
 
   try {
-    const [userRegister] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
-    if (userRegister.length > 0) {
-      return res.status(409).json({
-        message: "El usuario ya está registrado en la base de datos",
-      });
+    // Verificar si el email ya está registrado en temporary_users o users
+    const [userInTemporary] = await pool.query("SELECT * FROM temporary_users WHERE email = ?", [email]);
+    if (userInTemporary.length > 0) {
+      return res.status(409).json({ message: "El usuario ya está en proceso de verificación." });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
-    await pool.query("INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)", [nombreSanitizado, email, hashedPassword]);
+    const [userInUsers] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+    if (userInUsers.length > 0) {
+      return res.status(409).json({ message: "El usuario ya está registrado en la base de datos" });
+    }
 
-    return res.status(200).json({ message: "Usuario ingresado exitosamente" });
+    // Generar código de verificación y encriptar contraseña
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Insertar el usuario en la tabla temporal
+    await pool.query(
+      "INSERT INTO temporary_users (nombre, email, password, verification_code) VALUES (?, ?, ?, ?)",
+      [nombreSanitizado, email, hashedPassword, verificationCode]
+    );
+
+    // Generar token basado en el correo
+    const verificationToken = generateToken(email);
+    console.log(verificationToken)
+
+    // Enviar correo con el código de verificación y el token
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: process.env.GMAIL_APP_USER, // your email address
+        pass: process.env.GMAIL_APP_PASSWORD, // your password
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.GMAIL_APP_USER,
+      to: email,
+      subject: 'Código de verificación',
+      text: `Tu código de verificación es: ${verificationCode}`,
+    });
+
+    return res.status(200).json({ message: "Registro exitoso. Por favor verifica tu correo." });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Ocurrió un error inesperado" });
@@ -111,7 +149,45 @@ export const registerUser = async (req, res) => {
 };
 
 
+export const verifyUser = async (req, res) => {
+  const { verificationCode } = req.body; // Solo se envía el código
 
+  if (!verificationCode) {
+    return res.status(400).json({ message: "El código de verificación es requerido." });
+  }
+
+  try {
+    // El correo del usuario ya está disponible en req.user gracias al middleware verifyToken
+    const email = req.user.email;
+
+    // Buscar al usuario en la tabla temporal usando el email y el código de verificación
+    const [user] = await pool.query(
+      "SELECT * FROM temporary_users WHERE email = ? AND verification_code = ?",
+      [email, verificationCode]
+    );
+
+    if (user.length === 0) {
+      return res.status(400).json({ message: "El código de verificación es inválido." });
+    }
+
+    // Mover el usuario a la tabla users
+    await pool.query(
+      "INSERT INTO users (nombre, email, password) VALUES (?, ?, ?)",
+      [user[0].nombre, user[0].email, user[0].password]
+    );
+
+    // Eliminar al usuario de la tabla temporal
+    await pool.query("DELETE FROM temporary_users WHERE email = ?", [email]);
+
+    return res.status(200).json({ message: "Usuario verificado y registrado exitosamente." });
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: "El token ha expirado. Por favor solicita uno nuevo." });
+    }
+    console.error(error);
+    return res.status(500).json({ message: "Ocurrió un error durante la verificación." });
+  }
+};
 
 
 // Controllers para olvido de contraseña
@@ -148,7 +224,7 @@ export const forgetPassword = async (req, res) => {
   );
 
   let config = {
-    service: "gmail", // your email domain
+    service: "gmail",  // your email domain
     auth: {
       user: process.env.GMAIL_APP_USER, // your email address
       pass: process.env.GMAIL_APP_PASSWORD, // your password
