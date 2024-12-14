@@ -1,13 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function LoginForm() {
   const { loginUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
+
+  // Usamos useRef para guardar si el mensaje ya fue mostrado
+  const messageShownRef = useRef(false); 
+
+  useEffect(() => {
+    // Verifica si existe el mensaje y si no se ha mostrado aún
+    if (location.state?.message && !messageShownRef.current) {
+      toast.success(location.state.message, {
+        position: "top-center",
+        style: {
+          border: "1px solid black",
+        },
+      });
+      messageShownRef.current = true;  // Marca como mostrado para evitar que se repita
+    }
+  }, [location.state]); // Solo dispara si cambia location.state
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -42,6 +60,9 @@ function LoginForm() {
               navigate("/");
             } catch (error) {
               console.error("Error al iniciar sesión", error);
+              toast.error("Error al iniciar sesión. Verifica tus datos.", {
+                position: "top-center",
+              });
             }
           }}
         >

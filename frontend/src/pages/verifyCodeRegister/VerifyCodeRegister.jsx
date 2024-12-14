@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext.jsx"; // Importar el contexto
 import { useNavigate } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik"; // Importar Formik
 import * as Yup from "yup"; // Importar Yup para validación
-import toast from 'react-hot-toast'; // Importar react-hot-toast
+import toast from "react-hot-toast"; // Importar react-hot-toast
 
 function VerifyCodeRegister() {
   const { verifyUser } = useAuth(); // Usar la función verifyUser del contexto
@@ -97,16 +97,25 @@ function VerifyCodeRegister() {
                     setMessage("Account verified successfully.");
 
                     // Mostrar el toast
-                    toast.success("Codigo Correcto, Redirigiendo", {
+                    toast.success(
+                      "Codigo Correcto, Redirigiendo a iniciar sesión",
+                      {
                         position: "top-center",
                         style: {
                           border: "1px solid black", // Color verde (puedes personalizar)
                         },
-                      });
+                      }
+                    );
 
                     // Redirigir después de un pequeño retraso
+                    // Redirigir y pasar un mensaje al login
                     setTimeout(() => {
-                      navigate("/"); // Redirigir a la página de inicio
+                      navigate("/login", {
+                        state: {
+                          message:
+                            "Inicia sesión con los datos que te has registrado.",
+                        },
+                      });
                     }, 2000); // Esperar 2 segundos
                   }
                 } catch (error) {
