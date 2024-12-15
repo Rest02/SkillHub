@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast"; // Importa toast
 
 const MisCursosCard = () => {
   const { cursos, setCursoSeleccionado, deleteCurso } =
@@ -41,140 +42,172 @@ const MisCursosCard = () => {
     navigate(`/cursos/${cursoID}/unitsandvideos`);
   };
 
+  // Reemplazar la confirmación de eliminación con toast
   const handleDeleteCourse = async (courseId) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este curso?")) {
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que deseas eliminar este curso?"
+    );
+    if (confirmDelete) {
       const result = await deleteCurso(courseId);
-      alert(
-        result?.success
-          ? "Curso eliminado con éxito"
-          : result?.message || "Hubo un error"
-      );
+      console.log(result.message)
+      if (result.message === "Curso eliminado exitosamente") {
+        toast.success("Curso eliminado con éxito", {
+          position: "bottom-right",
+          autoClose: 5000,  // El toast se cierra después de 5 segundos
+          hideProgressBar: true,
+          closeButton: true,
+        });
+        
+      } else {
+        toast.error(result?.message || "Hubo un error");
+      }
     }
   };
 
+  const handleCrearCurso = () => {
+    navigate("/createcourse"); // Redirige a la página de creación de curso
+  };
+
   return (
-    <div className="flex flex-col items-center min-h-screen py-10">
+    <div className="flex flex-col items-center min-h-screen py-10 px-4 md:px-8">
       <h1 className="text-2xl font-semibold mb-4">Mis Cursos</h1>
 
-      {/* Barra de búsqueda mejorada */}
-      <div className="flex mb-4 justify-start items-center w-full max-w-[600px] mx-auto">
-        <div className="flex rounded-full bg-[#ffffff] px-2 w-full border border-black">
-          {/* Icono de búsqueda */}
-          <input
-            type="text"
-            className="w-full bg-transparent pl-2 text-[#cccccc] outline-0 py-2"
-            placeholder="Buscar curso"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-
-          {/* Botón de búsqueda */}
+      {/* Mostrar mensaje si no hay cursos */}
+      {cursos.length === 0 ? (
+        <div className="flex flex-col items-center mt-4">
+          <h2 className="text-xl font-semibold text-gray-500">
+            Aún no has creado ningún curso.
+          </h2>
+          <p className="text-gray-600 mt-2 text-center">
+            Comienza a crear cursos para que aparezcan aquí.
+          </p>
           <button
-            type="submit"
-            className="relative p-2 rounded-full ml-2"
+            onClick={handleCrearCurso}
+            className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300"
           >
-            <svg
-              width="24px"
-              height="24px"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-                  stroke="#999"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </g>
-            </svg>
+            Crear Curso
           </button>
         </div>
-      </div>
-
-      {/* Tarjetas de Cursos */}
-      <div className="flex justify-center items-center w-full ">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-7xl ">
-          {cursosActuales.map((curso) => (
-            <div className="flex flex-col bg-white shadow-lg rounded-xl overflow-hidden border border-black">
-              <div className="w-full relative">
-                <img
-                  src={`http://localhost:4000/${curso.imagen_portada}`}
-                  alt="Imagen del curso"
-                  className="w-full h-48 object-cover rounded-t-xl"
-                />
-              </div>
-              <div className="p-6 flex flex-col h-full">
-                <h6 className="text-black uppercase font-semibold mb-4">
-                  {curso.titulo}
-                </h6>
-                <p className="text-gray-700 mb-4 truncate-lines flex-grow">
-                  {curso.descripcion}
-                </p>
-                <div className="flex justify-between gap-4 mt-auto">
-                  <button
-                    onClick={() => handleViewCourse(curso.id)}
-                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-blue-600 transition-colors duration-400 w-full"
-                  >
-                    Ver Curso
-                  </button>
-                  <button
-                    onClick={() => handleDeleteCourse(curso.id)}
-                    className="px-6 py-2 bg-black text-white rounded-lg hover:bg-red-600 transition-colors duration-400 w-full"
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              </div>
+      ) : (
+        <>
+          {/* Barra de búsqueda con botón al lado derecho - Mostrar solo si hay cursos */}
+          <div className="flex mb-4 items-center w-full max-w-[600px]">
+            <div className="flex items-center w-full rounded-lg bg-white border border-black shadow-xl focus-within:ring-2 transition duration-300">
+              <span className="pl-3 text-gray-500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm5.292-1.292a1 1 0 011.416 0l4 4a1 1 0 01-1.416 1.416l-4-4a1 1 0 010-1.416z"
+                  />
+                </svg>
+              </span>
+              <input
+                type="text"
+                className="w-full bg-transparent pl-2 pr-4 py-2 text-gray-700 placeholder-gray-400 outline-none"
+                placeholder="Buscar curso"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Paginación */}
-      <nav>
-        <ul className="flex justify-center mt-8 pb-10">
-          {/* Botón Anterior */}
-          <li>
             <button
-              onClick={() => handlePaginaChange(paginaActual - 1)}
-              disabled={paginaActual === 1}
-              className="mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-black bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300"
+              onClick={handleCrearCurso}
+              className="ml-4 px-4 h-11 bg-black shadow-xl text-white whitespace-nowrap rounded-lg hover:bg-blue-700 transition-colors duration-300"
             >
-              <span className="material-icons text-sm">↞</span>
+              Crear curso
             </button>
-          </li>
+          </div>
 
-          {/* Botones de Páginas */}
-          {[...Array(totalPaginas)].map((_, index) => (
-            <li key={index}>
-              <button
-                onClick={() => handlePaginaChange(index + 1)}
-                className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full ${
-                  paginaActual === index + 1
-                    ? "bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-md shadow-pink-500/20"
-                    : "border border-black bg-transparent text-blue-gray-500"
-                } p-0 text-sm transition duration-150 ease-in-out hover:bg-light-300`}
-              >
-                {index + 1}
-              </button>
-            </li>
-          ))}
+          {/* Tarjetas de Cursos */}
+          <div className="flex justify-center items-center w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-7xl">
+              {cursosActuales.map((curso) => (
+                <div
+                  key={curso.id}
+                  className="flex flex-col bg-white shadow-lg rounded-xl overflow-hidden border border-black"
+                >
+                  <div className="w-full relative">
+                    <img
+                      src={`http://localhost:4000/${curso.imagen_portada}`}
+                      alt="Imagen del curso"
+                      className="w-full h-48 object-cover rounded-t-xl"
+                    />
+                  </div>
+                  <div className="p-6 flex flex-col h-full">
+                    <h6 className="text-black uppercase font-semibold mb-4">
+                      {curso.titulo}
+                    </h6>
+                    <p className="text-gray-700 mb-4 truncate-lines flex-grow">
+                      {curso.descripcion}
+                    </p>
+                    <div className="flex justify-between gap-4 mt-auto">
+                      <button
+                        onClick={() => handleViewCourse(curso.id)}
+                        className="px-6 py-2 bg-black text-white rounded-lg hover:bg-blue-600 transition-colors duration-400 w-full"
+                      >
+                        Ver Curso
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCourse(curso.id)}
+                        className="px-6 py-2 bg-black text-white rounded-lg hover:bg-red-600 transition-colors duration-400 w-full"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {/* Botón Siguiente */}
-          <li>
-            <button
-              onClick={() => handlePaginaChange(paginaActual + 1)}
-              disabled={paginaActual === totalPaginas}
-              className="mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-black bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300"
-            >
-              <span className="material-icons text-sm">↠</span>
-            </button>
-          </li>
-        </ul>
-      </nav>
+          {/* Paginación */}
+          <nav>
+            <ul className="flex justify-center mt-8 pb-10">
+              <li>
+                <button
+                  onClick={() => handlePaginaChange(paginaActual - 1)}
+                  disabled={paginaActual === 1}
+                  className="mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-black bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300"
+                >
+                  ↞
+                </button>
+              </li>
+
+              {[...Array(totalPaginas)].map((_, index) => (
+                <li key={index}>
+                  <button
+                    onClick={() => handlePaginaChange(index + 1)}
+                    className={`mx-1 flex h-9 w-9 items-center justify-center rounded-full ${
+                      paginaActual === index + 1
+                        ? "bg-gradient-to-tr from-pink-600 to-pink-400 text-white shadow-md"
+                        : "border border-black bg-transparent text-blue-gray-500"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
+
+              <li>
+                <button
+                  onClick={() => handlePaginaChange(paginaActual + 1)}
+                  disabled={paginaActual === totalPaginas}
+                  className="mx-1 flex h-9 w-9 items-center justify-center rounded-full border border-black bg-transparent p-0 text-sm text-blue-gray-500 transition duration-150 ease-in-out hover:bg-light-300"
+                >
+                  ↠
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </>
+      )}
     </div>
   );
 };

@@ -197,21 +197,26 @@ export const uploadThumbnail = async (req, res) => {
 
 export const getCourses = async (req, res) => {
   try {
-    // Realiza una consulta para obtener todos los cursos
     const instructor_id = req.user.id; // Asumiendo que el id del instructor está en el payload del token
 
     const [courses] = await pool.query(
-      "SELECT id, titulo, descripcion, imagen_portada from courses WHERE instructor_id = ?",
+      "SELECT id, titulo, descripcion, imagen_portada FROM courses WHERE instructor_id = ?",
       [instructor_id]
     );
 
-    // Devuelve los cursos obtenidos
+    if (courses.length === 0) {
+      // Si no hay cursos, devuelve un mensaje adecuado
+      return res.status(200).json({ message: "Aún no has creado ningún curso" });
+    }
+
+    // Si hay cursos, devuélvelos
     res.status(200).json(courses);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al obtener los cursos" });
   }
 };
+
 
 export const getCategorias = async (req, res) => {
   try {
@@ -536,18 +541,20 @@ export const deleteCourse = async (req, res) => {
     await pool.query(`DELETE FROM units WHERE curso_id = ?`, [courseId]);
 
     // Eliminar archivo de miniatura si existe
-    const thumbnailPath = path.resolve(
-      __dirname,
-      "..",
-      "public",
-      course[0].imagen_portada
-    );
-    console.log("Ruta absoluta de la miniatura:", thumbnailPath);
-    if (thumbnailPath && fs.existsSync(thumbnailPath)) {
-      fs.unlinkSync(thumbnailPath);
-      console.log("Archivo eliminado exitosamente.");
-    } else {
-      console.log("Archivo no encontrado en la ruta especificada.");
+    if (course[0].imagen_portada) {
+      const thumbnailPath = path.resolve(
+        __dirname,
+        "..",
+        "public",
+        course[0].imagen_portada
+      );
+      console.log("Ruta absoluta de la miniatura:", thumbnailPath);
+      if (fs.existsSync(thumbnailPath)) {
+        fs.unlinkSync(thumbnailPath);
+        console.log("Archivo eliminado exitosamente.");
+      } else {
+        console.log("Archivo no encontrado en la ruta especificada.");
+      }
     }
 
     // Eliminar el curso de la base de datos
@@ -559,6 +566,7 @@ export const deleteCourse = async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 };
+
 
 // Eliminar una unidad específica
 export const deleteUnit = async (req, res) => {
