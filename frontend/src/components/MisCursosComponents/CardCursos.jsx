@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast"; // Importa toast
+import anime from "animejs"; // Asegúrate de importar anime.js
 
 const MisCursosCard = () => {
   const { cursos, setCursoSeleccionado, deleteCurso } =
@@ -68,6 +69,18 @@ const MisCursosCard = () => {
     navigate("/createcourse"); // Redirige a la página de creación de curso
   };
 
+  // Animación para las tarjetas de cursos
+  useEffect(() => {
+    anime({
+      targets: '.card', // Aplica la animación a las tarjetas
+      opacity: [0, 1],
+      translateY: [50, 0],
+      duration: 1000,
+      easing: 'easeOutExpo',
+      delay: anime.stagger(100), // Retraso entre tarjetas
+    });
+  }, [cursos]);
+
   return (
     <div className="flex flex-col items-center min-h-screen py-10 px-4 md:px-8">
       <h1 className="text-2xl font-semibold mb-4">Mis Cursos</h1>
@@ -131,7 +144,7 @@ const MisCursosCard = () => {
               {cursosActuales.map((curso) => (
                 <div
                   key={curso.id}
-                  className="flex flex-col bg-white shadow-lg rounded-xl overflow-hidden border border-black"
+                  className="card flex flex-col bg-white shadow-lg rounded-xl overflow-hidden border border-black"
                 >
                   <div className="w-full relative">
                     <img

@@ -1,13 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSnackbar } from "notistack"; // Importa useSnackbar
-import { MisCursosContext } from "../../context/MisCursosContext.jsx"; // Asegúrate de que MisCursosContext esté configurado correctamente
+import { toast } from "react-hot-toast"; // Importar toast para las notificaciones
+import anime from "animejs";
+import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 
 function CreateUnidadForm() {
-  const { courseId } = useParams(); // Obtiene el ID del curso desde los parámetros de la URL
-  const navigate = useNavigate(); // Usamos useNavigate para redirigir al usuario
-  const { createUnidad } = useContext(MisCursosContext); // Accede a la función createUnidad desde el contexto
-  const { enqueueSnackbar } = useSnackbar(); // Hook de notistack para mostrar notificaciones
+  const { courseId } = useParams(); // ID del curso desde la URL
+  const navigate = useNavigate(); // Redirección
+  const { createUnidad } = useContext(MisCursosContext); // Función del contexto
 
   const [formData, setFormData] = useState({
     titulo: "",
@@ -16,7 +16,7 @@ function CreateUnidadForm() {
     tema: "",
   });
 
-  const [error, setError] = useState(null);
+  const formRef = useRef(null); // Referencia para el formulario
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,108 +33,110 @@ function CreateUnidadForm() {
       const response = await createUnidad(courseId, formData);
 
       if (response.success) {
-        // Muestra una notificación de éxito
-        enqueueSnackbar("¡Unidad creada exitosamente!", { variant: "success" });
+        toast.success("¡Unidad creada exitosamente!", {
+          position: "bottom-right",
+          duration: 2000,
+        });
 
-        // Redirige al usuario
-        navigate(`/cursos/${courseId}/unitsandvideos`);
+        setTimeout(() => {
+          navigate(`/cursos/${courseId}/unitsandvideos`);
+        }, 2000);
       } else {
-        setError(response.message);
+        toast.error(response.message || "Error al crear la unidad.");
       }
     } catch (err) {
-      setError("Error al crear la unidad.");
+      toast.error("Error al crear la unidad.");
     }
   };
 
+  // Animar entrada del formulario
+  useEffect(() => {
+    anime({
+      targets: formRef.current,
+      opacity: [0, 1],
+      translateY: [-50, 0],
+      duration: 1000,
+      easing: "easeOutExpo",
+    });
+  }, []);
+
   return (
-    <div className="flex items-center justify-center py-20 ">
-      <div className="mx-auto w-full max-w-[550px] bg-gray-800 p-8 rounded-lg shadow-lg">
-        <form onSubmit={handleSubmit}>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div
+      ref={formRef}
+      className="max-w-4xl mx-auto p-8 bg-gray-800 text-white rounded-lg shadow-lg mt-10 mb-10"
+    >
+      <h2 className="text-3xl font-bold text-center mb-6">Crear Unidad</h2>
+      <form onSubmit={handleSubmit}>
+        {/* Título */}
+        <div className="mb-5">
+          <label className="block mb-2 font-semibold">Título</label>
+          <input
+            type="text"
+            name="titulo"
+            placeholder="Ej. Introducción a React"
+            value={formData.titulo}
+            onChange={(e) => {
+              handleChange(e);
+              if (!formData.titulo) {
+                anime({
+                  targets: e.target,
+                  translateX: [-10, 10, 0],
+                  duration: 300,
+                  easing: "easeInOutSine",
+                });
+              }
+            }}
+            className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-          <div className="-mx-3 flex flex-wrap">
-            <div className="w-full px-3">
-              <div className="mb-5">
-                <label
-                  htmlFor="titulo"
-                  className="mb-3 block text-base font-medium text-[#ffffff]"
-                >
-                  Título
-                </label>
-                <input
-                  type="text"
-                  name="titulo"
-                  id="titulo"
-                  value={formData.titulo}
-                  onChange={handleChange}
-                  required
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#000000] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                />
-              </div>
-            </div>
-          </div>
+        {/* Descripción */}
+        <div className="mb-5">
+          <label className="block mb-2 font-semibold">Descripción</label>
+          <textarea
+            name="descripcion"
+            rows="4"
+            placeholder="Describe brevemente el contenido de la unidad"
+            value={formData.descripcion}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-          <div className="mb-5">
-            <label
-              htmlFor="descripcion"
-              className="mb-3 block text-base font-medium text-[#ffffff]"
-            >
-              Descripción
-            </label>
-            <textarea
-              name="descripcion"
-              id="descripcion"
-              value={formData.descripcion}
-              onChange={handleChange}
-              required
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#000000] outline-none focus:border-[#6A64F1] focus:shadow-md"
-            />
-          </div>
+        {/* Objetivos */}
+        <div className="mb-5">
+          <label className="block mb-2 font-semibold">Objetivos</label>
+          <textarea
+            name="objetivos"
+            rows="4"
+            placeholder="Especifica los objetivos de esta unidad"
+            value={formData.objetivos}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-          <div className="mb-5">
-            <label
-              htmlFor="objetivos"
-              className="mb-3 block text-base font-medium text-[#ffffff]"
-            >
-              Objetivos
-            </label>
-            <textarea
-              name="objetivos"
-              id="objetivos"
-              value={formData.objetivos}
-              onChange={handleChange}
-              required
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#000000] outline-none focus:border-[#6A64F1] focus:shadow-md"
-            />
-          </div>
+        {/* Tema */}
+        <div className="mb-5">
+          <label className="block mb-2 font-semibold">Tema</label>
+          <textarea
+            name="tema"
+            rows="4"
+            placeholder="Indica los temas que se cubrirán"
+            value={formData.tema}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-          <div className="mb-5">
-            <label
-              htmlFor="tema"
-              className="mb-3 block text-base font-medium text-[#ffffff]"
-            >
-              Tema
-            </label>
-            <textarea
-              name="tema"
-              id="tema"
-              value={formData.tema}
-              onChange={handleChange}
-              required
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#000000] outline-none focus:border-[#6A64F1] focus:shadow-md"
-            />
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="hover:bg-[#FF4081] hover:shadow-lg transition-colors duration-300 rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
-            >
-              Crear Unidad
-            </button>
-          </div>
-        </form>
-      </div>
+        {/* Botón Enviar */}
+        <button
+          type="submit"
+          className="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-semibold transition duration-300"
+        >
+          Crear Unidad
+        </button>
+      </form>
     </div>
   );
 }

@@ -1,53 +1,65 @@
-import React from 'react'
+import React from "react";
+import { FaStar } from "react-icons/fa"; // Importar iconos de estrellas
 
 function ValoracionesEnInstructor() {
-    return (
-        // <div className="flex justify-center py-4 px-6 bg-gray-100">
-          <div className="relative flex flex-col w-full  rounded-xl bg-gray-800 shadow-lg p-6">
-            <div className="relative flex items-center gap-4">
-              <img
-                src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1480&amp;q=80"
-                alt="Commentor"
-                className="relative inline-block h-[58px] w-[58px] rounded-full object-cover object-center shadow-md"
-              />
-              <div className="flex flex-col w-full">
-                <div className="flex items-center justify-between">
-                  <h5 className="font-sans text-xl font-semibold text-white">
-                    Tania Andrew
-                  </h5>
-                  <div className="flex items-center gap-0">
-                    {[...Array(5)].map((_, index) => (
+  // Función para renderizar las estrellas
+  const renderStars = (rating) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <FaStar key={index} color={index < rating ? "#ffc107" : "#e4e5e9"} />
+    ));
+  };
+  return (
+    <section className="relative flex flex-col justify-center bg-[#1f2937] overflow-hidden antialiased rounded-lg">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-6 py-24">
+        <div className="flex flex-col justify-center divide-y divide-slate-200 [&>*]:py-16">
+          <div className="w-full max-w-3xl mx-auto">
+            {/* Vertical Timeline #3 */}
+            <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:ml-[8.75rem] md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-300 before:to-transparent pt-3">
+              {/* Item #1 */}
+              <div className="relative">
+                <div className="md:flex items-center md:space-x-4 mb-3">
+                  <div className="flex items-center space-x-4 md:space-x-2 md:space-x-reverse">
+                    {/* Icon */}
+                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow md:order-1">
                       <svg
-                        key={index}
+                        className="fill-emerald-500"
                         xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className={`h-5 w-5 ${
-                          index < 4 ? 'text-yellow-500' : 'text-gray-300'
-                        }`}
+                        width="16"
+                        height="16"
                       >
-                        <path
-                          fillRule="evenodd"
-                          d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                          clipRule="evenodd"
-                        />
+                        <path d="M8 0a8 8 0 1 0 8 8 8.009 8.009 0 0 0-8-8Zm0 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8Z" />
                       </svg>
-                    ))}
+                    </div>
+                    {/* Date */}
+                    <time className="text-sm font-medium text-indigo-500 md:w-28">
+                      Apr 7, 2024
+                    </time>
+                  </div>
+                  {/* Title and Stars */}
+                  <div className="flex items-center ml-14">
+                    <span className="text-white font-bold">
+                      Tania Andrew
+                    </span>
+                    <div className="flex ml-2">
+                      {renderStars(3)} {/* Ejemplo: 3 estrellas */}
+                    </div>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">Frontend Lead @ Google</p>
+                {/* Card */}
+                <div className="bg-white p-4 rounded border border-slate-200 text-black shadow ml-14 md:ml-44">
+                  "I found solution to all my design needs from Creative Tim. I
+                  use them as a freelancer in my hobby projects for fun! And its
+                  really affordable, very humble guys !!!"
+                </div>
               </div>
             </div>
-            <div className="mt-4">
-              <p className="text-base text-white">
-                "I found solution to all my design needs from Creative Tim. I use them
-                as a freelancer in my hobby projects for fun! And its really affordable,
-                very humble guys !!!"
-              </p>
-            </div>
+            
+            {/* End: Vertical Timeline #3 */}
           </div>
-        // </div>
-      );
-    }
+        </div>
+      </div>
+    </section>
+  );
+}
 
-export default ValoracionesEnInstructor
+export default ValoracionesEnInstructor;

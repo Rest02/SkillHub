@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Typography, Box, Menu, MenuItem } from "@mui/material";
+import { Button, Box, Menu, MenuItem } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 
 function MenuEditsCourse() {
@@ -49,95 +49,69 @@ function MenuEditsCourse() {
   };
 
   return (
-    <Box
-    sx={{
-      maxWidth: 600,
-      margin: "0 auto",
-      padding: 2,  // Reducido padding
-      backgroundColor: "#1f2937",
-      borderRadius: 2,
-      boxShadow: 6,
-      border: "1px solid black",
-      transition: "all 0.3s ease",
-      ":hover": {
-        boxShadow: 10,
-      },
-    }}
-  >
-    <Typography
-      variant="h5"
-      align="center"
-      gutterBottom
-      sx={{ fontWeight: 'bold', color: "#fefefefe", paddingBottom: "15px" }} // Menor separación
-    >
-      Menú de opciones
-    </Typography>
-      <Box display="flex" flexDirection="column" alignItems="center" gap={3}>
-        {/* Crear */}
+    <Box className="max-w-screen-xl pt-4 bg-[#1e293b] rounded-xl shadow-xl border border-black transition-all hover:shadow-2xl mx-auto my-10">
+      <Box className="flex justify-around mb-4">
+        {/* Botón Crear */}
         <Button
-          variant="contained"
-          color="primary"
           sx={{
-            textTransform: "none",
-            border: "1px solid #6A5ACD",
-            width: "240px",
-            borderRadius: "25px",
-            backgroundColor: "#6A5ACD",
-            color: "#FFFFFF",
-            fontWeight: "bold",
-            "&:hover": {
-              backgroundColor: "#3FA557",
-              color: "#FFFFFF",
+            color: 'white',
+            fontWeight: 'bold',
+            width: "300px",
+            height: '3rem',
+            borderRadius: '9999px',
+            backgroundColor: '#14b8a6',
+            '&:hover': {
+              backgroundColor: '#0d9488',
             },
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            transition: "background-color 0.3s, box-shadow 0.3s",
+            boxShadow: 1,
+            transition: 'transform 0.2s',
+            '&:active': {
+              transform: 'scale(0.95)',
+            },
+            border: '2px solid black'
           }}
           onClick={(e) => handleOpenMenu(e, "crear")}
         >
           Crear 🧩
         </Button>
 
+        {/* Botón Editar */}
         <Button
-          variant="contained"
-          color="secondary"
           sx={{
-            textTransform: "none",
-            border: "1px solid #4682B4",
-            width: "240px",
-            borderRadius: "25px",
-            backgroundColor: "#4682B4",
-            color: "#FFFFFF",
-            fontWeight: "bold",
-            "&:hover": {
-              backgroundColor: "#366589",
-              color: "#FFFFFF",
+            color: 'white',
+            fontWeight: 'bold',
+            width: "300px",
+            height: '3rem',
+            borderRadius: '9999px',
+            backgroundColor: '#6366f1',
+            '&:hover': {
+              backgroundColor: '#4f46e5',
             },
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            transition: "background-color 0.3s, box-shadow 0.3s",
+            border: '2px solid black'
           }}
           onClick={(e) => handleOpenMenu(e, "editar")}
         >
           Editar ✏️
         </Button>
 
-        {/* Eliminar */}
+        {/* Botón Eliminar */}
         <Button
-          variant="contained"
-          color="error"
           sx={{
-            textTransform: "none",
-            border: "1px solid #9B111E",
-            width: "240px",
-            borderRadius: "25px",
-            backgroundColor: "#9B111E",
-            color: "white",
-            fontWeight: "bold",
-            "&:hover": {
-              backgroundColor: "#B12E38",
-              color: "white",
+            color: 'white',
+            fontWeight: 'bold',
+            width: "300px",
+            height: '3rem',
+            borderRadius: '9999px',
+            backgroundColor: '#f43f5e',
+            '&:hover': {
+              backgroundColor: '#e11d48',
             },
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            transition: "background-color 0.3s, box-shadow 0.3s",
+            boxShadow: 1,
+            transition: 'transform 0.2s',
+            '&:active': {
+              transform: 'scale(0.95)',
+            },
+            border: '2px solid black'
           }}
           onClick={(e) => handleOpenMenu(e, "eliminar")}
         >
@@ -152,15 +126,18 @@ function MenuEditsCourse() {
         onClose={handleCloseMenu}
         PaperProps={{
           sx: {
-            width: anchorEl ? anchorEl.offsetWidth : undefined,
-            borderRadius: "12px",
-            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
-            padding: "10px",
+            width: "300px", // Asegura que el menú tenga el mismo ancho que los botones
+            border: "2px solid black", // Borde negro en el menú
+            borderRadius: 2,
+            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
+            padding: 1,
+            backgroundColor: "white",
+            color: "black",
+            marginTop: 2, // Espacio entre el botón y el menú
           },
         }}
-        transformOrigin={{ vertical: "top", horizontal: "center" }}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        sx={{ mt: 2 }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         {menuType === "crear" && (
           <div>

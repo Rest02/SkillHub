@@ -25,15 +25,19 @@ const CourseDetailsPage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center px-4 py-6">
+    <div className="flex flex-col items-center">
+      {/* Menú de opciones en la parte superior */}
+      <div className="w-full">
+        <MenuEditsCourse />
+      </div>
+
       {/* Contenedor principal con la disposición de los elementos */}
       <div className="flex flex-col md:flex-row gap-6 max-w-[1200px] w-full">
-        {/* Columna de VideoIntroduccion y MenuEditsCourse */}
+        {/* Columna de VideoIntroduccion */}
         <div className="w-full md:w-1/3">
           <div className="mb-6">
             <VideoIntroduccion />
           </div>
-          <MenuEditsCourse />
         </div>
 
         {/* Columna de DescripcionCurso */}
