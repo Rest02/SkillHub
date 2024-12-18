@@ -8,49 +8,73 @@ import fs from "fs";
 //---------------- POST TODO LO DE CURSOS ------------------------
 
 // Controlador para crear curso
+// Función de sanitización básica
+const sanitizeInput = (input) => {
+  return input.replace(/[^a-zA-Z0-9\s-_.,]/g, '').trim();
+};
+
 export const createCourse = async (req, res) => {
   try {
     const { titulo, descripcion, categoria_id, precio, modalidad } = req.body;
 
-    // Obtener instructor_id desde el token (req.user)
-    const instructor_id = req.user.id; // Asumiendo que el id del instructor está en el payload del token
+    // Sanitización de entradas
+    const tituloSanitizado = sanitizeInput(titulo);
+    const descripcionSanitizada = sanitizeInput(descripcion);
+    const modalidadSanitizada = sanitizeInput(modalidad);
 
-    // Guarda la ruta de la imagen de portada si fue cargada
-    const thumbnailPath = req.file ? `thumbnail/${req.file.filename}` : null;
-
-    // Verifica si se recibió el título, descripción, categoría, precio y modalidad
-    if (!titulo || !descripcion || !categoria_id || !precio || !modalidad) {
-      // Si el archivo se subió pero faltan datos, lo eliminamos
-      if (thumbnailPath) {
-        fs.unlinkSync(thumbnailPath);
-      }
-      return res.status(400).json({ message: "Faltan datos requeridos" });
+    // Validaciones de entradas
+    if (!tituloSanitizado || !descripcionSanitizada || !categoria_id || !precio || !modalidadSanitizada) {
+      return res.status(400).json({ message: "Todos los campos son requeridos" });
     }
 
-    // Realiza la inserción en la base de datos
+    if (tituloSanitizado.length < 3 || tituloSanitizado.length > 100) {
+      return res.status(400).json({ message: "El título debe tener entre 3 y 100 caracteres" });
+    }
+
+    if (descripcionSanitizada.length < 10 || descripcionSanitizada.length > 1000) {
+      return res.status(400).json({ message: "La descripción debe tener entre 10 y 1000 caracteres" });
+    }
+
+    if (!['continuo', 'completo'].includes(modalidadSanitizada)) {
+      return res.status(400).json({ message: "La modalidad debe ser 'continuo' o 'completo'" });
+    }
+
+    if (!Number.isInteger(Number(precio)) || Number(precio) <= 0) {
+      return res.status(400).json({ message: "El precio debe ser un número entero positivo" });
+    }
+
+    const instructor_id = req.user.id; // Obteniendo el ID del instructor desde el token
+    const thumbnailPath = req.file ? `thumbnail/${req.file.filename}` : null;
+
+    // Inserción en la base de datos
     const [result] = await pool.query(
       `INSERT INTO courses (titulo, descripcion, categoria_id, instructor_id, precio, modalidad, imagen_portada) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
-        titulo,
-        descripcion,
+        tituloSanitizado,
+        descripcionSanitizada,
         categoria_id,
         instructor_id,
         precio,
-        modalidad,
+        modalidadSanitizada,
         thumbnailPath,
       ]
     );
 
-    // Devuelve la respuesta con el ID del curso creado
-    res
-      .status(201)
-      .json({ message: "Curso creado con éxito", courseId: result.insertId });
+    res.status(201).json({ message: "Curso creado con éxito", courseId: result.insertId });
   } catch (error) {
     console.error(error);
+
+    // Eliminar archivo subido en caso de error
+    if (req.file) {
+      fs.unlinkSync(`thumbnail/${req.file.filename}`);
+    }
+
     res.status(500).json({ message: "Error al crear el curso" });
   }
 };
+
+
 // Controlador para crear unidades segun el curso seleccionado
 export const createUnit = async (req, res) => {
   try {

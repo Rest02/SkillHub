@@ -1,18 +1,38 @@
-import React, { useState, useContext } from "react";
-import { MisCursosContext } from "../../context/MisCursosContext.jsx"; 
-import { TextField, Button, Container, Typography, Box, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
-import { Formik, Form } from "formik";  // Importamos Formik
-import * as Yup from "yup";  // Importamos Yup
-import { useNavigate } from "react-router-dom";  // Importamos useNavigate para la redirección
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { MisCursosContext } from "../../context/MisCursosContext";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+import anime from "animejs";
+import { toast } from "react-hot-toast"; // Importar toast
 
-// Definir las validaciones con Yup
 const validationSchema = Yup.object({
   titulo: Yup.string()
     .required("El título es obligatorio")
-    .min(3, "El título debe tener al menos 3 caracteres"),
+    .min(3, "El título debe tener al menos 3 caracteres")
+    .test(
+      "no-html",
+      "El título no debe contener etiquetas HTML o símbolos como < o >",
+      (value) => !/[<>]/.test(value) // Prohibir directamente los caracteres < o >
+    )
+    .test(
+      "no-forbidden-words",
+      "El título contiene palabras no permitidas",
+      (value) => {
+        const forbiddenWords = ["select", "drop"];
+        return !forbiddenWords.some((word) =>
+          value?.toLowerCase().includes(word)
+        );
+      }
+    ),
   descripcion: Yup.string()
     .required("La descripción es obligatoria")
-    .min(10, "La descripción debe tener al menos 10 caracteres"),
+    .min(10, "La descripción debe tener al menos 10 caracteres")
+    .test(
+      "no-html",
+      "La descripción no debe contener etiquetas HTML o símbolos como < o >",
+      (value) => !/[<>]/.test(value) // Prohibir directamente los caracteres < o >
+    ),
   categoriaId: Yup.string().required("Selecciona una categoría"),
   precio: Yup.number()
     .required("El precio es obligatorio")
@@ -22,9 +42,11 @@ const validationSchema = Yup.object({
 });
 
 function FormCurso() {
-  const { createCourse, categorias } = useContext(MisCursosContext);  
+  const { createCourse, categorias } = useContext(MisCursosContext);
   const [thumbnail, setThumbnail] = useState(null);
-  const navigate = useNavigate();  // Usamos useNavigate para la redirección
+  const navigate = useNavigate();
+
+  const formRef = useRef(null); // Referencia para el formulario
 
   const handleThumbnailChange = (e) => {
     setThumbnail(e.target.files[0]);
@@ -39,12 +61,47 @@ function FormCurso() {
       modalidad: values.modalidad,
     };
 
-    createCourse(courseData, thumbnail);  
-    navigate("/miscursos");  // Redirige a la sección de "Mis Cursos" después de crear el curso
+    // Llamada al servidor para crear el curso
+    createCourse(courseData, thumbnail)
+      .then((response) => {
+        // Si la creación es exitosa, mostrar una alerta de éxito
+        toast.success("Curso creado exitosamente, redirigiendo tus cursos", {
+          position: "bottom-right",
+          duration: 2000, // Mostrar la alerta por 2 segundos
+        });
+        
+        // Redirigir después de 2 segundos
+        setTimeout(() => {
+          navigate("/miscursos");
+        }, 2000);
+      })
+      .catch((error) => {
+        // Si hay un error, mostrar una alerta de error
+        toast.error("Error al crear el curso, el formulario contiene errores", {
+          duration: 2000, // Mostrar la alerta por 2 segundos
+        });
+      });
   };
 
+  // Animar entrada del formulario al cargar
+  useEffect(() => {
+    anime({
+      targets: formRef.current,
+      opacity: [0, 1],
+      translateY: [-50, 0],
+      duration: 1000,
+      easing: "easeOutExpo",
+    });
+  }, []);
+
   return (
-    <Container maxWidth="lg" sx={{ paddingTop: 5 }}>
+    <div
+      ref={formRef}
+      className="max-w-4xl mx-auto p-8 bg-gray-800 text-white rounded-lg shadow-lg mt-10 mb-10"
+    >
+      <h2 className="text-3xl font-bold text-center mb-6">
+        Crear un Curso Nuevo
+      </h2>
       <Formik
         initialValues={{
           titulo: "",
@@ -58,184 +115,153 @@ function FormCurso() {
       >
         {({ values, handleChange, handleBlur, errors, touched }) => (
           <Form>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 3,
-                backgroundColor: "#C0C0C0",
-                padding: 4,
-                borderRadius: 2,
-                boxShadow: 3,
-              }}
-            >
-              <Box sx={{ flex: 1 }}>
-                <Typography
-                  variant="h5"
-                  align="center"
-                  sx={{ marginBottom: 3, color: "#000000" }}
-                >
-                  Crear un nuevo curso
-                </Typography>
-
-                <TextField
-                  label="Título del curso"
-                  variant="outlined"
-                  name="titulo"
-                  value={values.titulo}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth
-                  required
-                  sx={{ marginBottom: "20px" }}
-                  error={touched.titulo && !!errors.titulo}
-                  helperText={touched.titulo && errors.titulo}
-                />
-
-                <TextField
-                  label="Descripción"
-                  variant="outlined"
-                  name="descripcion"
-                  value={values.descripcion}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth
-                  multiline
-                  rows={4}
-                  required
-                  sx={{ marginBottom: "20px" }}
-                  error={touched.descripcion && !!errors.descripcion}
-                  helperText={touched.descripcion && errors.descripcion}
-                />
-
-                <FormControl fullWidth required sx={{ marginBottom: "20px" }}>
-                  <InputLabel id="categoria-select-label">Categoría</InputLabel>
-                  <Select
-                    labelId="categoria-select-label"
-                    id="categoria-select"
-                    name="categoriaId"
-                    value={values.categoriaId}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.categoriaId && !!errors.categoriaId}
-                  >
-                    {categorias.map((categoria) => (
-                      <MenuItem key={categoria.id} value={categoria.id}>
-                        {categoria.nombre}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {touched.categoriaId && errors.categoriaId && (
-                    <Typography color="error">{errors.categoriaId}</Typography>
-                  )}
-                </FormControl>
-
-                <TextField
-                  label="Precio"
-                  variant="outlined"
-                  name="precio"
-                  value={values.precio}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth
-                  required
-                  sx={{ marginBottom: "20px" }}
-                  error={touched.precio && !!errors.precio}
-                  helperText={touched.precio && errors.precio}
-                />
-
-                <FormControl fullWidth required sx={{ marginBottom: "20px" }}>
-                  <InputLabel id="modalidad-select-label">Modalidad</InputLabel>
-                  <Select
-                    labelId="modalidad-select-label"
-                    id="modalidad-select"
-                    name="modalidad"
-                    value={values.modalidad}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.modalidad && !!errors.modalidad}
-                  >
-                    <MenuItem value="continuo">Continuo</MenuItem>
-                    <MenuItem value="completo">Completo</MenuItem>
-                  </Select>
-                  {touched.modalidad && errors.modalidad && (
-                    <Typography color="error">{errors.modalidad}</Typography>
-                  )}
-                </FormControl>
-
-                <Box sx={{ display: "flex", gap: 2, marginTop: 2 }}>
-                  <Button
-                    variant="outlined"
-                    component="label"
-                    sx={{
-                      width: "50%",
-                      padding: 1.5,
-                      borderColor: "#C0C0C0",
-                      color: "#FFFFFF",
-                      backgroundColor: "black",
-                      "&:hover": {
-                        color: "#FFFFFF",
-                        backgroundColor: "#292929",
-                      },
-                    }}
-                  >
-                    Subir Imagen de Portada
-                    <input
-                      type="file"
-                      accept="image/*"
-                      hidden
-                      onChange={handleThumbnailChange}
-                    />
-                  </Button>
-
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    sx={{
-                      width: "50%",
-                      padding: 1.5,
-                      backgroundColor: "#9B111E",
-                      "&:hover": {
-                        backgroundColor: "#CA1628",
-                      },
-                    }}
-                  >
-                    Crear Curso
-                  </Button>
-                </Box>
-              </Box>
-
-              {thumbnail && (
-                <Box
-                  sx={{
-                    width: "500px",
-                    height: "auto",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 2,
-                    overflow: "hidden",
-                    boxShadow: 3,
-                    backgroundColor: "black",
-                  }}
-                >
-                  <img
-                    src={URL.createObjectURL(thumbnail)}
-                    alt="Vista previa"
-                    style={{
-                      width: "500px",
-                      height: "572px",
-                      objectFit: "cover",
-                      borderRadius: "8px",
-                    }}
-                  />
-                </Box>
+            {/* Título */}
+            <div className="mb-5">
+              <label className="block mb-2 font-semibold">
+                Título del Curso
+              </label>
+              <input
+                type="text"
+                name="titulo"
+                placeholder="Ej. Curso de JavaScript Avanzado"
+                value={values.titulo}
+                onChange={(e) => {
+                  handleChange(e);
+                  if (errors.titulo) {
+                    // Animar campo con error
+                    anime({
+                      targets: e.target,
+                      translateX: [-10, 10, 0],
+                      duration: 300,
+                      easing: "easeInOutSine",
+                    });
+                  }
+                }}
+                onBlur={(e) => {
+                  handleBlur(e);
+                  if (errors.titulo) {
+                    // Mostrar animación si hay error al perder foco
+                    anime({
+                      targets: e.target,
+                      scale: [1, 1.05, 1],
+                      duration: 300,
+                      easing: "easeInOutSine",
+                    });
+                  }
+                }}
+                className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {touched.titulo && errors.titulo && (
+                <p className="text-red-400 text-sm mt-1">{errors.titulo}</p>
               )}
-            </Box>
+            </div>
+
+            {/* Descripción */}
+            <div className="mb-5">
+              <label className="block mb-2 font-semibold">Descripción</label>
+              <textarea
+                name="descripcion"
+                rows="4"
+                placeholder="Describe el contenido del curso"
+                value={values.descripcion}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {touched.descripcion && errors.descripcion && (
+                <p className="text-red-400 text-sm mt-1">{errors.descripcion}</p>
+              )}
+            </div>
+
+            {/* Categoría */}
+            <div className="mb-5">
+              <label className="block mb-2 font-semibold">Categoría</label>
+              <select
+                name="categoriaId"
+                value={values.categoriaId}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" label="Selecciona una categoría" />
+                {categorias.map((categoria) => (
+                  <option key={categoria.id} value={categoria.id}>
+                    {categoria.nombre}
+                  </option>
+                ))}
+              </select>
+              {touched.categoriaId && errors.categoriaId && (
+                <p className="text-red-400 text-sm mt-1">{errors.categoriaId}</p>
+              )}
+            </div>
+
+            {/* Precio */}
+            <div className="mb-5">
+              <label className="block mb-2 font-semibold">Precio</label>
+              <input
+                type="number"
+                name="precio"
+                placeholder="Ej. 100"
+                value={values.precio}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {touched.precio && errors.precio && (
+                <p className="text-red-400 text-sm mt-1">{errors.precio}</p>
+              )}
+            </div>
+
+            {/* Modalidad */}
+            <div className="mb-5">
+              <label className="block mb-2 font-semibold">Modalidad</label>
+              <select
+                name="modalidad"
+                value={values.modalidad}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="" label="Selecciona la modalidad" />
+                <option value="continuo">Continuo</option>
+                <option value="completo">Completo</option>
+              </select>
+              {touched.modalidad && errors.modalidad && (
+                <p className="text-red-400 text-sm mt-1">{errors.modalidad}</p>
+              )}
+            </div>
+
+            {/* Subir Imagen */}
+            <div className="mb-5">
+              <label className="block mb-2 font-semibold">
+                Subir Imagen de Portada
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleThumbnailChange}
+                className="text-white"
+              />
+              {thumbnail && (
+                <img
+                  src={URL.createObjectURL(thumbnail)}
+                  alt="Preview"
+                  className="mt-4 rounded-md shadow-md w-full max-h-64 object-cover"
+                />
+              )}
+            </div>
+
+            {/* Botón Enviar */}
+            <button
+              type="submit"
+              className="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white font-semibold transition duration-300"
+            >
+              Crear Curso
+            </button>
           </Form>
         )}
       </Formik>
-    </Container>
+    </div>
   );
 }
 
