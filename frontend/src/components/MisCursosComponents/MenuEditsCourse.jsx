@@ -49,7 +49,7 @@ function MenuEditsCourse() {
   };
 
   return (
-    <Box className="max-w-screen-xl pt-4 bg-[#1e293b] rounded-xl shadow-xl border border-black transition-all hover:shadow-2xl mx-auto my-10">
+    <Box className="max-w-screen-xl transition-all mx-auto my-10">
       <Box className="flex justify-around mb-4">
         {/* Botón Crear */}
         <Button
@@ -63,12 +63,13 @@ function MenuEditsCourse() {
             '&:hover': {
               backgroundColor: '#0d9488',
             },
-            boxShadow: 1,
+            boxShadow: 4,
             transition: 'transform 0.2s',
             '&:active': {
               transform: 'scale(0.95)',
             },
-            border: '2px solid black'
+            border: '1px solid black',
+            
           }}
           onClick={(e) => handleOpenMenu(e, "crear")}
         >
@@ -87,7 +88,9 @@ function MenuEditsCourse() {
             '&:hover': {
               backgroundColor: '#4f46e5',
             },
-            border: '2px solid black'
+            border: '1px solid black',
+            boxShadow: 4,
+
           }}
           onClick={(e) => handleOpenMenu(e, "editar")}
         >
@@ -106,12 +109,12 @@ function MenuEditsCourse() {
             '&:hover': {
               backgroundColor: '#e11d48',
             },
-            boxShadow: 1,
+            boxShadow: 4,
             transition: 'transform 0.2s',
             '&:active': {
               transform: 'scale(0.95)',
             },
-            border: '2px solid black'
+            border: '1px solid black'
           }}
           onClick={(e) => handleOpenMenu(e, "eliminar")}
         >
@@ -127,7 +130,7 @@ function MenuEditsCourse() {
         PaperProps={{
           sx: {
             width: "300px", // Asegura que el menú tenga el mismo ancho que los botones
-            border: "2px solid black", // Borde negro en el menú
+            border: "1px solid black", // Borde negro en el menú
             borderRadius: 2,
             boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
             padding: 1,

@@ -5,7 +5,7 @@ import Pagination from "@mui/material/Pagination";
 function DescripcionCurso({ course, units }) {
   const [expanded, setExpanded] = useState(false);
   const [paginaActual, setPaginaActual] = useState(1);
-  const unidadesPorPagina = 7; 
+  const unidadesPorPagina = 7;
   const navigate = useNavigate();
 
   if (!units || units.length === 0) {
@@ -15,7 +15,8 @@ function DescripcionCurso({ course, units }) {
           No hay unidades disponibles para este curso.
         </p>
         <p className="text-md text-gray-400 mt-4">
-          Parece que este curso aún no tiene unidades asignadas. Por favor, intenta más tarde o contacta al administrador.
+          Parece que este curso aún no tiene unidades asignadas. Por favor,
+          intenta más tarde o contacta al administrador.
         </p>
       </div>
     );
@@ -37,10 +38,12 @@ function DescripcionCurso({ course, units }) {
   const totalPaginas = Math.ceil(units.length / unidadesPorPagina);
 
   return (
-    <div className="p-8 bg-gray-900 text-white min-h-screen rounded-lg">
+    <div className="p-8 bg-white border border-black text-white min-h-screen rounded-lg w-[755px] mx-auto">
       {/* Título del curso */}
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-extrabold text-blue-500">{course.titulo}</h1>
+        <h1 className="text-3xl font-extrabold text-black">
+          {course.titulo}
+        </h1>
         <p className="text-lg text-gray-400 mt-2">{course.descripcion}</p>
       </div>
 
@@ -49,14 +52,16 @@ function DescripcionCurso({ course, units }) {
         {unidadesAMostrar.map((unit, index) => (
           <div
             key={unit.unidad_id}
-            className="bg-gray-800 rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow"
+            className="bg-white border border-black rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow"
           >
             {/* Cabecera de la unidad */}
             <div
               className="flex justify-between items-center cursor-pointer"
               onClick={() => handleExpand(`panel${index}`)}
             >
-              <h2 className="text-xl font-semibold">{`Unidad ${index + 1}: ${unit.unidad_titulo}`}</h2>
+              <h2 className="text-lg text-black font-semibold">{`${
+                unit.unidad_titulo
+              }`}</h2>
               <span
                 className={`transform transition-transform ${
                   expanded === `panel${index}` ? "rotate-180" : ""
@@ -66,7 +71,7 @@ function DescripcionCurso({ course, units }) {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  stroke="black"
                   className="w-5 h-5"
                 >
                   <path
@@ -88,15 +93,10 @@ function DescripcionCurso({ course, units }) {
               <ul className="pl-4 text-sm space-y-2">
                 {unit.videos.map((video, videoIndex) => (
                   <li key={video.video_id} className="flex items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      className="w-4 h-4 text-blue-400"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M16 8c0 4.418-3.582 8-8 8S0 12.418 0 8 3.582 0 8 0s8 3.582 8 8zM7 5.5v5l4-2.5-4-2.5z" />
-                    </svg>
-                    <span className="text-gray-300">{`${videoIndex + 1}. ${video.video_nombre}`}</span>
+
+                    <span className="text-black">{`${videoIndex + 1}. ${
+                      video.video_nombre
+                    }`}</span>
                   </li>
                 ))}
               </ul>
@@ -112,7 +112,7 @@ function DescripcionCurso({ course, units }) {
           page={paginaActual}
           onChange={handleChangePagina}
           color="primary"
-          className="bg-gray-800 rounded-lg p-2"
+          className=" rounded-lg p-2"
         />
       </div>
     </div>

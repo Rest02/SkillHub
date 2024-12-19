@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 function VideoIntroduccion() {
   return (
-    <div className="relative flex flex-col justify-center overflow-hidden">
-      <div className="w-full max-w-4xl  pt-14 ">
+    <div className="relative flex flex-col justify-center overflow-hidden border rounded-lg border-black bg-white p-5">
+      <div className="w-full max-w-4xl">
         <div className="flex justify-center">
           {/* Video component */}
           <div className="rounded-3xl shadow-2xl overflow-hidden">
