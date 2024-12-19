@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Box, Menu, MenuItem } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
+import anime from "animejs";
 
 function MenuEditsCourse() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -48,11 +49,38 @@ function MenuEditsCourse() {
     handleCloseMenu();
   };
 
+  // Animaciones al abrir el menú
+  useEffect(() => {
+    if (anchorEl) {
+      anime({
+        targets: '.menu-paper',
+        opacity: [0, 1],
+        translateY: [20, 0],
+        easing: 'easeOutExpo',
+        duration: 500,
+      });
+    }
+  }, [anchorEl]);
+
+  // Animaciones para los botones
+  useEffect(() => {
+    const buttons = document.querySelectorAll('.menu-button');
+    anime({
+      targets: buttons,
+      opacity: [0, 1],
+      translateY: [20, 0],
+      easing: 'easeOutExpo',
+      delay: anime.stagger(200),
+      duration: 600,
+    });
+  }, []);
+
   return (
     <Box className="max-w-screen-xl transition-all mx-auto my-10">
       <Box className="flex justify-around mb-4">
         {/* Botón Crear */}
         <Button
+          className="menu-button"
           sx={{
             color: 'white',
             fontWeight: 'bold',
@@ -69,7 +97,6 @@ function MenuEditsCourse() {
               transform: 'scale(0.95)',
             },
             border: '1px solid black',
-            
           }}
           onClick={(e) => handleOpenMenu(e, "crear")}
         >
@@ -78,6 +105,7 @@ function MenuEditsCourse() {
 
         {/* Botón Editar */}
         <Button
+          className="menu-button"
           sx={{
             color: 'white',
             fontWeight: 'bold',
@@ -90,7 +118,6 @@ function MenuEditsCourse() {
             },
             border: '1px solid black',
             boxShadow: 4,
-
           }}
           onClick={(e) => handleOpenMenu(e, "editar")}
         >
@@ -99,6 +126,7 @@ function MenuEditsCourse() {
 
         {/* Botón Eliminar */}
         <Button
+          className="menu-button"
           sx={{
             color: 'white',
             fontWeight: 'bold',
@@ -138,6 +166,7 @@ function MenuEditsCourse() {
             color: "black",
             marginTop: 2, // Espacio entre el botón y el menú
           },
+          className: 'menu-paper',
         }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

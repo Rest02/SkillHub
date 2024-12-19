@@ -1,23 +1,61 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
+import anime from "animejs";
 
 function DescripcionCurso({ course, units }) {
   const [expanded, setExpanded] = useState(false);
   const [paginaActual, setPaginaActual] = useState(1);
   const unidadesPorPagina = 7;
   const navigate = useNavigate();
+  const { courseId } = useParams();
+
+  // Función que maneja la redirección
+  const handleCrearUnidad = () => {
+    navigate(`/courses/${courseId}/units`);
+  };
+
+  // Animación para el panel de expansión
+  useEffect(() => {
+    if (expanded) {
+      anime({
+        targets: `.unit-content`,
+        translateY: [100, 0], // Animar desde abajo hacia arriba
+        opacity: [0, 1], // Desvanecer de 0 a 1
+        easing: "easeOutExpo",
+        duration: 500,
+      });
+    }
+  }, [expanded]);
+
+  // Animación para los elementos de la lista de unidades
+  useEffect(() => {
+    const unitElements = document.querySelectorAll(".unit-card");
+    anime({
+      targets: unitElements,
+      opacity: [0, 1],
+      translateY: [30, 0],
+      easing: "easeOutExpo",
+      delay: anime.stagger(200), // Retraso entre cada elemento
+      duration: 600,
+    });
+  }, []);
 
   if (!units || units.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white text-white w-[755px] rounded-lg border border-black">
         <p className="text-xl font-bold text-center bg-red-600 px-6 py-4 rounded-lg shadow-md">
           No hay unidades disponibles para este curso.
         </p>
-        <p className="text-md text-gray-400 mt-4">
-          Parece que este curso aún no tiene unidades asignadas. Por favor,
-          intenta más tarde o contacta al administrador.
+        <p className="text-md text-gray-400 mt-4 center">
+          Parece que este curso aún no tiene unidades asignadas. Crea tu primera unidad.
         </p>
+        <button
+          onClick={handleCrearUnidad}
+          className="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
+        >
+          Crear Unidad
+        </button>
       </div>
     );
   }
@@ -52,16 +90,14 @@ function DescripcionCurso({ course, units }) {
         {unidadesAMostrar.map((unit, index) => (
           <div
             key={unit.unidad_id}
-            className="bg-white border border-black rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow"
+            className="unit-card bg-white border border-black rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow"
           >
             {/* Cabecera de la unidad */}
             <div
               className="flex justify-between items-center cursor-pointer"
               onClick={() => handleExpand(`panel${index}`)}
             >
-              <h2 className="text-lg text-black font-semibold">{`${
-                unit.unidad_titulo
-              }`}</h2>
+              <h2 className="text-lg text-black font-semibold">{`${unit.unidad_titulo}`}</h2>
               <span
                 className={`transform transition-transform ${
                   expanded === `panel${index}` ? "rotate-180" : ""
@@ -86,17 +122,14 @@ function DescripcionCurso({ course, units }) {
 
             {/* Contenido de la unidad */}
             <div
-              className={`transition-all duration-300 overflow-hidden ${
+              className={`unit-content transition-all duration-300 overflow-hidden ${
                 expanded === `panel${index}` ? "max-h-screen mt-4" : "max-h-0"
               }`}
             >
               <ul className="pl-4 text-sm space-y-2">
                 {unit.videos.map((video, videoIndex) => (
                   <li key={video.video_id} className="flex items-center gap-2">
-
-                    <span className="text-black">{`${videoIndex + 1}. ${
-                      video.video_nombre
-                    }`}</span>
+                    <span className="text-black">{`${videoIndex + 1}. ${video.video_nombre}`}</span>
                   </li>
                 ))}
               </ul>
@@ -112,7 +145,7 @@ function DescripcionCurso({ course, units }) {
           page={paginaActual}
           onChange={handleChangePagina}
           color="primary"
-          className=" rounded-lg p-2"
+          className="rounded-lg p-2"
         />
       </div>
     </div>

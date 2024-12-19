@@ -406,3 +406,31 @@ export const updateVideoApi = async (courseId, videoId, videoData, videoFile) =>
     return null;  // Retorna null si hay un error
   }
 };
+
+
+// Función para obtener las valoraciones de un curso
+export const getCourseRatings = async (courseId) => {
+  try {
+    const token = localStorage.getItem("token"); // Obtener el token del localStorage
+    if (!token) {
+      return null; // Si no hay token, retorna null
+    }
+
+    // Realizar la solicitud GET a la ruta del servidor
+    const response = await axios.get(
+      `http://localhost:4000/courses/${courseId}/valorations`, // Ruta de la API
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Incluir el token en los encabezados
+        },
+      }
+    );
+
+    // Retornar los datos de las valoraciones obtenidas
+    console.log("Valoraciones obtenidas desde el api :", response.data);
+    return response.data; // Devuelve la respuesta de la API
+  } catch (error) {
+    console.error("Error al obtener las valoraciones:", error);
+    return null; // Retorna null en caso de error
+  }
+};

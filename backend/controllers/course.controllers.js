@@ -708,3 +708,58 @@ export const deleteClase = async (req, res) => {
     });
   }
 };
+
+
+
+// Controlador para obtener las valoraciones de un curso
+export const getCourseRatings = async (req, res) => {
+  const { courseId } = req.params; // Obtener el ID del curso desde los parámetros de la ruta
+
+  try {
+    // Consultar las valoraciones del curso
+    const [ratings] = await pool.query(
+      `SELECT 
+         r.id AS rating_id,
+         r.valoracion AS score,
+         r.comentario AS comment,
+         r.fecha_valoracion AS date,
+         u.id AS user_id,
+         u.nombre AS username
+       FROM ratings r
+       JOIN users u ON r.usuario_id = u.id
+       WHERE r.curso_id = ?`,
+      [courseId]
+    );
+
+
+    // Verificar si hay valoraciones
+    if (ratings.length === 0) {
+      return res.status(404).json({ message: "No se encontraron valoraciones para este curso." });
+    }
+
+    // Calcular el promedio de las valoraciones
+    const averageRating =
+      ratings.reduce((sum, rating) => sum + rating.score, 0) / ratings.length;
+
+    // Formatear la respuesta
+    const response = {
+      averageRating: averageRating.toFixed(1), // Promedio con 1 decimal
+      totalRatings: ratings.length, // Número total de valoraciones
+      ratings: ratings.map(rating => ({
+        id: rating.rating_id,
+        score: rating.score,
+        comment: rating.comment,
+        date: rating.date,
+        user: {
+          id: rating.user_id,
+          name: rating.username,
+        },
+      })),
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error al obtener las valoraciones del curso:", error);
+    res.status(500).json({ message: "Error al obtener las valoraciones del curso." });
+  }
+};

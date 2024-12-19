@@ -11,7 +11,8 @@ import {
   updateVideoApi,
   deleteCursoApi,
   deleteUnitApi,
-  deleteClaseApi
+  deleteClaseApi,
+  getCourseRatings
 } from "../api/misCursos.api";
 import { AuthContext } from "./AuthContext";
 
@@ -23,6 +24,8 @@ export const MisCursosProvider = ({ children }) => {
   const [unidades, setUnidades] = useState([]); // Define el estado de las unidades
 
   const [cursoSeleccionado, setCursoSeleccionado] = useState(null); // Estado para el curso seleccionado
+  const [valoraciones, setValoraciones] = useState([]);  // Nuevo estado para las valoraciones
+
 
   const { userRole } = useContext(AuthContext);
 
@@ -200,8 +203,23 @@ export const MisCursosProvider = ({ children }) => {
     }
   };
   
+  useEffect(() => {
+    const fetchValoraciones = async () => {
+      if (userRole && cursoSeleccionado && cursoSeleccionado.id) {
+        try {
+          const data = await getCourseRatings(cursoSeleccionado.id); // Obtener las valoraciones
+          setValoraciones(data); // Guardar las valoraciones en el estado
+        } catch (error) {
+          console.error("Error al obtener valoraciones:", error);
+        }
+      } else {
+        console.log("No se puede obtener valoraciones, cursoSeleccionado o userRole no están definidos.");
+      }
+    };
+    fetchValoraciones();
+  }, [userRole, cursoSeleccionado]);
   
-
+  
   return (
     <MisCursosContext.Provider
       value={{
@@ -217,7 +235,8 @@ export const MisCursosProvider = ({ children }) => {
         updateVideo,
         deleteCurso,
         deleteUnidad,
-        deleteVideo
+        deleteVideo,
+        valoraciones
       }}
     >
       {children}

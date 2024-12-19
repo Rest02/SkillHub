@@ -100,4 +100,7 @@ router.delete("/unidad/:courseId/delete", verifyToken, checkInstructorRole, cour
 router.delete("/clase/:courseId/delete", verifyToken, checkInstructorRole, courseControllers.deleteClase )
 
 
+router.get("/courses/:courseId/valorations", verifyToken, checkInstructorRole, courseControllers.getCourseRatings);
+
+
 export default router;

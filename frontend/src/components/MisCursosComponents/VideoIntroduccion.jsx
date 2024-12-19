@@ -1,12 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import anime from "animejs";
 
 function VideoIntroduccion() {
+  useEffect(() => {
+    // Animación para el contenedor del video
+    anime({
+      targets: '.video-container',
+      opacity: [0, 1],
+      translateY: [20, 0],
+      easing: 'easeOutExpo',
+      duration: 800,
+    });
+
+    // Animación para el video
+    anime({
+      targets: '.video-element',
+      scale: [0.9, 1],
+      opacity: [0, 1],
+      easing: 'easeOutExpo',
+      duration: 1000,
+      delay: 300,
+    });
+  }, []);
+
   return (
-    <div className="relative flex flex-col justify-center overflow-hidden border rounded-lg border-black bg-white p-5">
+    <div className="relative flex flex-col justify-center overflow-hidden border rounded-lg border-black bg-white p-5 video-container">
       <div className="w-full max-w-4xl">
         <div className="flex justify-center">
           {/* Video component */}
-          <div className="rounded-3xl shadow-2xl overflow-hidden">
+          <div className="rounded-3xl shadow-2xl overflow-hidden video-element">
             <video
               autoPlay
               loop
