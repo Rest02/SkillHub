@@ -3,10 +3,11 @@ import DescripcionCurso from '../../components/MostrarCursoUserComponents/Descri
 import CommentsValorations from '../../components/MostrarCursoUserComponents/CommentsValorations.jsx';
 import ProductActionCard from '../../components/MostrarCursoUserComponents/ProductActionCard.jsx';
 import { Box } from '@mui/material';
-import {useParams} from 'react-router-dom'
+import { useParams } from 'react-router-dom';
 
 function MostrarCursoUserPage() {
-  const {courseId} = useParams()
+  const { courseId } = useParams();
+
   const handleBuyNow = () => {
     console.log('Compra realizada');
     // Lógica para manejar la compra
@@ -26,35 +27,27 @@ function MostrarCursoUserPage() {
           margin: '0 auto', // Centrado
         }}
       >
-        <div style={{ display: 'flex', height: '70vh' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* Lado izquierdo con DescripcionCurso */}
           <Box
             sx={{
-              width: '100%', // Ocupa la mitad del ancho
-              height: '100%', // Asegura que ocupe todo el alto de la página
+              width: '100%', // Ocupa el 100% del ancho
               padding: 2,
-              overflowY: 'auto', // Añade scroll si el contenido es largo
-              border : "1px solid black"
             }}
           >
             <DescripcionCurso />
           </Box>
 
-          
+          {/* CommentsValorations debajo de DescripcionCurso */}
+          <Box
+            sx={{
+              padding: '20px',
+              marginTop: '20px', // Espacio entre DescripcionCurso y CommentsValorations
+            }}
+          >
+            <CommentsValorations />
+          </Box>
         </div>
-
-        {/* CommentsValorations a lo largo */}
-        <Box
-          sx={{
-            height: '30vh',
-            overflowY: 'auto',
-            padding: '20px',
-            border : "1px solid black"
-
-          }}
-        >
-          <CommentsValorations />
-        </Box>
       </Box>
     </div>
   );

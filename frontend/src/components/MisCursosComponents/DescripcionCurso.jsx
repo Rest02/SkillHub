@@ -76,7 +76,7 @@ function DescripcionCurso({ course, units }) {
   const totalPaginas = Math.ceil(units.length / unidadesPorPagina);
 
   return (
-    <div className="p-8 bg-white border border-black text-white min-h-screen rounded-lg w-[755px] mx-auto">
+    <div className="p-8 bg-white text-white min-h-screen rounded-lg w-[755px] mx-auto">
       {/* Título del curso */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-extrabold text-black">
