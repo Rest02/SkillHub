@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSnackbar } from "notistack"; // Importa useSnackbar
+import toast from "react-hot-toast"; // Importa React Hot Toast
 import { MisCursosContext } from "../../context/MisCursosContext.jsx";
 import {
   Container,
@@ -17,7 +17,6 @@ const DeleteUnidad = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const { unidades, setCursoSeleccionado, deleteUnidad } = useContext(MisCursosContext);
-  const { enqueueSnackbar } = useSnackbar(); // Hook de notistack para mostrar notificaciones
   const [selectedUnidad, setSelectedUnidad] = useState("");
 
   // Configura el curso seleccionado al montar el componente
@@ -33,7 +32,7 @@ const DeleteUnidad = () => {
   // Maneja la eliminación de la unidad
   const handleDeleteUnidad = async () => {
     if (!selectedUnidad) {
-      enqueueSnackbar("Selecciona una unidad para eliminar.", { variant: "warning" });
+      toast.error("Selecciona una unidad para eliminar.");
       return;
     }
 
@@ -43,15 +42,16 @@ const DeleteUnidad = () => {
 
     if (confirmDelete) {
       const result = await deleteUnidad(courseId, selectedUnidad);
-      if (result && result.success) {
-        enqueueSnackbar("¡Unidad eliminada con éxito!", { variant: "success" });
+      if (result.message === "Unidad eliminada con éxito.") {
+        toast.success("¡Unidad eliminada con éxito!");
 
         // Redirige al usuario a la página de unidades y videos directamente después de la eliminación
+        console.log(courseId)
         navigate(`/cursos/${courseId}/unitsandvideos`);
 
         setSelectedUnidad(""); // Resetea la selección
       } else {
-        enqueueSnackbar(result?.message || "Error al eliminar la unidad.", { variant: "error" });
+        toast.error(result?.message || "Error al eliminar la unidad.");
       }
     }
   };

@@ -19,7 +19,7 @@ function ImageBar() {
                 Sobre Nosotros
               </p>
               <h2 className="mb-6 max-w-lg text-5xl font-light leading-snug tracking-tight text-blue-600 sm:text-7xl sm:leading-snug">
-                Te ayudamos a lucir
+                Aprender puede ser
                 <span className="my-1 inline-block border-b-8 border-blue-400 px-4 font-bold text-black animate__animated animate__flash">
                   diferente
                 </span>

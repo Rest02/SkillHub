@@ -146,9 +146,9 @@ export const getRatingsForCourse = async (req, res) => {
     console.log(ratings)
 
     // Si no se encontraron valoraciones, devolvemos un mensaje
-    if (ratings.length === 0) {
-      return res.status(404).json({ message: 'No se encontraron valoraciones para este curso.' });
-    }
+    // if (ratings.length === 0) {
+    //   return res.status(404).json({ message: 'No se encontraron valoraciones para este curso.' });
+    // }
 
     // Si se encuentran valoraciones, las devolvemos en la respuesta
     return res.status(200).json({ ratings });

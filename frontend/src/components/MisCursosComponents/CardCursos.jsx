@@ -165,7 +165,7 @@ const MisCursosCard = () => {
                         onClick={() => handleViewCourse(curso.id)}
                         className="px-6 py-2 bg-black text-white rounded-lg hover:bg-blue-600 transition-colors duration-400 w-full"
                       >
-                        Ver Curso
+                        Editar Curso
                       </button>
                       <button
                         onClick={() => handleDeleteCourse(curso.id)}

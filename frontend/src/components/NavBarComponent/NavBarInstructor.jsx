@@ -54,6 +54,11 @@ const NavBarInstructor = () => {
     setDrawerOpen(!drawerOpen);
   };
 
+  const handleHome = () => {
+    // Lógica para ir al carrito
+    navigate("/");
+  };
+
   return (
     <AppBar
       position="static"
@@ -161,6 +166,7 @@ const NavBarInstructor = () => {
         {/* Logo centrado */}
         <Box
           component="img"
+          onClick={handleHome}
           src={logo}
           alt="SkillHub Logo"
           sx={{
