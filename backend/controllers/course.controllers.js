@@ -294,9 +294,14 @@ export const getCourseUnitsAndVideos = async (req, res) => {
           unit.unidad_id,
         ]);
 
-        // Query para obtener los videos de la unidad
+        // Query para obtener los videos de la unidad, incluyendo video_url
         const videosQuery = `
-          SELECT v.id AS video_id, v.nombre AS video_nombre
+          SELECT 
+            v.id AS video_id, 
+            v.nombre AS video_nombre,
+            v.descripcion AS video_descripcion,
+            v.miniatura_url,
+            v.video_url
           FROM videos v
           WHERE v.unidad_id = ?;
         `;
@@ -318,6 +323,7 @@ export const getCourseUnitsAndVideos = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
+
 
 // GET para obtener las unidades de uncurso
 export const getUnitsOfCourse = async (req, res) => {

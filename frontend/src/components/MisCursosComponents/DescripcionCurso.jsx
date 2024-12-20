@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import anime from "animejs";
 
-function DescripcionCurso({ course, units }) {
+function DescripcionCurso({ course, units, onVideoSelect }) {
   const [expanded, setExpanded] = useState(false);
   const [paginaActual, setPaginaActual] = useState(1);
   const unidadesPorPagina = 7;
@@ -20,8 +20,8 @@ function DescripcionCurso({ course, units }) {
     if (expanded) {
       anime({
         targets: `.unit-content`,
-        translateY: [100, 0], // Animar desde abajo hacia arriba
-        opacity: [0, 1], // Desvanecer de 0 a 1
+        translateY: [100, 0],
+        opacity: [0, 1],
         easing: "easeOutExpo",
         duration: 500,
       });
@@ -36,7 +36,7 @@ function DescripcionCurso({ course, units }) {
       opacity: [0, 1],
       translateY: [30, 0],
       easing: "easeOutExpo",
-      delay: anime.stagger(200), // Retraso entre cada elemento
+      delay: anime.stagger(200),
       duration: 600,
     });
   }, []);
@@ -77,22 +77,17 @@ function DescripcionCurso({ course, units }) {
 
   return (
     <div className="p-8 bg-white border border-black text-white min-h-screen rounded-lg w-[755px] mx-auto">
-      {/* Título del curso */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-extrabold text-black">
-          {course.titulo}
-        </h1>
+        <h1 className="text-3xl font-extrabold text-black">{course.titulo}</h1>
         <p className="text-lg text-gray-400 mt-2">{course.descripcion}</p>
       </div>
 
-      {/* Lista de unidades */}
       <div className="space-y-4">
         {unidadesAMostrar.map((unit, index) => (
           <div
             key={unit.unidad_id}
             className="unit-card bg-white border border-black rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow"
           >
-            {/* Cabecera de la unidad */}
             <div
               className="flex justify-between items-center cursor-pointer"
               onClick={() => handleExpand(`panel${index}`)}
@@ -120,7 +115,6 @@ function DescripcionCurso({ course, units }) {
               </span>
             </div>
 
-            {/* Contenido de la unidad */}
             <div
               className={`unit-content transition-all duration-300 overflow-hidden ${
                 expanded === `panel${index}` ? "max-h-screen mt-4" : "max-h-0"
@@ -128,7 +122,11 @@ function DescripcionCurso({ course, units }) {
             >
               <ul className="pl-4 text-sm space-y-2">
                 {unit.videos.map((video, videoIndex) => (
-                  <li key={video.video_id} className="flex items-center gap-2">
+                  <li
+                    key={video.video_id}
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => onVideoSelect(video)}
+                  >
                     <span className="text-black">{`${videoIndex + 1}. ${video.video_nombre}`}</span>
                   </li>
                 ))}
@@ -138,7 +136,6 @@ function DescripcionCurso({ course, units }) {
         ))}
       </div>
 
-      {/* Paginación */}
       <div className="flex justify-center mt-8">
         <Pagination
           count={totalPaginas}
